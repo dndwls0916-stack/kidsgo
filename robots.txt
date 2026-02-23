@@ -1,0 +1,11 @@
+# 키즈고(KidsGo) robots.txt
+# https://kidsgo.kr
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://kidsgo.kr/sitemap.xml
+
+# 크롤러 예의 (서버 부하 방지)
+Crawl-delay: 1

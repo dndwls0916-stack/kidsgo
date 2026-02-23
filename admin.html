@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>키즈고 관리자 - CSV 데이터 업로드</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <!-- CSV 파서 -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <style>
+        :root {
+            --primary: #FF6B9D;
+            --primary-dark: #E85588;
+            --primary-light: #FFD4E3;
+            --secondary: #4ECDC4;
+            --bg: #FFF8F0;
+            --card: #FFFFFF;
+            --text: #2D3436;
+            --text-light: #636E72;
+            --border: #E8E8E8;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #e17055;
+            --font: 'Noto Sans KR', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white; padding: 16px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .header h1 { font-size: 1.1rem; font-weight: 700; }
+        .header h1 i { margin-right: 8px; }
+        .header a { color: white; text-decoration: none; font-size: 0.85rem; opacity: 0.9; }
+        .header a:hover { opacity: 1; }
+
+        /* Container */
+        .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px; margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--card); border-radius: 12px; padding: 16px;
+            text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .stat-card .num { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+        .stat-card .label { font-size: 0.75rem; color: var(--text-light); margin-top: 4px; }
+
+        /* Sections */
+        .section {
+            background: var(--card); border-radius: 16px; padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 24px;
+        }
+        .section-title {
+            font-size: 1rem; font-weight: 700; margin-bottom: 16px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .section-title i { color: var(--primary); }
+
+        /* Step Indicator */
+        .steps {
+            display: flex; gap: 4px; margin-bottom: 24px;
+        }
+        .step {
+            flex: 1; text-align: center; padding: 10px 8px;
+            background: #f1f2f6; border-radius: 8px; font-size: 0.78rem;
+            font-weight: 500; color: var(--text-light); transition: all 0.3s;
+            position: relative;
+        }
+        .step.active { background: var(--primary); color: white; }
+        .step.done { background: var(--success); color: white; }
+        .step .step-num {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 22px; height: 22px; border-radius: 50%;
+            background: rgba(255,255,255,0.3); font-size: 0.7rem;
+            font-weight: 700; margin-right: 4px;
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 2.5px dashed var(--border); border-radius: 16px;
+            padding: 48px 24px; text-align: center; cursor: pointer;
+            transition: all 0.3s; position: relative;
+        }
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: var(--primary); background: rgba(255,107,157,0.04);
+        }
+        .upload-zone i { font-size: 2.5rem; color: var(--primary-light); margin-bottom: 12px; }
+        .upload-zone h3 { font-size: 1rem; margin-bottom: 8px; }
+        .upload-zone p { font-size: 0.82rem; color: var(--text-light); }
+        .upload-zone input { display: none; }
+
+        /* Template Download */
+        .template-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            background: linear-gradient(135deg, #f0fffe 0%, #fff5f8 100%);
+            border-radius: 12px; padding: 14px 18px; margin-bottom: 16px;
+            border: 1px solid #e0f5f3;
+        }
+        .template-bar span { font-size: 0.82rem; color: var(--text-light); }
+        .template-bar span i { color: var(--secondary); margin-right: 6px; }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 10px 20px; border-radius: 10px; border: none;
+            font-family: var(--font); font-size: 0.85rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .btn-primary:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+        .btn-secondary { background: var(--secondary); color: white; }
+        .btn-secondary:hover { background: var(--secondary-dark); }
+        .btn-outline {
+            background: white; color: var(--primary); border: 1.5px solid var(--primary);
+        }
+        .btn-outline:hover { background: var(--primary-light); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: #d63031; }
+        .btn-sm { padding: 7px 14px; font-size: 0.78rem; }
+
+        /* Preview Table */
+        .preview-wrapper {
+            overflow-x: auto; border: 1px solid var(--border);
+            border-radius: 12px; max-height: 400px; overflow-y: auto;
+        }
+        .preview-table {
+            width: 100%; border-collapse: collapse; font-size: 0.78rem;
+            min-width: 800px;
+        }
+        .preview-table th {
+            background: #f8f9fa; position: sticky; top: 0; z-index: 2;
+            padding: 10px 12px; text-align: left; font-weight: 600;
+            border-bottom: 2px solid var(--border); white-space: nowrap;
+        }
+        .preview-table td {
+            padding: 8px 12px; border-bottom: 1px solid #f1f2f6;
+            max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .preview-table tr:hover td { background: #fef9f0; }
+        .preview-info { 
+            padding: 12px 16px; background: #f8f9fa; border-top: 1px solid var(--border);
+            font-size: 0.78rem; color: var(--text-light); 
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* Mapping Section */
+        .mapping-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 12px;
+        }
+        .mapping-item {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 14px; background: #f8f9fa; border-radius: 10px;
+            font-size: 0.82rem;
+        }
+        .mapping-item .field-name {
+            min-width: 120px; font-weight: 600; color: var(--primary-dark);
+        }
+        .mapping-item .field-required { color: var(--danger); font-size: 0.7rem; }
+        .mapping-item i.fa-arrow-right { color: var(--text-light); font-size: 0.7rem; }
+        .mapping-item select {
+            flex: 1; padding: 6px 10px; border: 1.5px solid var(--border);
+            border-radius: 8px; font-family: var(--font); font-size: 0.8rem;
+            background: white; cursor: pointer;
+        }
+        .mapping-item select:focus { border-color: var(--primary); outline: none; }
+        .mapping-item select.mapped { border-color: var(--success); background: #f0fff4; }
+        .mapping-item select.unmapped { border-color: var(--warning); }
+
+        /* Progress */
+        .progress-bar {
+            width: 100%; height: 12px; background: #f1f2f6;
+            border-radius: 6px; overflow: hidden; margin: 12px 0;
+        }
+        .progress-fill {
+            height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 6px; transition: width 0.3s; width: 0%;
+        }
+        .progress-text { font-size: 0.82rem; color: var(--text-light); text-align: center; }
+
+        /* Result Log */
+        .result-log {
+            background: #1e272e; color: #d2dae2; border-radius: 12px;
+            padding: 16px; font-family: 'Courier New', monospace;
+            font-size: 0.78rem; max-height: 300px; overflow-y: auto;
+            line-height: 1.8;
+        }
+        .result-log .success { color: #00b894; }
+        .result-log .error { color: #e17055; }
+        .result-log .info { color: #74b9ff; }
+        .result-log .warn { color: #fdcb6e; }
+
+        /* Actions Bar */
+        .actions-bar {
+            display: flex; gap: 12px; justify-content: flex-end;
+            flex-wrap: wrap; margin-top: 16px;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 12px 16px; border-radius: 10px; font-size: 0.82rem;
+            margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+        }
+        .alert-info { background: #dff9fb; color: #0984e3; border: 1px solid #74b9ff; }
+        .alert-warning { background: #ffeaa7; color: #6c5ce7; border: 1px solid #fdcb6e; }
+        .alert-success { background: #e0fce7; color: #00b894; border: 1px solid #55efc4; }
+
+        /* Existing data controls */
+        .existing-controls {
+            display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+        }
+        .radio-group { display: flex; gap: 16px; }
+        .radio-group label {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 0.82rem; cursor: pointer;
+        }
+
+        /* Hidden sections */
+        .hidden { display: none !important; }
+
+        @media (max-width: 768px) {
+            .steps { flex-wrap: wrap; }
+            .step { flex: none; width: calc(50% - 2px); }
+            .mapping-grid { grid-template-columns: 1fr; }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <h1><i class="fas fa-database"></i> 키즈고 관리자 - 데이터 업로드</h1>
+        <a href="index.html"><i class="fas fa-arrow-left"></i> 메인으로</a>
+    </div>
+
+    <div class="container">
+        <!-- Stats -->
+        <div class="stats-bar" id="statsBar">
+            <div class="stat-card">
+                <div class="num" id="statTotal">-</div>
+                <div class="label">현재 등록 가게</div>
+            </div>
+            <div class="stat-card">
+                <div class="num" id="statCat">-</div>
+                <div class="label">업종 수</div>
+            </div>
+            <div class="stat-card">
+                <div class="num" id="statRegion">-</div>
+                <div class="label">지역 수</div>
+            </div>
+            <div class="stat-card">
+                <div class="num" id="statAvgRating">-</div>
+                <div class="label">평균 평점</div>
+            </div>
+        </div>
+
+        <!-- Steps -->
+        <div class="steps">
+            <div class="step active" id="step1"><span class="step-num">1</span> CSV 파일 선택</div>
+            <div class="step" id="step2"><span class="step-num">2</span> 미리보기 확인</div>
+            <div class="step" id="step3"><span class="step-num">3</span> 컬럼 매핑</div>
+            <div class="step" id="step4"><span class="step-num">4</span> 업로드</div>
+        </div>
+
+        <!-- Step 1: File Upload -->
+        <div class="section" id="sectionUpload">
+            <div class="section-title"><i class="fas fa-file-csv"></i> Step 1. CSV 파일 선택</div>
+
+            <div class="template-bar">
+                <span><i class="fas fa-download"></i> 올바른 형식이 필요하신가요?</span>
+                <button class="btn btn-outline btn-sm" onclick="downloadTemplate()">
+                    <i class="fas fa-file-download"></i> CSV 템플릿 다운로드
+                </button>
+            </div>
+
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                <span>Python 크롤링 등으로 수집한 가게 데이터를 CSV/엑셀로 정리한 후 업로드하세요. 컬럼 이름이 달라도 다음 단계에서 매핑할 수 있습니다.</span>
+            </div>
+
+            <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>CSV 파일을 드래그하거나 클릭하여 선택</h3>
+                <p>지원 형식: .csv, .tsv (UTF-8 인코딩 권장, 최대 10MB)</p>
+                <input type="file" id="fileInput" accept=".csv,.tsv,.txt">
+            </div>
+        </div>
+
+        <!-- Step 2: Preview -->
+        <div class="section hidden" id="sectionPreview">
+            <div class="section-title"><i class="fas fa-table"></i> Step 2. 데이터 미리보기</div>
+            <div class="alert alert-info" id="previewAlert"></div>
+            <div class="preview-wrapper">
+                <table class="preview-table" id="previewTable">
+                    <thead id="previewHead"></thead>
+                    <tbody id="previewBody"></tbody>
+                </table>
+            </div>
+            <div class="preview-info">
+                <span id="previewCount"></span>
+                <span>처음 20행만 미리보기로 표시됩니다</span>
+            </div>
+            <div class="actions-bar">
+                <button class="btn btn-outline" onclick="goStep(1)"><i class="fas fa-arrow-left"></i> 다시 선택</button>
+                <button class="btn btn-primary" onclick="goStep(3)">컬럼 매핑하기 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Step 3: Mapping -->
+        <div class="section hidden" id="sectionMapping">
+            <div class="section-title"><i class="fas fa-exchange-alt"></i> Step 3. 컬럼 매핑</div>
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>CSV 컬럼을 키즈고 DB 필드에 연결하세요. <b>name(가게이름)</b>은 필수입니다. 나머지는 비워두면 기본값이 적용됩니다.</span>
+            </div>
+            <div class="mapping-grid" id="mappingGrid"></div>
+            
+            <div style="margin-top:20px; padding:16px; background:#f8f9fa; border-radius:12px;">
+                <div class="section-title" style="margin-bottom:12px;"><i class="fas fa-cog"></i> 기존 데이터 처리</div>
+                <div class="existing-controls">
+                    <div class="radio-group">
+                        <label><input type="radio" name="existingData" value="keep" checked> 기존 데이터 유지 + 추가</label>
+                        <label><input type="radio" name="existingData" value="clear"> 기존 데이터 삭제 후 교체</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions-bar">
+                <button class="btn btn-outline" onclick="goStep(2)"><i class="fas fa-arrow-left"></i> 미리보기</button>
+                <button class="btn btn-primary" id="btnStartUpload" onclick="startUpload()">
+                    <i class="fas fa-upload"></i> 업로드 시작
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 4: Upload Progress -->
+        <div class="section hidden" id="sectionResult">
+            <div class="section-title"><i class="fas fa-rocket"></i> Step 4. 업로드 진행</div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="progress-text" id="progressText">준비 중...</div>
+            <div class="result-log" id="resultLog"></div>
+            <div class="actions-bar" id="resultActions" style="display:none;">
+                <button class="btn btn-outline" onclick="location.reload()"><i class="fas fa-redo"></i> 새로 업로드</button>
+                <button class="btn btn-primary" onclick="location.href='index.html'"><i class="fas fa-home"></i> 메인에서 확인</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+// ===== State =====
+let csvData = null;   // 파싱된 전체 데이터 {headers:[], rows:[]}
+let mapping = {};     // {dbField: csvColumn}
+
+// DB 필드 정의
+const DB_FIELDS = [
+    { key: 'name',               label: '가게 이름',     required: true },
+    { key: 'category',           label: '업종(대분류)',   required: false, hint: '식당/카페/키즈카페/뷔페/베이커리' },
+    { key: 'subcategory',        label: '세부업종',       required: false, hint: '한식/양식/고기집/횟집 등' },
+    { key: 'region',             label: '지역(시/도)',    required: false, hint: '서울/경기/부산 등' },
+    { key: 'district',           label: '구/군',          required: false },
+    { key: 'address',            label: '상세주소',       required: false },
+    { key: 'lat',                label: '위도',           required: false },
+    { key: 'lng',                label: '경도',           required: false },
+    { key: 'phone',              label: '전화번호',       required: false },
+    { key: 'hours',              label: '영업시간',       required: false },
+    { key: 'playroom_type',      label: '놀이방 유형',    required: false, hint: '실내놀이방/키즈존/볼풀 등' },
+    { key: 'playroom_desc',      label: '놀이방 설명',    required: false },
+    { key: 'age_range',          label: '권장 연령',      required: false, hint: '0~3세/3~5세/전연령 등' },
+    { key: 'has_parking',        label: '주차 여부',      required: false, hint: 'true/false 또는 O/X' },
+    { key: 'has_nursing_room',   label: '수유실 여부',    required: false },
+    { key: 'has_highchair',      label: '유아의자 여부',  required: false },
+    { key: 'has_stroller_access',label: '유모차 접근',    required: false },
+    { key: 'price_range',        label: '가격대',         required: false, hint: '$/$$/$$$ 또는 저렴/보통/고급' },
+    { key: 'rating',             label: '평점',           required: false, hint: '1~5 숫자' },
+    { key: 'review_count',       label: '리뷰 수',       required: false },
+    { key: 'tags',               label: '태그',           required: false, hint: '쉼표 구분: 생일파티,돌잔치' },
+    { key: 'description',        label: '가게 소개',      required: false },
+];
+
+// ===== Init =====
+document.addEventListener('DOMContentLoaded', () => {
+    loadStats();
+    setupDragDrop();
+    document.getElementById('fileInput').addEventListener('change', handleFile);
+});
+
+// ===== Stats =====
+async function loadStats() {
+    try {
+        const r = await fetch('tables/stores?limit=1');
+        const res = await r.json();
+        const total = res.total || 0;
+        document.getElementById('statTotal').textContent = total.toLocaleString();
+        
+        if (total > 0) {
+            // 전체 데이터 간단 통계
+            let allData = [];
+            const pages = Math.ceil(Math.min(total, 500) / 100);
+            for (let p = 1; p <= pages; p++) {
+                const pr = await fetch(`tables/stores?page=${p}&limit=100`);
+                const pres = await pr.json();
+                allData = allData.concat(pres.data || []);
+            }
+            const cats = new Set(allData.map(d => d.category).filter(Boolean));
+            const regions = new Set(allData.map(d => d.region).filter(Boolean));
+            const avgRating = allData.reduce((s,d) => s + (d.rating||0), 0) / allData.length;
+            
+            document.getElementById('statCat').textContent = cats.size;
+            document.getElementById('statRegion').textContent = regions.size;
+            document.getElementById('statAvgRating').textContent = avgRating.toFixed(1);
+        }
+    } catch(e) {
+        console.error('Stats load error:', e);
+    }
+}
+
+// ===== Drag & Drop =====
+function setupDragDrop() {
+    const zone = document.getElementById('uploadZone');
+    ['dragenter','dragover'].forEach(e => {
+        zone.addEventListener(e, (ev) => { ev.preventDefault(); zone.classList.add('dragover'); });
+    });
+    ['dragleave','drop'].forEach(e => {
+        zone.addEventListener(e, (ev) => { ev.preventDefault(); zone.classList.remove('dragover'); });
+    });
+    zone.addEventListener('drop', (ev) => {
+        const file = ev.dataTransfer.files[0];
+        if (file) processFile(file);
+    });
+}
+
+// ===== File Handling =====
+function handleFile(e) {
+    const file = e.target.files[0];
+    if (file) processFile(file);
+}
+
+function processFile(file) {
+    if (file.size > 10 * 1024 * 1024) {
+        alert('파일이 10MB를 초과합니다.');
+        return;
+    }
+    
+    const zone = document.getElementById('uploadZone');
+    zone.innerHTML = `
+        <i class="fas fa-spinner fa-spin" style="color:var(--primary);"></i>
+        <h3>파일 분석 중...</h3>
+        <p>${file.name} (${(file.size/1024).toFixed(1)}KB)</p>
+    `;
+
+    Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        encoding: 'UTF-8',
+        complete: function(results) {
+            if (results.errors.length > 0 && results.data.length === 0) {
+                alert('CSV 파싱 오류: ' + results.errors[0].message);
+                location.reload();
+                return;
+            }
+            csvData = {
+                headers: results.meta.fields || [],
+                rows: results.data,
+                fileName: file.name
+            };
+            renderPreview();
+            goStep(2);
+        },
+        error: function(err) {
+            alert('파일 읽기 실패: ' + err.message);
+            location.reload();
+        }
+    });
+}
+
+// ===== Preview =====
+function renderPreview() {
+    if (!csvData) return;
+    const { headers, rows } = csvData;
+
+    document.getElementById('previewAlert').innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        <span><b>${csvData.fileName}</b> · 컬럼 ${headers.length}개 · 데이터 <b>${rows.length}행</b> 감지</span>
+    `;
+    document.getElementById('previewAlert').className = 'alert alert-success';
+
+    // Header
+    const headHtml = '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
+    document.getElementById('previewHead').innerHTML = headHtml;
+
+    // Body (max 20 rows)
+    const previewRows = rows.slice(0, 20);
+    const bodyHtml = previewRows.map(row =>
+        '<tr>' + headers.map(h => `<td title="${row[h] || ''}">${row[h] || ''}</td>`).join('') + '</tr>'
+    ).join('');
+    document.getElementById('previewBody').innerHTML = bodyHtml;
+    document.getElementById('previewCount').textContent = `${rows.length}행 중 ${previewRows.length}행 표시`;
+}
+
+// ===== Mapping =====
+function renderMapping() {
+    if (!csvData) return;
+    const { headers } = csvData;
+    const grid = document.getElementById('mappingGrid');
+
+    grid.innerHTML = DB_FIELDS.map(field => {
+        const options = headers.map(h => `<option value="${h}" ${autoMatch(field.key, h) ? 'selected' : ''}>${h}</option>`);
+        const hintHtml = field.hint ? `<br><small style="color:#94a3b8;font-size:0.7rem;">${field.hint}</small>` : '';
+        const reqHtml = field.required ? '<span class="field-required">*필수</span>' : '';
+        
+        return `
+            <div class="mapping-item">
+                <div class="field-name">${field.label} ${reqHtml}${hintHtml}</div>
+                <i class="fas fa-arrow-right"></i>
+                <select data-field="${field.key}" onchange="updateMappingState()">
+                    <option value="">-- 매핑 안 함 --</option>
+                    ${options.join('')}
+                </select>
+            </div>
+        `;
+    }).join('');
+
+    // 자동 매핑 적용
+    updateMappingState();
+}
+
+function autoMatch(dbField, csvCol) {
+    const col = csvCol.toLowerCase().replace(/[\s_-]/g, '');
+    const db = dbField.toLowerCase().replace(/[\s_-]/g, '');
+    
+    // 정확 매치
+    if (col === db) return true;
+    
+    // 한글 매칭
+    const koreanMap = {
+        name: ['가게이름','이름','상호','상호명','가게명','매장명','업소명','점포명'],
+        category: ['업종','대분류','카테고리','분류'],
+        subcategory: ['세부업종','소분류','세부분류','서브카테고리'],
+        region: ['지역','시도','시','도','광역시'],
+        district: ['구','군','구군','시군구'],
+        address: ['주소','상세주소','도로명주소','지번주소'],
+        lat: ['위도','latitude','y'],
+        lng: ['경도','longitude','x','lon'],
+        phone: ['전화','전화번호','연락처','tel'],
+        hours: ['영업시간','운영시간','시간'],
+        playroom_type: ['놀이방유형','놀이시설','놀이방종류','키즈존유형'],
+        playroom_desc: ['놀이방설명','놀이시설설명','키즈존설명'],
+        age_range: ['연령','연령대','권장연령','나이'],
+        has_parking: ['주차','주차가능','주차여부'],
+        has_nursing_room: ['수유실','수유실여부'],
+        has_highchair: ['유아의자','아기의자','하이체어'],
+        has_stroller_access: ['유모차','유모차접근','유모차가능'],
+        price_range: ['가격대','가격','가격범위','가격수준'],
+        rating: ['평점','별점','점수','rating'],
+        review_count: ['리뷰수','리뷰','후기수','review'],
+        tags: ['태그','키워드','해시태그'],
+        description: ['설명','소개','가게소개','상세설명','메모'],
+    };
+    
+    const aliases = koreanMap[dbField] || [];
+    return aliases.some(a => col.includes(a.replace(/[\s_-]/g, '')));
+}
+
+function updateMappingState() {
+    mapping = {};
+    document.querySelectorAll('#mappingGrid select').forEach(sel => {
+        const field = sel.dataset.field;
+        const val = sel.value;
+        if (val) {
+            mapping[field] = val;
+            sel.className = 'mapped';
+        } else {
+            sel.className = val === '' ? 'unmapped' : '';
+        }
+    });
+}
+
+// ===== Step Navigation =====
+function goStep(n) {
+    ['sectionUpload','sectionPreview','sectionMapping','sectionResult'].forEach((id,i) => {
+        document.getElementById(id).classList.toggle('hidden', i !== n-1);
+    });
+    for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById('step'+i);
+        el.classList.remove('active','done');
+        if (i < n) el.classList.add('done');
+        if (i === n) el.classList.add('active');
+    }
+    if (n === 3) renderMapping();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== Upload =====
+async function startUpload() {
+    if (!mapping.name) {
+        alert('가게 이름(name) 매핑은 필수입니다!');
+        return;
+    }
+    if (!csvData || csvData.rows.length === 0) {
+        alert('업로드할 데이터가 없습니다.');
+        return;
+    }
+
+    const confirmMsg = `총 ${csvData.rows.length}건을 업로드합니다. 계속하시겠습니까?`;
+    if (!confirm(confirmMsg)) return;
+
+    goStep(4);
+    const log = document.getElementById('resultLog');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    log.innerHTML = '';
+
+    function addLog(msg, type='info') {
+        log.innerHTML += `<div class="${type}">  ${msg}</div>`;
+        log.scrollTop = log.scrollHeight;
+    }
+
+    // 기존 데이터 처리
+    const existingAction = document.querySelector('input[name="existingData"]:checked').value;
+    if (existingAction === 'clear') {
+        addLog('⚠️ 기존 데이터 삭제 시작...', 'warn');
+        try {
+            while (true) {
+                const r = await fetch('tables/stores?page=1&limit=100');
+                const res = await r.json();
+                const data = res.data || [];
+                if (data.length === 0) break;
+                await Promise.all(data.map(d => fetch(`tables/stores/${d.id}`, { method: 'DELETE' })));
+                addLog(`  🗑️ ${data.length}건 삭제`, 'warn');
+            }
+            addLog('✅ 기존 데이터 삭제 완료', 'success');
+        } catch(e) {
+            addLog('❌ 삭제 중 오류: ' + e.message, 'error');
+        }
+    }
+
+    // 데이터 변환
+    addLog(`📋 ${csvData.rows.length}건 변환 시작...`, 'info');
+    const records = [];
+    let skipCount = 0;
+
+    csvData.rows.forEach((row, i) => {
+        const record = {};
+        
+        // 매핑 적용
+        DB_FIELDS.forEach(field => {
+            const csvCol = mapping[field.key];
+            if (csvCol && row[csvCol] !== undefined && row[csvCol] !== '') {
+                let val = String(row[csvCol]).trim();
+                
+                // 타입 변환
+                if (['lat','lng','rating'].includes(field.key)) {
+                    val = parseFloat(val) || 0;
+                } else if (field.key === 'review_count') {
+                    val = parseInt(val) || 0;
+                } else if (['has_parking','has_nursing_room','has_highchair','has_stroller_access'].includes(field.key)) {
+                    val = ['true','1','o','O','예','Y','y','있음','가능'].includes(val);
+                } else if (field.key === 'tags') {
+                    val = val.split(/[,;|]/).map(t => t.trim()).filter(Boolean);
+                } else if (field.key === 'price_range') {
+                    if (['저렴','싸다','낮음','low'].includes(val.toLowerCase())) val = '$';
+                    else if (['보통','중간','medium','mid'].includes(val.toLowerCase())) val = '$$';
+                    else if (['고급','비쌈','높음','high','프리미엄'].includes(val.toLowerCase())) val = '$$$';
+                }
+                
+                record[field.key] = val;
+            }
+        });
+
+        // 필수 필드 체크
+        if (!record.name) {
+            skipCount++;
+            return;
+        }
+
+        // 기본값 적용
+        if (!record.category) record.category = '식당';
+        if (!record.subcategory) record.subcategory = '한식';
+        if (!record.region) {
+            // 주소에서 지역 추출 시도
+            const addr = record.address || '';
+            const regions = ['서울','경기','인천','부산','대구','대전','광주','울산','경남','충북','충남','강원','제주'];
+            record.region = regions.find(r => addr.includes(r)) || '서울';
+        }
+        if (!record.playroom_type) record.playroom_type = '키즈존';
+        if (!record.age_range) record.age_range = '전연령';
+        if (!record.price_range) record.price_range = '$$';
+        if (!record.rating) record.rating = +(3.5 + Math.random() * 1.5).toFixed(1);
+        if (!record.review_count) record.review_count = Math.floor(10 + Math.random() * 200);
+        if (!record.tags || record.tags.length === 0) record.tags = ['가족외식', '아이'];
+        if (!record.description) record.description = record.playroom_desc || '키즈프렌들리 가게입니다.';
+
+        records.push(record);
+    });
+
+    addLog(`✅ 변환 완료: ${records.length}건 (스킵: ${skipCount}건)`, 'success');
+
+    // 업로드
+    if (records.length === 0) {
+        addLog('❌ 업로드할 데이터가 없습니다.', 'error');
+        document.getElementById('resultActions').style.display = 'flex';
+        return;
+    }
+
+    addLog(`🚀 API 업로드 시작 (${records.length}건)...`, 'info');
+    const batchSize = 20;
+    let uploaded = 0;
+    let errors = 0;
+
+    for (let i = 0; i < records.length; i += batchSize) {
+        const batch = records.slice(i, i + batchSize);
+        const results = await Promise.allSettled(
+            batch.map(rec =>
+                fetch('tables/stores', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(rec)
+                })
+            )
+        );
+
+        results.forEach((r, j) => {
+            if (r.status === 'fulfilled' && r.value.ok) {
+                uploaded++;
+            } else {
+                errors++;
+                addLog(`  ⚠️ [${i+j+1}] ${batch[j].name} 실패`, 'error');
+            }
+        });
+
+        const pct = Math.round(((i + batch.length) / records.length) * 100);
+        progressFill.style.width = pct + '%';
+        progressText.textContent = `${uploaded}/${records.length} 업로드 완료 (${pct}%)`;
+        
+        if ((i + batch.length) % 100 === 0 || i + batch.length >= records.length) {
+            addLog(`  📦 ${uploaded}건 완료...`, 'info');
+        }
+    }
+
+    // 완료
+    progressFill.style.width = '100%';
+    addLog('', 'info');
+    addLog('═══════════════════════════════════', 'info');
+    addLog(`🎉 업로드 완료!`, 'success');
+    addLog(`   ✅ 성공: ${uploaded}건`, 'success');
+    if (errors > 0) addLog(`   ❌ 실패: ${errors}건`, 'error');
+    if (skipCount > 0) addLog(`   ⏭️ 스킵: ${skipCount}건 (이름 없음)`, 'warn');
+    addLog('═══════════════════════════════════', 'info');
+    progressText.textContent = `완료! ${uploaded}건 업로드 성공`;
+    document.getElementById('resultActions').style.display = 'flex';
+}
+
+// ===== Template Download =====
+function downloadTemplate() {
+    const headers = DB_FIELDS.map(f => f.key);
+    const example = {
+        name: '맛있는 고기집',
+        category: '식당',
+        subcategory: '고기집',
+        region: '서울',
+        district: '강남구',
+        address: '서울 강남구 테헤란로 123',
+        lat: '37.498',
+        lng: '127.028',
+        phone: '02-123-4567',
+        hours: '11:00~22:00 (월 휴무)',
+        playroom_type: '실내놀이방',
+        playroom_desc: '볼풀+미끄럼틀 키즈존 운영. CCTV 완비',
+        age_range: '전연령',
+        has_parking: 'O',
+        has_nursing_room: 'O',
+        has_highchair: 'O',
+        has_stroller_access: 'O',
+        price_range: '$$',
+        rating: '4.3',
+        review_count: '150',
+        tags: '한우,숯불구이,생일파티',
+        description: '프리미엄 한우 전문점. 넓은 키즈룸에 CCTV 모니터링 완비'
+    };
+    
+    const csv = headers.join(',') + '\n' + headers.map(h => `"${example[h] || ''}"`).join(',') + '\n';
+    const bom = '\uFEFF';
+    const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'kidsgo_template.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>

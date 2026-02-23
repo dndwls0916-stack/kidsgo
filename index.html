@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>키즈고 - 놀이방 있는 식당 & 카페 찾기 | 아이와 함께 가기 좋은 맛집</title>
+
+    <!-- ===== SEO 메타 태그 ===== -->
+    <meta name="description" content="놀이방 있는 식당, 카페, 키즈카페, 뷔페를 한눈에 검색! 고기집·횟집·브런치카페 등 900개+ 키즈프렌들리 가게를 지역·업종·놀이시설별로 찾아보세요. GPS 기반 내 주변 검색 지원.">
+    <meta name="keywords" content="놀이방있는식당,키즈프렌들리,아이와외식,키즈카페,놀이방카페,키즈존식당,아이와가기좋은곳,가족외식,돌잔치,생일파티,놀이방맛집,어린이식당,유아놀이방,키즈레스토랑,패밀리레스토랑">
+    <meta name="author" content="키즈고(KidsGo)">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://kidsgo.kr/">
+
+    <!-- ===== Open Graph (SNS 공유) ===== -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="키즈고 - 놀이방 있는 식당 & 카페 찾기">
+    <meta property="og:description" content="아이와 함께 가기 좋은 키즈프렌들리 맛집 900개+! 지역·업종·놀이시설별 검색, GPS 기반 내 주변 찾기.">
+    <meta property="og:site_name" content="키즈고">
+    <meta property="og:locale" content="ko_KR">
+    <!-- <meta property="og:image" content="https://kidsgo.kr/images/og-thumbnail.png"> -->
+    <!-- <meta property="og:url" content="https://kidsgo.kr/"> -->
+
+    <!-- ===== Twitter Card ===== -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="키즈고 - 놀이방 있는 식당 & 카페 찾기">
+    <meta name="twitter:description" content="아이와 함께 가기 좋은 키즈프렌들리 맛집 900개+! 지역·업종·놀이시설별 검색.">
+    <!-- <meta name="twitter:image" content="https://kidsgo.kr/images/og-thumbnail.png"> -->
+
+    <!-- ===== 네이버 사이트 인증 (서치어드바이저 등록 후 값 교체) ===== -->
+    <!-- <meta name="naver-site-verification" content="여기에_인증코드_입력"> -->
+
+    <!-- ===== 구글 사이트 인증 (서치콘솔 등록 후 값 교체) ===== -->
+    <!-- <meta name="google-site-verification" content="여기에_인증코드_입력"> -->
+
+    <!-- ===== 구조화된 데이터 (JSON-LD) - 검색 결과 리치 스니펫 ===== -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "키즈고(KidsGo)",
+        "description": "놀이방 있는 식당, 카페, 키즈카페를 검색하고 찾아볼 수 있는 서비스",
+        "url": "https://kidsgo.kr",
+        "applicationCategory": "LifestyleApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "KRW"
+        }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "키즈고",
+        "url": "https://kidsgo.kr",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://kidsgo.kr/?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+
+    <!-- ===== 광고 스크립트 자리 (애드센스 승인 후 활성화) ===== -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-여기에_발급번호" crossorigin="anonymous"></script> -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <!-- CSS 인라인 적용됨 -->
+    <style>
+/* ===== CSS Variables & Reset ===== */
+:root {
+    --primary: #FF6B9D;
+    --primary-dark: #E85588;
+    --primary-light: #FFD4E3;
+    --secondary: #4ECDC4;
+    --secondary-dark: #3BB5AD;
+    --accent: #FFE66D;
+    --accent-dark: #F5D12E;
+    --bg: #FFF8F0;
+    --bg-card: #FFFFFF;
+    --text: #2D3436;
+    --text-light: #636E72;
+    --text-lighter: #B2BEC3;
+    --border: #F0E6DD;
+    --shadow: 0 2px 16px rgba(0,0,0,0.06);
+    --shadow-hover: 0 8px 32px rgba(255,107,157,0.15);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --radius-xs: 6px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --font: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+/* Header */
+.header { background: linear-gradient(135deg, var(--primary) 0%, #FF8E9E 50%, var(--secondary) 100%); padding: 16px 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(255,107,157,0.3); }
+.header-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; gap: 16px; }
+.logo { display: flex; align-items: center; gap: 8px; color: white; font-size: 1.5rem; font-weight: 800; cursor: pointer; flex-shrink: 0; }
+.logo i { font-size: 1.3rem; background: rgba(255,255,255,0.25); border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; }
+.tagline { color: rgba(255,255,255,0.9); font-size: 0.85rem; font-weight: 400; }
+
+/* Hero */
+.hero { background: linear-gradient(180deg, #FFF0F5 0%, var(--bg) 100%); padding: 48px 0 32px; text-align: center; }
+.hero-inner { max-width: 700px; margin: 0 auto; padding: 0 20px; }
+.hero h1 { font-size: 1.8rem; font-weight: 700; line-height: 1.4; margin-bottom: 8px; color: var(--text); }
+.hero h1 strong { color: var(--primary); }
+.hero-sub { color: var(--text-light); font-size: 0.95rem; margin-bottom: 28px; }
+
+/* Search */
+.search-box { display: flex; align-items: center; background: white; border-radius: 50px; padding: 6px 6px 6px 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); border: 2px solid transparent; transition: var(--transition); max-width: 600px; margin: 0 auto; }
+.search-box:focus-within { border-color: var(--primary); box-shadow: 0 4px 24px rgba(255,107,157,0.2); }
+.search-box i { color: var(--text-lighter); font-size: 1.1rem; }
+.search-box input { flex: 1; border: none; outline: none; padding: 12px; font-size: 1rem; font-family: var(--font); background: transparent; }
+.search-btn { background: var(--primary); color: white; border: none; border-radius: 50px; padding: 12px 28px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: var(--transition); font-family: var(--font); white-space: nowrap; }
+.search-btn:hover { background: var(--primary-dark); transform: scale(1.02); }
+
+/* Quick Tags */
+.quick-tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+.quick-tag { background: white; border: 1.5px solid var(--border); border-radius: 50px; padding: 8px 16px; font-size: 0.82rem; color: var(--text-light); cursor: pointer; transition: var(--transition); font-family: var(--font); font-weight: 500; }
+.quick-tag:hover, .quick-tag.active { background: var(--primary-light); border-color: var(--primary); color: var(--primary-dark); }
+.quick-tag i { margin-right: 4px; }
+
+/* Filter */
+.filter-section { padding: 16px 0 0; }
+.location-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.location-btn { display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--secondary) 0%, #45B7AA 100%); color: white; border: none; border-radius: 50px; padding: 10px 20px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: var(--transition); font-family: var(--font); white-space: nowrap; }
+.location-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(78,205,196,0.3); }
+.location-btn i { animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.location-info { display: flex; align-items: center; gap: 8px; background: #E8F8F5; border-radius: 50px; padding: 8px 16px; font-size: 0.85rem; color: var(--secondary-dark); font-weight: 500; }
+.clear-location { background: none; border: none; color: var(--text-lighter); cursor: pointer; font-size: 0.8rem; padding: 2px; }
+.sort-box select { appearance: none; background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%23636E72'/%3E%3C/svg%3E") no-repeat right 12px center; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 36px 10px 14px; font-size: 0.88rem; font-family: var(--font); color: var(--text); cursor: pointer; font-weight: 500; }
+
+/* Filter Toggle & Panel */
+.filter-toggle { display: flex; align-items: center; gap: 8px; background: white; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 20px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: var(--transition); font-family: var(--font); color: var(--text); width: 100%; justify-content: center; }
+.filter-toggle:hover, .filter-toggle.active { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+.filter-count { background: var(--primary); color: white; border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; }
+.filter-panel { background: white; border-radius: var(--radius); margin-top: 12px; padding: 24px; box-shadow: var(--shadow); display: none; animation: slideDown 0.3s ease; }
+.filter-panel.open { display: block; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.filter-grid { display: grid; gap: 20px; }
+.filter-group { border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+.filter-group:last-child { border-bottom: none; padding-bottom: 0; }
+.filter-label { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+.filter-label i { color: var(--primary); width: 18px; text-align: center; }
+.filter-hint { font-size: 0.75rem; font-weight: 400; color: var(--text-lighter); margin-left: 4px; }
+.subcategory-appear { animation: slideDown 0.3s ease; }
+.filter-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { background: var(--bg); border: 1.5px solid var(--border); border-radius: 50px; padding: 7px 16px; font-size: 0.82rem; cursor: pointer; transition: var(--transition); font-family: var(--font); font-weight: 500; color: var(--text-light); }
+.chip:hover { border-color: var(--primary); color: var(--primary); }
+.chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+.multi-count { display: inline-flex; align-items: center; justify-content: center; background: var(--primary); color: white; font-size: 0.65rem; font-weight: 700; min-width: 18px; height: 18px; border-radius: 50px; padding: 0 5px; margin-left: 6px; line-height: 1; }
+
+/* Facility */
+.facility-toggles { display: flex; flex-wrap: wrap; gap: 10px; }
+.toggle-item { display: flex; align-items: center; cursor: pointer; }
+.toggle-item input { display: none; }
+.toggle-label { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.82rem; color: var(--text-light); transition: var(--transition); font-weight: 500; }
+.toggle-item input:checked + .toggle-label { background: #E8F8F5; border-color: var(--secondary); color: var(--secondary-dark); }
+.toggle-label i { font-size: 0.9rem; }
+
+/* Filter Actions */
+.filter-actions { display: flex; gap: 12px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+.btn-reset { flex: 1; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 12px; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: var(--font); color: var(--text-light); transition: var(--transition); }
+.btn-reset:hover { background: #f5f5f5; }
+.btn-apply { flex: 2; background: var(--primary); color: white; border: none; border-radius: var(--radius-sm); padding: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: var(--font); transition: var(--transition); }
+.btn-apply:hover { background: var(--primary-dark); }
+
+/* Results */
+.results-section { padding: 24px 0 60px; }
+.results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.results-header h2 { font-size: 1.15rem; font-weight: 700; }
+.results-count { background: var(--primary-light); color: var(--primary-dark); border-radius: 50px; padding: 4px 14px; font-size: 0.82rem; font-weight: 700; }
+.view-toggle { display: flex; gap: 4px; margin-bottom: 16px; }
+.view-btn { background: white; border: 1.5px solid var(--border); border-radius: var(--radius-xs); padding: 8px 14px; cursor: pointer; color: var(--text-lighter); transition: var(--transition); font-size: 0.9rem; }
+.view-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+/* Map */
+.map-container { margin-bottom: 20px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+.map-view { height: 400px; background: #E8F0FE; position: relative; }
+.map-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-light); }
+.map-placeholder i { font-size: 3rem; margin-bottom: 12px; color: var(--primary); }
+.map-placeholder p { font-weight: 600; font-size: 1.1rem; }
+.map-placeholder span { font-size: 0.85rem; color: var(--text-lighter); }
+.map-marker { position: absolute; transform: translate(-50%, -100%); cursor: pointer; z-index: 5; transition: var(--transition); }
+.map-marker:hover { z-index: 10; transform: translate(-50%, -100%) scale(1.15); }
+.marker-icon { background: var(--primary); color: white; width: 36px; height: 36px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: 2px solid white; }
+.marker-icon i { transform: rotate(45deg); font-size: 0.75rem; }
+.marker-tooltip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: white; border-radius: var(--radius-sm); padding: 8px 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); white-space: nowrap; font-size: 0.8rem; font-weight: 600; display: none; z-index: 20; }
+.map-marker:hover .marker-tooltip { display: block; }
+
+/* Store Grid & Card */
+.store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+.store-grid.list-view { grid-template-columns: 1fr; }
+.store-card { background: var(--bg-card); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); cursor: pointer; transition: var(--transition); border: 1.5px solid transparent; position: relative; }
+.store-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: var(--primary-light); }
+.card-image { height: 180px; background: linear-gradient(135deg, #FFE0EB 0%, #FFD4E3 30%, #E8F8F5 70%, #D4F1EC 100%); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.card-image-icon { font-size: 3.5rem; opacity: 0.6; }
+.card-badges { position: absolute; top: 12px; left: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+.badge { background: rgba(255,255,255,0.95); border-radius: 50px; padding: 4px 10px; font-size: 0.72rem; font-weight: 700; backdrop-filter: blur(4px); }
+.badge-category { color: var(--primary-dark); }
+.badge-playroom { color: var(--secondary-dark); }
+.card-distance { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.65); color: white; border-radius: 50px; padding: 4px 10px; font-size: 0.72rem; font-weight: 600; backdrop-filter: blur(4px); }
+.card-body { padding: 16px; }
+.card-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.card-title .price-tag { color: var(--accent-dark); font-size: 0.82rem; font-weight: 700; }
+.card-location { font-size: 0.82rem; color: var(--text-light); margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
+.card-location i { color: var(--primary); font-size: 0.75rem; }
+.card-rating { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+.stars { color: #FFB800; font-size: 0.82rem; letter-spacing: 1px; }
+.rating-num { font-weight: 700; font-size: 0.88rem; color: var(--text); }
+.review-count { font-size: 0.78rem; color: var(--text-lighter); }
+.card-desc { font-size: 0.83rem; color: var(--text-light); line-height: 1.5; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.card-facilities { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.facility-badge { display: flex; align-items: center; gap: 4px; background: #F0FAF8; color: var(--secondary-dark); border-radius: 50px; padding: 3px 10px; font-size: 0.72rem; font-weight: 600; }
+.facility-badge i { font-size: 0.68rem; }
+.card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { background: var(--bg); color: var(--text-light); border-radius: 50px; padding: 3px 10px; font-size: 0.72rem; font-weight: 500; }
+.store-grid.list-view .store-card { display: grid; grid-template-columns: 260px 1fr; }
+.store-grid.list-view .card-image { height: 100%; min-height: 200px; }
+
+/* Loading & Empty */
+.loading { text-align: center; padding: 60px 20px; }
+.spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading p { color: var(--text-light); font-size: 0.9rem; }
+.empty-state { text-align: center; padding: 80px 20px; }
+.empty-state i { font-size: 3rem; color: var(--text-lighter); margin-bottom: 16px; }
+.empty-state h3 { font-size: 1.2rem; margin-bottom: 8px; }
+.empty-state p { color: var(--text-light); font-size: 0.9rem; margin-bottom: 20px; }
+.btn-reset-all { background: var(--primary); color: white; border: none; border-radius: 50px; padding: 12px 32px; font-size: 0.95rem; font-weight: 600; cursor: pointer; font-family: var(--font); transition: var(--transition); }
+.btn-reset-all:hover { background: var(--primary-dark); }
+
+/* Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; animation: fadeIn 0.3s ease; backdrop-filter: blur(4px); }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal { background: white; border-radius: var(--radius) var(--radius) 0 0; width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s ease; position: relative; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal-close { position: sticky; top: 12px; float: right; margin: 12px; background: rgba(0,0,0,0.06); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5; color: var(--text-light); font-size: 1rem; transition: var(--transition); }
+.modal-close:hover { background: rgba(0,0,0,0.12); }
+.modal-hero { height: 220px; background: linear-gradient(135deg, #FFE0EB 0%, #E8F8F5 100%); display: flex; align-items: center; justify-content: center; font-size: 5rem; opacity: 0.5; position: relative; }
+.modal-hero-badges { position: absolute; bottom: 16px; left: 16px; display: flex; gap: 8px; }
+.modal-content { padding: 24px 20px 40px; }
+.modal-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; }
+.modal-subtitle { color: var(--text-light); font-size: 0.88rem; margin-bottom: 16px; }
+.modal-rating { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+.modal-rating .stars { font-size: 1rem; }
+.modal-rating .rating-num { font-size: 1.1rem; }
+.modal-info-grid { display: grid; gap: 12px; margin-bottom: 24px; }
+.modal-info-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px; background: var(--bg); border-radius: var(--radius-sm); }
+.modal-info-item i { color: var(--primary); width: 20px; text-align: center; margin-top: 2px; flex-shrink: 0; }
+.modal-info-item .info-label { font-size: 0.75rem; color: var(--text-lighter); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.modal-info-item .info-value { font-size: 0.9rem; font-weight: 500; color: var(--text); margin-top: 2px; }
+.modal-section { margin-bottom: 20px; }
+.modal-section-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.modal-section-title i { color: var(--primary); }
+.playroom-desc { background: linear-gradient(135deg, #FFF0F5, #F0FAF8); border-radius: var(--radius-sm); padding: 16px; font-size: 0.88rem; line-height: 1.7; color: var(--text); }
+.modal-facilities { display: flex; flex-wrap: wrap; gap: 10px; }
+.modal-facility { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; }
+.modal-facility.available { background: #E8F8F5; color: var(--secondary-dark); }
+.modal-facility.unavailable { background: #F5F5F5; color: var(--text-lighter); text-decoration: line-through; }
+.modal-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.modal-tag { background: var(--primary-light); color: var(--primary-dark); border-radius: 50px; padding: 6px 14px; font-size: 0.82rem; font-weight: 600; }
+.modal-cta { display: flex; gap: 10px; margin-top: 24px; }
+.btn-call { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--secondary); color: white; border: none; border-radius: var(--radius-sm); padding: 14px; font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: var(--font); transition: var(--transition); }
+.btn-call:hover { background: var(--secondary-dark); }
+.btn-directions { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--primary); color: white; border: none; border-radius: var(--radius-sm); padding: 14px; font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: var(--font); transition: var(--transition); }
+.btn-directions:hover { background: var(--primary-dark); }
+
+/* Back to Top */
+.back-to-top { position: fixed; bottom: 24px; right: 24px; width: 48px; height: 48px; background: var(--primary); color: white; border: none; border-radius: 50%; box-shadow: 0 4px 16px rgba(255,107,157,0.3); cursor: pointer; font-size: 1.1rem; z-index: 50; transition: var(--transition); }
+.back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(255,107,157,0.4); }
+
+/* Ad Slots */
+.ad-slot { width: 100%; max-width: 100%; overflow: hidden; }
+.ad-placeholder { background: linear-gradient(135deg, #f8f9fa 0%, #eef0f2 100%); border: 2px dashed #d1d5db; border-radius: 12px; text-align: center; color: #9ca3af; font-size: 0.85rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; transition: var(--transition); }
+.ad-placeholder:hover { border-color: var(--primary-light); background: linear-gradient(135deg, #fff0f5 0%, #fef3f7 100%); }
+.ad-placeholder p { margin: 0; }
+.ad-placeholder small { font-size: 0.72rem; color: #b0b8c4; }
+.ad-label { display: inline-block; background: #e5e7eb; color: #6b7280; font-size: 0.6rem; font-weight: 700; letter-spacing: 1px; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; }
+.ad-slot-top { padding: 10px 16px; display: flex; justify-content: center; background: rgba(255,255,255,0.6); backdrop-filter: blur(6px); }
+.ad-slot-top .ad-placeholder { max-width: 728px; width: 100%; min-height: 90px; padding: 12px 20px; }
+.ad-slot-infeed { margin-bottom: 20px; }
+.ad-slot-infeed .ad-placeholder { max-width: 100%; min-height: 100px; padding: 20px; background: linear-gradient(135deg, #fff5f8 0%, #f0fffe 100%); border-color: var(--primary-light); }
+.ad-placeholder.ad-native { gap: 8px; }
+.ad-placeholder.ad-native .ad-label { background: var(--primary-light); color: var(--primary-dark); }
+.ad-slot-bottom { position: fixed; bottom: 0; left: 0; right: 0; z-index: 999; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); box-shadow: 0 -2px 20px rgba(0,0,0,0.08); padding: 8px 16px; display: flex; justify-content: center; align-items: center; }
+.ad-slot-bottom .ad-placeholder { max-width: 728px; width: 100%; min-height: 50px; padding: 8px 16px; flex-direction: row; gap: 12px; }
+.ad-close { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: #e5e7eb; border: none; width: 24px; height: 24px; border-radius: 50%; font-size: 14px; line-height: 1; color: #6b7280; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+.ad-close:hover { background: #d1d5db; color: #374151; }
+
+/* Footer */
+.footer { margin-bottom: 70px; background: var(--text); color: rgba(255,255,255,0.7); padding: 48px 0 24px; }
+.footer-inner { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 32px; }
+.footer-brand .logo { color: white; font-size: 1.3rem; margin-bottom: 12px; }
+.footer-brand p { font-size: 0.88rem; line-height: 1.6; }
+.footer-links h4 { color: white; font-size: 0.9rem; font-weight: 700; margin-bottom: 12px; }
+.footer-links a { display: block; color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.85rem; padding: 4px 0; transition: var(--transition); }
+.footer-links a:hover { color: var(--primary-light); }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; text-align: center; font-size: 0.82rem; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header-inner { flex-direction: column; gap: 4px; text-align: center; }
+    .tagline { font-size: 0.78rem; }
+    .hero { padding: 32px 0 24px; }
+    .hero h1 { font-size: 1.4rem; }
+    .search-box { flex-direction: row; }
+    .search-btn { padding: 10px 20px; font-size: 0.88rem; }
+    .quick-tags { gap: 6px; }
+    .quick-tag { padding: 6px 12px; font-size: 0.78rem; }
+    .location-bar { flex-direction: column; gap: 8px; }
+    .location-btn { width: 100%; justify-content: center; }
+    .sort-box { width: 100%; }
+    .sort-box select { width: 100%; }
+    .store-grid { grid-template-columns: 1fr; }
+    .store-grid.list-view .store-card { grid-template-columns: 1fr; }
+    .store-grid.list-view .card-image { height: 180px; min-height: auto; }
+    .modal { max-height: 95vh; }
+    .modal-hero { height: 160px; }
+    .footer-inner { grid-template-columns: 1fr; gap: 24px; }
+    .map-view { height: 300px; }
+    .modal-cta { flex-direction: column; }
+    .ad-slot-top .ad-placeholder { min-height: 60px; font-size: 0.75rem; }
+    .ad-slot-infeed .ad-placeholder { min-height: 80px; padding: 14px; }
+    .ad-slot-bottom .ad-placeholder { max-width: 320px; min-height: 50px; font-size: 0.75rem; }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+    .store-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+    .modal { border-radius: var(--radius); max-width: 640px; margin-bottom: 5vh; }
+    .modal-overlay { align-items: center; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--text-lighter); border-radius: 3px; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo" onclick="resetAll()">
+                <i class="fas fa-baby"></i>
+                <span>키즈고</span>
+            </div>
+            <p class="tagline">놀이방 있는 식당 & 카페, 한 눈에 찾아보세요!</p>
+        </div>
+    </header>
+
+    <!-- ===== 광고: 상단 배너 ===== -->
+    <div class="ad-slot ad-slot-top" id="adTop">
+        <div class="ad-placeholder">
+            <span class="ad-label">AD</span>
+            <p>광고 영역 · 애드센스 승인 후 자동 표시</p>
+        </div>
+    </div>
+
+    <!-- Hero Search Section -->
+    <section class="hero">
+        <div class="hero-inner">
+            <h1>아이와 함께 가기 좋은<br><strong>키즈 프렌들리</strong> 맛집 찾기 🎈</h1>
+            <p class="hero-sub">놀이방 있는 식당, 카페, 뷔페를 내 주변에서 쉽게 찾아보세요</p>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="가게 이름, 지역, 태그로 검색..." autocomplete="off">
+                <button id="searchBtn" class="search-btn">검색</button>
+            </div>
+            <!-- Quick Tags -->
+            <div class="quick-tags">
+                <button class="quick-tag" data-tag="생일파티"><i class="fas fa-birthday-cake"></i> 생일파티</button>
+                <button class="quick-tag" data-tag="돌잔치"><i class="fas fa-gift"></i> 돌잔치</button>
+                <button class="quick-tag" data-tag="단체모임"><i class="fas fa-users"></i> 단체모임</button>
+                <button class="quick-tag" data-tag="체험프로그램"><i class="fas fa-paint-brush"></i> 체험프로그램</button>
+                <button class="quick-tag" data-tag="브런치"><i class="fas fa-coffee"></i> 브런치</button>
+                <button class="quick-tag" data-tag="고기"><i class="fas fa-drumstick-bite"></i> 고기집</button>
+                <button class="quick-tag" data-tag="횟집"><i class="fas fa-fish"></i> 횟집</button>
+                <button class="quick-tag" data-tag="치맥"><i class="fas fa-beer-mug-empty"></i> 치맥/술집</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="filter-section">
+        <div class="container">
+            <!-- Location Bar -->
+            <div class="location-bar">
+                <button id="locationBtn" class="location-btn">
+                    <i class="fas fa-location-crosshairs"></i>
+                    <span>내 위치로 찾기</span>
+                </button>
+                <div id="locationInfo" class="location-info" style="display:none;">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span id="locationText"></span>
+                    <button id="clearLocationBtn" class="clear-location"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="sort-box">
+                    <select id="sortSelect">
+                        <option value="rating">평점순</option>
+                        <option value="review">리뷰많은순</option>
+                        <option value="distance">거리순</option>
+                        <option value="price_low">가격 낮은순</option>
+                        <option value="price_high">가격 높은순</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Filter Toggle -->
+            <button class="filter-toggle" id="filterToggle">
+                <i class="fas fa-sliders-h"></i> 필터
+                <span class="filter-count" id="filterCount" style="display:none;">0</span>
+            </button>
+
+            <!-- Filter Panel -->
+            <div class="filter-panel" id="filterPanel">
+                <div class="filter-grid">
+                    <!-- Category -->
+                    <div class="filter-group">
+                        <label class="filter-label"><i class="fas fa-store"></i> 업종</label>
+                        <div class="filter-chips" id="categoryFilter">
+                            <button class="chip active" data-value="all">전체</button>
+                            <button class="chip" data-value="식당">🍽️ 식당</button>
+                            <button class="chip" data-value="카페">☕ 카페</button>
+                            <button class="chip" data-value="키즈카페">🎪 키즈카페</button>
+                            <button class="chip" data-value="뷔페">🍱 뷔페</button>
+                            <button class="chip" data-value="베이커리">🍞 베이커리</button>
+                        </div>
+                    </div>
+
+                    <!-- Subcategory (동적 생성 - 대분류 선택 시 표시) -->
+                    <div class="filter-group" id="subcategoryGroup" style="display:none;">
+                        <label class="filter-label"><i class="fas fa-utensils"></i> 세부업종 <span id="subcategoryHint" class="filter-hint"></span></label>
+                        <div class="filter-chips" id="subcategoryFilter">
+                            <!-- JS에서 동적으로 렌더링 -->
+                        </div>
+                    </div>
+
+                    <!-- Region -->
+                    <div class="filter-group">
+                        <label class="filter-label"><i class="fas fa-map-marker-alt"></i> 지역</label>
+                        <div class="filter-chips" id="regionFilter">
+                            <button class="chip active" data-value="all">전체</button>
+                            <button class="chip" data-value="서울">서울</button>
+                            <button class="chip" data-value="경기">경기</button>
+                            <button class="chip" data-value="인천">인천</button>
+                            <button class="chip" data-value="부산">부산</button>
+                            <button class="chip" data-value="대구">대구</button>
+                            <button class="chip" data-value="대전">대전</button>
+                            <button class="chip" data-value="제주">제주</button>
+                            <button class="chip" data-value="광주">광주</button>
+                            <button class="chip" data-value="울산">울산</button>
+                            <button class="chip" data-value="경남">경남</button>
+                            <button class="chip" data-value="충북">충북</button>
+                            <button class="chip" data-value="충남">충남</button>
+                            <button class="chip" data-value="강원">강원</button>
+                        </div>
+                    </div>
+
+                    <!-- Playroom Type -->
+                    <div class="filter-group">
+                        <label class="filter-label"><i class="fas fa-puzzle-piece"></i> 놀이시설</label>
+                        <div class="filter-chips" id="playroomFilter">
+                            <button class="chip active" data-value="all">전체</button>
+                            <button class="chip" data-value="실내놀이방">실내놀이방</button>
+                            <button class="chip" data-value="실외놀이터">실외놀이터</button>
+                            <button class="chip" data-value="키즈존">키즈존</button>
+                            <button class="chip" data-value="볼풀">볼풀</button>
+                            <button class="chip" data-value="미끄럼틀">미끄럼틀</button>
+                            <button class="chip" data-value="종합놀이시설">종합놀이시설</button>
+                        </div>
+                    </div>
+
+                    <!-- Age Range -->
+                    <div class="filter-group">
+                        <label class="filter-label"><i class="fas fa-child"></i> 연령대</label>
+                        <div class="filter-chips" id="ageFilter">
+                            <button class="chip active" data-value="all">전체</button>
+                            <button class="chip" data-value="0~3세">0~3세</button>
+                            <button class="chip" data-value="3~5세">3~5세</button>
+                            <button class="chip" data-value="5~7세">5~7세</button>
+                            <button class="chip" data-value="3~7세">3~7세</button>
+                            <button class="chip" data-value="전연령">전연령</button>
+                        </div>
+                    </div>
+
+                    <!-- Price Range -->
+                    <div class="filter-group">
+                        <label class="filter-label"><i class="fas fa-won-sign"></i> 가격대</label>
+                        <div class="filter-chips" id="priceFilter">
+                            <button class="chip active" data-value="all">전체</button>
+                            <button class="chip" data-value="$">💰 저렴</button>
+                            <button class="chip" data-value="$$">💰💰 보통</button>
+                            <button class="chip" data-value="$$$">💰💰💰 고급</button>
+                        </div>
+                    </div>
+
+                    <!-- Facilities -->
+                    <div class="filter-group">
+                        <label class="filter-label"><i class="fas fa-check-circle"></i> 편의시설</label>
+                        <div class="facility-toggles" id="facilityFilter">
+                            <label class="toggle-item">
+                                <input type="checkbox" data-facility="has_parking">
+                                <span class="toggle-label"><i class="fas fa-parking"></i> 주차</span>
+                            </label>
+                            <label class="toggle-item">
+                                <input type="checkbox" data-facility="has_nursing_room">
+                                <span class="toggle-label"><i class="fas fa-baby-carriage"></i> 수유실</span>
+                            </label>
+                            <label class="toggle-item">
+                                <input type="checkbox" data-facility="has_highchair">
+                                <span class="toggle-label"><i class="fas fa-chair"></i> 유아의자</span>
+                            </label>
+                            <label class="toggle-item">
+                                <input type="checkbox" data-facility="has_stroller_access">
+                                <span class="toggle-label"><i class="fas fa-wheelchair"></i> 유모차</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button id="resetFilters" class="btn-reset"><i class="fas fa-redo"></i> 초기화</button>
+                    <button id="applyFilters" class="btn-apply"><i class="fas fa-check"></i> 적용하기</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section">
+        <div class="container">
+            <div class="results-header">
+                <h2 id="resultsTitle">전체 키즈 프렌들리 가게</h2>
+                <span class="results-count" id="resultsCount">0개</span>
+            </div>
+
+            <!-- View Toggle -->
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="grid" title="그리드 보기"><i class="fas fa-th-large"></i></button>
+                <button class="view-btn" data-view="list" title="리스트 보기"><i class="fas fa-list"></i></button>
+                <button class="view-btn" data-view="map" title="지도 보기"><i class="fas fa-map"></i></button>
+            </div>
+
+            <!-- Map Container -->
+            <div id="mapContainer" class="map-container" style="display:none;">
+                <div id="mapView" class="map-view">
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <p>지도 보기</p>
+                        <span>가게 위치를 지도에서 확인하세요</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 광고: 검색 결과 상단 (네이티브 인피드) ===== -->
+            <div class="ad-slot ad-slot-infeed" id="adInfeed">
+                <div class="ad-placeholder ad-native">
+                    <span class="ad-label">SPONSORED</span>
+                    <p>🎈 프리미엄 키즈프렌들리 가게를 여기에 노출하세요</p>
+                    <small>광고 문의: ad@kidsgo.kr</small>
+                </div>
+            </div>
+
+            <!-- Store Cards -->
+            <div id="storeGrid" class="store-grid">
+                <!-- Cards will be rendered by JS -->
+            </div>
+
+            <!-- Loading -->
+            <div id="loading" class="loading" style="display:none;">
+                <div class="spinner"></div>
+                <p>가게 정보를 불러오는 중...</p>
+                <p id="loadingProgress" style="font-size:0.8rem;color:#94A3B8;margin-top:6px;"></p>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state" style="display:none;">
+                <i class="fas fa-search"></i>
+                <h3>검색 결과가 없어요 😢</h3>
+                <p>다른 조건으로 다시 검색해 보세요</p>
+                <button onclick="resetAll()" class="btn-reset-all">전체보기</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detail Modal -->
+    <div id="detailModal" class="modal-overlay" style="display:none;">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-body" id="modalBody">
+                <!-- Detail content rendered by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Top -->
+    <button id="backToTop" class="back-to-top" style="display:none;">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- ===== 광고: 하단 고정 배너 ===== -->
+    <div class="ad-slot ad-slot-bottom" id="adBottom">
+        <div class="ad-placeholder">
+            <span class="ad-label">AD</span>
+            <p>하단 고정 배너 광고 영역</p>
+        </div>
+        <button class="ad-close" onclick="document.getElementById('adBottom').style.display='none'" title="광고 닫기">&times;</button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <div class="logo"><i class="fas fa-baby"></i> 키즈고</div>
+                    <p>아이와 함께하는 행복한 외식, 키즈고가 함께합니다.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>서비스</h4>
+                    <a href="#">가게 등록 요청</a>
+                    <a href="#">이용 가이드</a>
+                    <a href="#">자주 묻는 질문</a>
+                </div>
+                <div class="footer-links">
+                    <h4>문의</h4>
+                    <a href="mailto:info@kidsgo.kr">info@kidsgo.kr</a>
+                    <a href="https://instagram.com/kidsgo" target="_blank">Instagram @kidsgo</a>
+                </div>
+                <div class="footer-links">
+                    <h4>법적 고지</h4>
+                    <a href="terms.html">이용약관</a>
+                    <a href="privacy.html">개인정보처리방침</a>
+                </div>
+            </div>
+            <!-- 사업자 정보 (사업자등록 후 실제 정보로 교체) -->
+            <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;margin-bottom:12px;font-size:0.75rem;color:rgba(255,255,255,0.4);line-height:1.8;text-align:center;">
+                상호: 키즈고 | 대표: [대표자명] | 사업자등록번호: [000-00-00000]<br>
+                소재지: [사업장 주소] | 이메일: info@kidsgo.kr<br>
+                <a href="terms.html" style="color:rgba(255,255,255,0.5);text-decoration:none;">이용약관</a> · 
+                <a href="privacy.html" style="color:rgba(255,255,255,0.5);text-decoration:none;">개인정보처리방침</a>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 키즈고(KidsGo). All rights reserved.</p>
+                <a href="admin.html" style="color:#94A3B8;font-size:0.72rem;text-decoration:none;margin-top:4px;display:inline-block;">관리자</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+/**
+ * 키즈고 - 대량 시드 데이터 자동 생성기 v3
+ */
+// ===== Supabase 연결 설정 =====
+// ⚠️ 아래 두 값을 본인의 Supabase 프로젝트 값으로 교체하세요!
+const SUPABASE_URL = 'https://vzjqfogqymthtmbzyxkz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_911v8puVJ_Qm-iex5F1gcg_suBEEkur';
+
+// 시드 데이터 비활성화 (Supabase 사용)
+const SEED_DATA = (() => {
+    const REGIONS = [
+        { r:"서울", ds:[
+            {n:"강남구",la:37.498,lo:127.028,a:"서울 강남구 테헤란로"},{n:"송파구",la:37.514,lo:127.105,a:"서울 송파구 올림픽로"},
+            {n:"마포구",la:37.556,lo:126.908,a:"서울 마포구 월드컵북로"},{n:"강서구",la:37.551,lo:126.849,a:"서울 강서구 공항대로"},
+            {n:"영등포구",la:37.524,lo:126.926,a:"서울 영등포구 여의대방로"},{n:"용산구",la:37.534,lo:126.987,a:"서울 용산구 이태원로"},
+            {n:"서초구",la:37.493,lo:127.014,a:"서울 서초구 반포대로"},{n:"노원구",la:37.654,lo:127.056,a:"서울 노원구 동일로"},
+            {n:"성동구",la:37.563,lo:127.039,a:"서울 성동구 왕십리로"},{n:"강동구",la:37.539,lo:127.073,a:"서울 강동구 천호대로"},
+            {n:"관악구",la:37.484,lo:126.929,a:"서울 관악구 신림로"},{n:"종로구",la:37.573,lo:126.985,a:"서울 종로구 종로"},
+            {n:"서대문구",la:37.562,lo:126.938,a:"서울 서대문구 연희로"},{n:"성북구",la:37.587,lo:126.992,a:"서울 성북구 보문로"},
+            {n:"동대문구",la:37.574,lo:127.04,a:"서울 동대문구 왕산로"},{n:"광진구",la:37.538,lo:127.082,a:"서울 광진구 능동로"},
+            {n:"은평구",la:37.617,lo:126.927,a:"서울 은평구 통일로"},{n:"중랑구",la:37.606,lo:127.092,a:"서울 중랑구 망우로"},
+            {n:"도봉구",la:37.668,lo:127.047,a:"서울 도봉구 도봉로"},{n:"금천구",la:37.457,lo:126.895,a:"서울 금천구 시흥대로"},
+            {n:"양천구",la:37.517,lo:126.866,a:"서울 양천구 목동동로"},{n:"구로구",la:37.495,lo:126.887,a:"서울 구로구 디지털로"},
+            {n:"동작구",la:37.512,lo:126.939,a:"서울 동작구 상도로"},{n:"중구",la:37.563,lo:126.997,a:"서울 중구 명동길"},
+        ]},
+        { r:"경기", ds:[
+            {n:"성남시",la:37.359,lo:127.108,a:"경기 성남시 분당구 정자로"},{n:"수원시",la:37.284,lo:127.048,a:"경기 수원시 영통구 광교호수로"},
+            {n:"용인시",la:37.322,lo:127.086,a:"경기 용인시 수지구 성복로"},{n:"고양시",la:37.658,lo:126.762,a:"경기 고양시 일산서구 호수로"},
+            {n:"화성시",la:37.206,lo:127.074,a:"경기 화성시 동탄대로"},{n:"하남시",la:37.55,lo:127.206,a:"경기 하남시 미사강변로"},
+            {n:"파주시",la:37.748,lo:126.933,a:"경기 파주시 출판로"},{n:"부천시",la:37.499,lo:126.783,a:"경기 부천시 원미구 상동로"},
+            {n:"안양시",la:37.387,lo:126.951,a:"경기 안양시 동안구 평촌로"},{n:"안산시",la:37.317,lo:126.832,a:"경기 안산시 단원구 광덕대로"},
+            {n:"남양주시",la:37.595,lo:127.166,a:"경기 남양주시 화도읍 수레로"},{n:"김포시",la:37.615,lo:126.715,a:"경기 김포시 풍무로"},
+            {n:"양평군",la:37.491,lo:127.49,a:"경기 양평군 양평읍 물안개길"},{n:"의정부시",la:37.738,lo:127.034,a:"경기 의정부시 시민로"},
+            {n:"광주시",la:37.429,lo:127.255,a:"경기 광주시 경충대로"},{n:"시흥시",la:37.38,lo:126.803,a:"경기 시흥시 마유로"},
+            {n:"평택시",la:36.991,lo:127.085,a:"경기 평택시 평택로"},{n:"구리시",la:37.594,lo:127.129,a:"경기 구리시 건원대로"},
+            {n:"오산시",la:37.149,lo:127.077,a:"경기 오산시 경기대로"},{n:"이천시",la:37.272,lo:127.435,a:"경기 이천시 중리천로"},
+            {n:"양주시",la:37.785,lo:127.045,a:"경기 양주시 평화로"},{n:"광명시",la:37.478,lo:126.863,a:"경기 광명시 오리로"},
+        ]},
+        { r:"인천", ds:[
+            {n:"연수구",la:37.381,lo:126.658,a:"인천 연수구 컨벤시아대로"},{n:"부평구",la:37.495,lo:126.722,a:"인천 부평구 경인로"},
+            {n:"중구",la:37.472,lo:126.621,a:"인천 중구 연안부두로"},{n:"서구",la:37.546,lo:126.676,a:"인천 서구 청라대로"},
+            {n:"남동구",la:37.449,lo:126.731,a:"인천 남동구 소래로"},{n:"계양구",la:37.537,lo:126.737,a:"인천 계양구 계양대로"},
+            {n:"미추홀구",la:37.441,lo:126.7,a:"인천 미추홀구 경원대로"},
+        ]},
+        { r:"부산", ds:[
+            {n:"해운대구",la:35.162,lo:129.163,a:"부산 해운대구 해운대로"},{n:"수영구",la:35.153,lo:129.118,a:"부산 수영구 광안리해변로"},
+            {n:"기장군",la:35.244,lo:129.222,a:"부산 기장군 기장해안로"},{n:"금정구",la:35.243,lo:129.092,a:"부산 금정구 금샘로"},
+            {n:"사하구",la:35.104,lo:128.974,a:"부산 사하구 낙동대로"},{n:"동래구",la:35.196,lo:129.084,a:"부산 동래구 명륜로"},
+            {n:"부산진구",la:35.163,lo:129.053,a:"부산 부산진구 서면로"},{n:"남구",la:35.136,lo:129.084,a:"부산 남구 수영로"},
+            {n:"사상구",la:35.156,lo:128.981,a:"부산 사상구 사상로"},{n:"연제구",la:35.176,lo:129.079,a:"부산 연제구 월드컵대로"},
+        ]},
+        { r:"대구", ds:[
+            {n:"수성구",la:35.858,lo:128.63,a:"대구 수성구 동대구로"},{n:"달서구",la:35.828,lo:128.539,a:"대구 달서구 성당로"},
+            {n:"달성군",la:35.857,lo:128.431,a:"대구 달성군 현풍로"},{n:"중구",la:35.866,lo:128.593,a:"대구 중구 동성로"},
+            {n:"북구",la:35.886,lo:128.583,a:"대구 북구 학정로"},{n:"동구",la:35.885,lo:128.636,a:"대구 동구 동대구로"},
+            {n:"서구",la:35.871,lo:128.559,a:"대구 서구 국채보상로"},
+        ]},
+        { r:"대전", ds:[
+            {n:"유성구",la:36.362,lo:127.356,a:"대전 유성구 대학로"},{n:"서구",la:36.355,lo:127.38,a:"대전 서구 둔산로"},
+            {n:"중구",la:36.327,lo:127.421,a:"대전 중구 대종로"},{n:"동구",la:36.351,lo:127.427,a:"대전 동구 동서대로"},
+            {n:"대덕구",la:36.346,lo:127.416,a:"대전 대덕구 한밭대로"},
+        ]},
+        { r:"광주", ds:[
+            {n:"서구",la:35.152,lo:126.89,a:"광주 서구 상무대로"},{n:"북구",la:35.174,lo:126.912,a:"광주 북구 체육관로"},
+            {n:"남구",la:35.132,lo:126.902,a:"광주 남구 봉선로"},{n:"광산구",la:35.14,lo:126.793,a:"광주 광산구 수완로"},
+            {n:"동구",la:35.146,lo:126.923,a:"광주 동구 금남로"},
+        ]},
+        { r:"울산", ds:[
+            {n:"남구",la:35.543,lo:129.33,a:"울산 남구 삼산로"},{n:"중구",la:35.572,lo:129.311,a:"울산 중구 성남로"},
+            {n:"동구",la:35.505,lo:129.416,a:"울산 동구 봉수로"},{n:"북구",la:35.582,lo:129.361,a:"울산 북구 매곡로"},
+        ]},
+        { r:"경남", ds:[
+            {n:"창원시",la:35.228,lo:128.68,a:"경남 창원시 성산구 중앙대로"},{n:"김해시",la:35.234,lo:128.889,a:"경남 김해시 호계로"},
+            {n:"진주시",la:35.18,lo:128.108,a:"경남 진주시 진주대로"},{n:"양산시",la:35.335,lo:129.037,a:"경남 양산시 물금읍 범어로"},
+            {n:"거제시",la:34.88,lo:128.621,a:"경남 거제시 거제대로"},{n:"통영시",la:34.854,lo:128.433,a:"경남 통영시 통영해안로"},
+        ]},
+        { r:"충북", ds:[
+            {n:"청주시",la:36.634,lo:127.457,a:"충북 청주시 상당구 상당로"},{n:"충주시",la:36.991,lo:127.926,a:"충북 충주시 성내로"},
+            {n:"제천시",la:37.133,lo:128.19,a:"충북 제천시 의림대로"},
+        ]},
+        { r:"충남", ds:[
+            {n:"천안시",la:36.808,lo:127.14,a:"충남 천안시 동남구 청수로"},{n:"아산시",la:36.789,lo:127.003,a:"충남 아산시 배방읍 모종로"},
+            {n:"서산시",la:36.785,lo:126.45,a:"충남 서산시 읍내로"},{n:"당진시",la:36.889,lo:126.629,a:"충남 당진시 당진중앙로"},
+        ]},
+        { r:"강원", ds:[
+            {n:"춘천시",la:37.866,lo:127.743,a:"강원 춘천시 퇴계로"},{n:"강릉시",la:37.755,lo:128.876,a:"강원 강릉시 경포로"},
+            {n:"속초시",la:38.207,lo:128.591,a:"강원 속초시 중앙로"},{n:"원주시",la:37.342,lo:127.92,a:"강원 원주시 원일로"},
+            {n:"동해시",la:37.524,lo:129.114,a:"강원 동해시 천곡로"},
+        ]},
+        { r:"제주", ds:[
+            {n:"제주시",la:33.449,lo:126.559,a:"제주 제주시 조천읍 함덕로"},{n:"서귀포시",la:33.253,lo:126.56,a:"제주 서귀포시 중문관광로"},
+            {n:"애월읍",la:33.462,lo:126.353,a:"제주 제주시 애월읍 일주서로"},{n:"성산읍",la:33.437,lo:126.912,a:"제주 서귀포시 성산읍 일주동로"},
+        ]},
+    ];
+    const N = {
+        고기집:["황소곳간","소풍갈비","화로구이","명가한우","청기와숯불","참나무갈비","돼지왕","고기마루","육감한우","불꽃갈비","산들목장","금강한우","무한숯불","소담한우","원조갈비","풍년숯불","진짜고기","화통구이","우대갈비","봉화숯불","소나무정원","미소한우","청정우","달빛소고기","삼겹살대장간","소고기연구소","화덕구이","목장의아침","그릴하우스","산골한우","풍미갈비","한우마을","연탄구이","석쇠가","정육식당","푸짐한고기","달구지숯불","고기왕국","우래옥","통삼겹","육회마을","불맛고기","솥뚜껑삼겹","갈비나라","소한마리","참숯고기","한우사랑","제주흑돼지","이베리코","꽃살명가","살치살대장","숯불갈매기","양념갈비","왕갈비집","고기광장"],
+        횟집:["바다향기","해신","파도소리","싱싱횟집","용궁","대왕수산","해안가","해물천국","진미횟집","오션뷰","등대횟집","갯벌","수산대첩","해녀의집","물회천국","바다왕","포구횟집","선장님","돌하르방횟집","자연산","갯마을","조개의정석","바다의정원","해적선","푸른바다","어부의밥상","대게나라","수산물직송","활어천국","통영횟집","제주바다","서해안","동해바다","해풍","진해만","광안리횟집","만선횟집","횟감나라","도미횟집","전복횟집","참돔회관","바다회관","노량진","수협횟집","인어횟집","해루질","바다의향기","거제바다","백운횟집","동해활어"],
+        "술집/포차":["하늘포차","청춘주막","달빛술방","맥주창고","호프타운","별밤포차","건배","한잔의여유","리버펍","충청집","노을펍","야시장","크래프트하우스","달밤맥주","소풍주점","루프탑맥주","감성포차","옥탑방","치맥의정석","투파인트","에일하우스","팝스맥주","비어가든","한잔더","포차인더시티","구름위포차","야경맥주","뉴욕펍","맥파이","브루어리","비어팩토리","홉하우스","골목주점","달빛주점","인생맥주","씨원한잔","별나라포차","하이볼공장","수제버거펍","크래프트비어","꿀맥주","피맥세상","수제안주","월광포차","동네맥주","요술포차","해방촌펍","테라스펍","빈티지펍","루프탑바"],
+        치킨:["릴리치킨","청춘닭","두마리치킨","황금올리브","바삭바삭","치킨마을","행복한닭","치킨나라","페더스","허니콤보","크런치킨","골든윙","치킨파크","하이닭","맛있는닭","오리지널","노랑통닭","치킨대학","굽네치킨","처갓집","붉은여왕","미스터치킨","치킨타운","핫윙","비비큐키즈","후라이드킹","양념장인","크리스피","치킨하우스","깐풍치킨","순살천국","치킨매니아","치킨스토리","치킨플러스","뼈없는닭","바른치킨","프라이드타운","치킨마스터","윙키즈","레드치킨","통닭공방","옛날통닭","참나무치킨","구운치킨","더바삭","치킨왕국","금빛후라이드","생방송치킨","양녕치킨","꿀닭"],
+        한식:["행복한밥상","엄마손밥집","시골밥상","보리밥비빌리","황금어장","정다운","한옥집","소담정식","나라사랑","두레밥","들꽃밥상","맘스키친","한솥밥","오곡밥","산들밥","고향밥상","정갈한한상","삼시세끼","토담","벽골제","보글보글한상","약선당","한상가득","바른밥상","어머니밥상","도토리식당","넉넉한상","집밥도깨비","돌솥밥","건강한끼","채움밥상","옛날밥상","장독대","시골한상","보쌈마을","한식뷔레","전주비빔밥","순두부마을","된장애","해물찌개달인","국밥명가","설렁탕왕","추어탕마을","삼계탕나무","코다리집","보리굴비","찜닭마을","해장국의달인","쌈밥천국","감자탕아리랑"],
+        양식:["올리브키친","남당당","호랑이네","라뽀르","파스텔","빈센트","더키친","리틀이탈리","브라보","마리오","그린테이블","로지스","팜투테이블","에밀리아","체리블라썸","스테이크하우스","파파스","라구","올데이","더테이블","비스트로","라쿠치나","화덕피자","트러플","레드오븐","파밀리아","르꼬르동","타볼라","밀라노","아페리티보","로마노","더바이트","쉐프의부엌","그릴앤로스트","더그릴","파스타제작소","오스테리아","알리오올리오","봉주르키친","프레시테이블","모닝브릿지","스테이크팩토리","라포레","프렌치블루","미트하우스","캐주얼다이닝","빠네파스타","에그온토스트","하우스오브스테이크","리코타키친"],
+        중식:["금상첨화","용의눈물","우리동네중화","만리장성","황룡","대박반점","북경루","중화명가","짬뽕천국","팔선생","홍루","마라킹","천향","진짜중국","꿔바로우집","동방명주","사천각","만두장인","용문","장안","짜장의달인","양꼬치왕","마라공방","훠궈천국","소룡포","대만미식","딤섬가든","북경오리","중화비원","짬뽕장인","사천마라","왕만두","중국집","복래춘","오향장육","차이나홀","홍콩반점","광동요리","상하이","팔보채","탄탄면왕","마파두부","짜짱면왕","루이향","홍등","마라보이","청도양꼬치","면사랑중화","촉한갈비","유니짬뽕"],
+        일식:["토토로","사쿠라","스시마루","오사카야","하루","미소라멘","해랑","스시왕","텐동마루","오니기리","유키","라멘장인","소바루","이자카야","아키","모모","니쿠","텐푸라","규동하우스","카이센동","히노키","우동마루","미소시루","와규","초밥달인","돈카츠왕","규카츠","오뎅바","야키토리","스시야","라멘365","봄날의스시","나미","카레야","소보로","스시만","나루토","하나비","코코이찌","사무라이","후지산","오마카세루","도쿄라멘","교토스시","사케하우스","규동킹","텐푸라야","잇뽄","마루젠","니쿠야"],
+        분식:["해맑떡볶이","할매손칼국수","엄마떡볶이","분식왕","김밥천국","라볶이집","떡볶이연구소","우리분식","착한분식","맛있는하루","추억의맛","소풍도시락","분식대장","국물떡볶이","순대왕","매콤달콤","라면공방","손만두","국수나무","빨간떡볶이","김밥나라","불떡","쫄면의달인","우동한그릇","칼국수장인","만두천국","떡볶이스토리","누들박스","한그릇분식","학교앞","모둠분식","꼬마김밥","옛날떡볶이","삼천원분식","매운맛연구소","떡순이","신전치즈떡볶이","추억분식","쌀떡볶이","꼬불이라면","오징어순대","만두명가","동대문분식","신림떡볶이","열떡","찐순대","종로김밥","핫도그왕","떡볶이하우스","수제어묵"],
+        샤브샤브:["뽀대기","채선당키즈","미나리","온천샤브","건강한한끼","산들바람","초록들판","한우샤브","맑은물","소나무집","자연한상","들깨향","보글보글","따뜻한집","서호","그린샤브","해물샤브","전골이야기","버섯마을","새벽이슬","산야초","물맑은집","한방샤브","보양한상","쌈채소","두부마을","연잎샤브","제주샤브","바다샤브","우거지샤브","들녘","푸른들","맑은샘","건강샤브","한우소고기샤브","산나물","제철야채","온가족샤브","미소샤브","솔잎향","청국장샤브","보리샤브","약초샤브","담소샤브","초원의아침","한끼건강","야채듬뿍","연두부샤브","고기듬뿍","맑은육수"],
+        해물탕:["해물천국","항구조개구이","바다의선물","해물대첩","갯마을","해신탕","게으른조개","해적선","대왕해물","동해바다","자갈치","새우천국","해물마을","파도소리탕","오징어나라","꽃게장","아귀찜","낙지마을","조개캠프","알탕의달인","게딱지","해물보쌈","꽃게마을","전복마을","산낙지","해물한상","포장마차","갈치조림","대게찜","바지락칼국수","해물왕","조개천국","동해해물","서해조개","남해찜","간장게장","생선구이왕","해물라면","조개구이천국","해물짬뽕","대하구이","전복삼계탕","꽃게찜왕","산낙지명가","회덮밥","해물파전","참돔구이","광어구이","우럭매운탕","해물뚝배기"],
+        멕시칸:["미스터타코","올레타코","부리또킹","나초스","살사베르데","코요테","과카몰리","차차차","또르띠야","하늘보리","칸쿤","아미고","로코타코","엘파소","치폴레","칼리엔테","퀘사디아","엔칠라다","세비체","마리아치","피에스타","토르타","케밥앤타코","멕시코시티","프레스코","라피에스타","아즈텍","그랜데타코","텍스멕스","루차도르","타코벨리","살사로하","마이타코","멕시칸그릴","할라피뇨","핫칠리","부에노타코","라코시나","나쵸바","바하타코","리마","마야","소노라","타코파티","콩키스타","아보카도하우스","쿠에보","살사키친","타코야","모히또타코"],
+        디저트카페:["무지개떡집","코코맘","바닐라스카이","메이플브리즈","헤이드","꿀마","슈가팝","달콤한오후","카라멜하우스","버터플라이","라벤더힐","민트초코","딸기정원","허니비","치즈케이크팩토리","구름위케이크","모카빈","마들렌하우스","르슈크레","베리굿","초코라떼","크레페리","와플스토리","디저트랩","마카롱캔디","슈크림공방","티라미수","파운드하우스","에끌레어","롤케이크공방","소프트아이스","빙수왕","달고나","아포가토","망고매니아","바닐라빈","밀크티하우스","스콘앤잼","허브라떼","디저트드림","코코아뮤즈","캬라멜브륄레","프루츠파이","캔디팝","마시멜로우","유자카페","타르트렛","비스킷하우스","달달공방","레몬드롭"],
+        브런치카페:["씨솔앞하우스","무령도원","돌담길카페","바람들이","숲속동화","모닝가든","선데이브런치","에그베네딕트","팬케이크하우스","올데이브런치","그린하우스","루프탑모닝","가든테라스","피크닉카페","밀밭","들꽃정원","카페드숲","테라스가든","자작나무","해질녘카페","솔바람","안개꽃카페","노을정원","호수의아침","계곡카페","감성정원","보리밭카페","햇살마당","별빛가든","카페오소","바람개비","산들카페","하늘정원","구름다리","새벽별카페","모닝키친","파머스브런치","에그팝","브레드가든","아보카도토스트","비앙코카페","뜰안카페","포레스트카페","선사인가든","캐빈카페","더글래스","라운지테라스","카페풍경","숲길카페","메도우가든"],
+        키즈전용:["라랄라","별밤","파이럿츠","아리나라","판타지아","드림랜드","매직포레스트","토이킹덤","해피놀이터","리틀프린스","키즈파라다이스","플레이빌","스타키즈","레인보우","잼잼놀이터","어드벤처","버블팝","점핑키즈","와우플레이","미래나라","소꿉놀이","뽀로로아일랜드","키즈헌터","놀이의달인","꿈동산","에너지파크","슈퍼점프","놀자놀자","우주탐험","동화나라","키즈올림픽","펀팩토리","인디고키즈","해피월드","트레저아일랜드","리틀스타","플레이타임","팡팡키즈","꼬마성","롤리폴리","키즈빌리지","카카오키즈","토이월드","플레이그라운드","버니랜드","쿠키런랜드","마법의성","숲속놀이터","공룡키즈","해적섬"],
+        뷔페:["구름위","시골뷔페","나라현","별빛마리나","하늘정원","더파티","오션뷔페","가든뷔페","로얄뷔페","패밀리존","해피뷔페","매직뷔페","스타뷔페","놀자뷔페","파라다이스","킹스뷔페","뷔페스토리","더그랜드","프리미엄키친","제이뷔페","모두의식탁","풍성한한상","마리나뷔페","시즌뷔페","월드키친","그린뷔페","알찬뷔페","맘스뷔페","써니뷔페","아이앤맘뷔페","가족뷔페","돌잔치하우스","잔치마당","더테이블뷔페","스카이뷔페","그레이스뷔페","하모니뷔페","라온뷔페","드림뷔페","올인원뷔페","패밀리파티","잔치뷔페","로맨틱뷔페","해바라기뷔페","셀러브레이션","조이뷔페","플라워뷔페","미소뷔페","더파티뷔페","세레니티"],
+        빵집:["쇼콜라","금영장빵공장","소보루","버터향","크루아상","르팽","밀밭빵집","브레드가든","모닝빵","효모당","밤식빵","크림하우스","밀가루이야기","베이커리공방","통밀당","우리밀빵집","샌드위치하우스","파리의아침","독일빵집","르뺑데피스","비엔나빵","풍기당","호밀당","케이크하우스","단팥빵","아뜰리에빵","쁘띠부랑제","바게뜨마을","찹쌀떡빵","건강빵공방","천연발효","브런치빵집","골목빵집","구운빵","쌀빵이야기","효모장인","제빵왕","따뜻한빵","밀웜베이커리","브레드앤코","아침의빵","루팡빵집","크림브레드","메종카이저","앙버터하우스","더브레드","맘모스빵집","데니쉬팩토리","밀땅베이커리","잠봉뵈르"],
+        "쿠키/베이킹":["플라워베이킹","꼬마곰","쿠키하우스","슈가아트","달콤공방","마카롱팩토리","타르트리","케이크웍스","디저트랩","아뜰리에","베이킹스쿨","쿠키앤크림","롤리팝","스위트공방","미니오븐","슈가플럼","쿠킹클래스","달콤한손","아이싱월드","베이킹박스","떡케이크","핑크오븐","파티쉐","르꼬르동키즈","버터스쿨","바닐라랩","초코아뜰리에","미니베이커","키즈베이킹","오븐스토리","슈가크래프트","크림아뜰리에","달달베이킹","카카오공방","스위트오븐","마이리틀베이킹","와우쿠키","쿠킹포키즈","달콤세상","베이킹하우스","바닐라드림","레시피공방","쿠키정원","오렌지쿠키","글레이즈","미니케이크","캔디쿠킹","리본쿠키","초코팩토리","스위트캔디"],
+    };
+    const D = {
+        고기집:["프리미엄 한우 전문점. 넓은 키즈룸에 CCTV 모니터링 완비","숯불 갈비와 삼겹살 맛집. 독립된 놀이방에서 아이가 안전하게","숙성 고기 전문. 볼풀+미끄럼틀 키즈존 운영","양고기+돼지고기 구이 전문. 아이 메뉴와 유아의자 완비","한우 특수부위 맛집. 보육교사 상주 키즈룸","대장간 숯불구이. 40평 놀이방에 에어바운서까지","갈비+삼겹살 무한리필. 넓은 실내놀이방 인기","한우 숙성 전문. 생일파티/돌잔치 패키지 운영","오마카세식 고기 코스. 독립된 패밀리룸 제공","가성비 좋은 동네 고기집. 미니 키즈존과 아이 메뉴","1++ 한우만 사용. 프라이빗 룸과 키즈존 별도 운영","제주 흑돼지 전문. 화산석 구이와 놀이공간 구비","연탄불 갈비 전문. 레트로 분위기와 아이방 제공","셀프바 운영 숯불구이. 야외 키즈 테라스 인기","소고기 무한리필. 어린이 전용 샐러드바와 놀이존"],
+        횟집:["신선한 활어회와 바다전망. 2층 키즈존 완비","직송 해산물로 최상 신선도. 아이 전용 초밥세트","자연산 횟감을 합리적 가격에. 놀이방과 애니메이션룸","생선회+매운탕 코스. 넓은 키즈 놀이공간","바다 앞 프리미엄 횟집. 야외 놀이터와 모래놀이","제철 해산물 전문. 어린이 우동+유부초밥 인기","수산시장 직송 횟감. CCTV 키즈룸 운영","가족 코스요리 전문. 전복죽+아이밥 별도 제공","참치 전문 횟집. 소규모 키즈코너와 그림책","해물찜+회 세트 인기. 볼풀+블록 놀이공간","바다가 보이는 루프탑 횟집. 아이 미니카 운영","대게+킹크랩 전문. 가족 패키지와 키즈존","제주 자연산 전문. 오션뷰+야외놀이터","모둠회+탕 세트. 보드게임 키즈코너","활어수족관 구경 가능. 아이 체험형 횟집"],
+        "술집/포차":["낮에는 가족술집, 밤에는 분위기포차. 21시까지 키즈존 운영","수제맥주+안주 전문 펍. 야외 놀이터에서 아이들 마음껏","닭발+치킨 전문. 20시까지 키즈존 운영, 어린이 파스타 별도","크래프트 맥주 전문. 넓은 야외 잔디 놀이터 겸비","가정식 안주와 수제맥주. 블록놀이+그림책 키즈존","루프탑 맥주 전문. 어린이 무알콜 음료와 간식 별도","와인바+키즈존 운영. 낮 시간대 가족 모임 특화","이자카야 스타일. 다다미 키즈룸에서 편안한 식사","수제안주+맥주 전문. 보드게임 카페식 키즈존","포차 분위기의 가족 술집. 간이 놀이공간과 아이메뉴","하이볼+사케 전문. 19시까지 패밀리 존 운영","로컬 브루어리. 맥주 양조 견학과 키즈 쿠킹 체험","야외 비어가든. 잔디 놀이터와 미니 동물원","바베큐+생맥주. 캠핑 느낌의 야외 키즈존","전통 포장마차 느낌. 미니 놀이방과 아이 간식"],
+        치킨:["초대형 키즈파크와 함께하는 치킨 전문점. 치킨만들기 체험","가성비 치킨집. 볼풀+블록 키즈존 운영","오븐치킨 전문. CCTV 독립 키즈룸에서 안심","수제 양념치킨과 어린이 치즈스틱 세트 인기","치킨뷔페+놀이시설. 무한리필 어린이 메뉴","후라이드+양념 전문. 미니놀이방과 그림책 코너","통닭 전문. 넓은 실내놀이방에 에어바운서","글루텐프리 치킨 옵션. 알레르기 걱정 없는 키즈메뉴","숯불치킨 전문. 야외 테라스에 미니 놀이터","치킨+파스타 패밀리 메뉴. 역할놀이 키즈존","닭강정+치킨 전문. 대형 볼풀과 미끄럼틀","겉바속촉 후라이드. 아이용 미니치킨 세트","반반치킨이 인기. 어린이 음료+사이드 서비스","쌀치킨 전문. 알레르기 프리 아이메뉴 다수","숯불+바베큐치킨. 야외 키즈테라스와 그네"],
+        한식:["정갈한 한정식과 프리미엄 키즈 놀이공간. 돌잔치 패키지","유기농 보리밥과 건강 반찬. 아기 전용 이유식 제공","엄마의 손맛 가정식 백반. 놀이방에 볼풀+미끄럼틀","한옥 분위기의 고급 한식당. 독립 패밀리룸 운영","생선구이+한정식 전문. 넓은 키즈룸과 보육사 상주","건강한 약선 요리. 어린이 영양밥상 별도 제공","돌솥밥+찌개 전문. 소규모 키즈코너와 유아의자","비빔밥+불고기 세트 인기. 아이용 미니 비빔밥","보쌈+족발 전문. 넓은 놀이방에서 편안한 가족 식사","한상 가득 차림 전문. 어린이 정식과 놀이공간 제공","감자탕+뼈해장국 전문. 순한맛 아이 세트 별도","쌈밥+보쌈 전문. 채소 모듬과 아이 주먹밥","전통 한식 코스. 특실과 키즈존 분리 운영","해물찌개+구이 백반. 소규모 놀이코너","순두부찌개 전문. 아이용 계란찌개 서비스"],
+        양식:["파스타+스테이크 전문. 독립 놀이방 완비된 패밀리 레스토랑","주말 무료 마술쇼. 아이들에게 인기만점 가족식당","수제 피자 전문. 아이들 피자만들기 체험 프로그램","유기농 팜투테이블. 어린이 메뉴와 넓은 키즈존","브런치+디너 전문. 야외 테라스에 미니놀이터","스테이크하우스+키즈룸. 고급 가족 외식에 딱","화덕 피자+파스타. 오픈키친에서 아이들 구경","이탈리안 정통 코스. 패밀리 세트와 놀이공간","캐주얼 다이닝. 어린이 세트와 볼풀 놀이존","팬케이크+오믈렛 전문 브런치. 소규모 키즈코너","립+바비큐 전문. 야외 가든과 미니 놀이터","피시앤칩스+버거. 영국풍 아이 메뉴 인기","나폴리 화덕피자. 치즈만들기 체험(주말)","크림파스타가 시그니처. 아이 미니세트 별도","프렌치 비스트로. 프라이빗 키즈 다이닝룸"],
+        중식:["짜장면+탕수육 전문. 볼풀+그림책 키즈코너 운영","유아 미니짜장+볶음밥 메뉴 별도. 넓은 놀이방","가족 코스요리와 독립 패밀리룸 운영","마라탕+꿔바로우 전문. 아이용 순한맛 별도 제공","점보 탕수육이 유명한 맛집. 소규모 키즈존","딤섬+만두 전문. 만두 빚기 체험(주말 운영)","양꼬치+중식 전문. 아이 볶음밥 세트 인기","북경오리+코스 전문. 프리미엄 패밀리룸","짬뽕+볶음밥 전문 서민 중식. 미니 놀이공간","훠궈 전문. 아이용 맑은 육수 별도 제공","유니짜장이 인기. 어린이 탕수육 미니사이즈","마파두부+볶음면. 순한맛 키즈세트 별도","광동요리 전문. 가족 세트와 키즈코너","소룡포+딤섬. 만두 빚기 체험과 키즈존","면요리 전문. 아이용 비빔면+미니탕수육"],
+        일식:["일본식 다다미 키즈룸. 나무 장난감과 오바자 제공","프리미엄 오마카세+돈카츠. 어린이 세트 별도","라멘+덮밥 전문. 소규모 키즈존에 그림책 비치","초밥+회 전문. 아이를 위한 유부초밥+계란초밥","텐동+우동 전문. 키즈 세트와 미니 놀이공간","규동+카레 전문. 아이용 순한 카레 인기","이자카야 스타일. 낮 시간 가족 특화 키즈존","돈카츠 전문. 미니 사이즈 어린이 돈카츠 세트","소바+우동 전문. 조용한 키즈코너 운영","스시 오마카세. 아이 참치김밥 세트와 놀이공간","장어덮밥 전문. 패밀리 세트와 키즈존","타코야키+오코노미야키. 아이 체험 메뉴","에비후라이+돈카츠 세트. 미니 놀이방","카츠카레가 인기. 순한맛 아이카레 서비스","일본식 가정식 정식. 다다미 키즈방 운영"],
+        분식:["떡볶이+김밥 전문. 순한맛 아이 떡볶이 세트 제공","손칼국수+수제비 맛집. 미니놀이방과 그림책 비치","라볶이 전문. 소규모 키즈코너와 유아의자 완비","김밥+떡볶이+순대 세트 인기. 어린이 미니세트","도시락+분식 전문. 소풍 느낌의 키즈 코너","순대+떡볶이 전문. 순한맛 어린이 세트 별도","수제만두+칼국수. 아이 잔치국수 서비스","국수+비빔밥 전문. 소규모 놀이공간 운영","쫄면+비빔국수 전문. 어린이 잔치국수 인기","우동+돈까스 세트. 미니 키즈존에 블록놀이","핫도그+튀김 전문. 미니 놀이코너와 그림책","어묵탕+김밥 전문. 아이용 유부김밥 인기","치즈떡볶이 전문. 볼풀+미끄럼틀 키즈존","즉석떡볶이 전문. 아이와 함께 토핑 체험","제육볶음+김밥. 어린이 미니 도시락 서비스"],
+        샤브샤브:["신선한 야채+육수 건강식. 유리창 키즈룸 완비","아이 전용 순한 샤브세트 별도 제공. 놀이공간","한우 샤브+칼국사리 전문. 넓은 실내놀이방","미나리+들깨 샤브 전문. 소규모 키즈존 운영","채소+해산물 샤브. 어린이 죽+볶음밥 서비스","버섯 전골+샤브 전문. 건강한 아이 메뉴 제공","한방 샤브 전문. 영양 가득 어린이 세트","두부+샤브 전문. 순두부 이유식 서비스","연잎밥+샤브 세트. 힐링 키즈존 운영","해물샤브+칼국수. 어린이 새우 튀김 인기","약선 샤브 전문. 건강한 재료만 사용 키즈 세트","콩나물 전골+샤브. 아이용 잔치국수 별도","소고기 샤브+야채바. 셀프바 키즈존 운영","계절야채 샤브. 로컬 유기농 식자재 사용","오리 샤브 전문. 담백한 맛의 아이 세트"],
+        해물탕:["해물탕+조개구이 전문. 소규모 놀이방 완비","대왕해물탕이 시그니처. 아이 주먹밥 서비스","조개구이+새우구이. 어린이 버터구이 인기","매운탕+해물찜. 순한맛 별도 제공, 놀이방","해산물 전문. 바다전망 좌석과 키즈존","꽃게찜+해물탕. 아이용 계란찜 서비스","아귀찜+해물탕 전문. 미니 놀이공간","낙지볶음+해물탕. 순한맛 어린이 세트","전복죽+해물탕 코스. 패밀리룸 운영","조개구이 전문. 캠핑 느낌의 야외 키즈존","해물파전+해물탕 세트. 아이 파전만들기 체험","꽃게라면+조개구이. 어린이 버터새우 서비스","간장게장+해물탕 코스. 아이 비빔밥 세트","바다 테마 식당. 어항 구경하며 키즈존 놀이","수산시장 직송 해물. 넓은 놀이방과 CCTV"],
+        멕시칸:["타코+부리또 전문. 타코만들기 체험(주말)","멕시칸 퓨전. 아이들 나초+치즈딥 세트 인기","부리또볼+타코 전문. 소규모 키즈존 운영","정통 퀘사디아. 어린이 치즈퀘사디아 세트","타코파티 패키지. 생일파티 단체 가능","멕시칸+BBQ 퓨전. 야외 놀이터 겸비","나초+살사 전문. 아이용 순한 소스 별도","엔칠라다+타코 전문. 미니 키즈코너 운영","세비체+타코 전문. 신선한 재료의 건강식","피에스타 분위기. 풍선아트+페이스페인팅(주말)","멕시칸 그릴 전문. 치즈듬뿍 아이 세트","부리또+샐러드볼. 건강한 키즈 옵션 다수","핫칠리 소스 전문. 순한 아이 소스 별도","타코트럭 콘셉트. 포토존과 키즈코너","과카몰리+나초. 아보카도 체험(주말)"],
+        디저트카페:["유기농 음료와 수제 디저트. 친환경 장난감 키즈존","수제 케이크+스무디 전문. 그림책 500권 보유","시즌 한정 디저트. 아기 전용 매트 놀이공간","카페 라떼아트 체험(주말). 소규모 키즈코너","수제 마카롱+쿠키. 수유실 완비 육아맘 카페","빙수+와플 전문. 나무장난감 가득한 키즈존","수제 아이스크림. 아이와 함께 만들기 체험","케이크+타르트 전문. 독서 코너와 미니 놀이방","유기농 이유식 판매. 아기 전용 놀이공간","크레페+와플 전문. 인스타감성 키즈존","밀크티+디저트 전문. 아이 과일주스 별도","애플파이+스콘. 영국풍 키즈 다이닝","허브티+건강 디저트. 알레르기 프리 메뉴 다수","비건 디저트 전문. 친환경 놀이기구 키즈존","케이크팝+마카롱. 아이 데코레이션 체험"],
+        브런치카페:["대형 야외 정원 놀이터. 모래놀이, 그네, 트리하우스","산속 대형 가든 카페. 반려동물 동반 OK, 피크닉세트","자연 속 브런치. 어린이 팬케이크 세트 인기","루프탑 브런치+야외 놀이터. 도심 속 힐링","농장 체험+브런치. 미니 동물원 운영(주말)","호수 전망 카페. 넓은 잔디 놀이터와 그네","산책로+카페. 유모차 산책 후 브런치 코스","에그베네딕트 전문. 아이 팬케이크+과일세트","감성 정원 카페. 사계절 야외 놀이터 운영","숲속 캠핑 느낌 카페. 텐트 좌석과 모래놀이","아보카도토스트+오믈렛. 아이 과일세트 서비스","프렌치토스트 전문. 야외 놀이터와 동물 체험","에그팝+스무디 전문. 볼풀과 미끄럼틀 키즈존","정원 뷔페+브런치. 꽃길 산책과 놀이터","오션뷰 브런치. 바다 앞 야외 키즈존"],
+        키즈전용:["초대형 실내 놀이시설. 에어바운서, 볼풀, 트램폴린, 암벽등반","미술체험+과학실험+요리체험 등 다양한 프로그램 운영","바다 테마 키즈카페. 해적선놀이, 수영장(여름), 볼풀","2층 종합 놀이시설. 에어바운서+미끄럼틀+미니카+역할놀이","연령별 분리 운영. 아기전용존(0~3세)+어린이존(3~7세)","우주 테마. 우주선 놀이+별자리 체험+레이저 미로","공룡 테마. 공룡발굴 체험+볼풀+대형 미끄럼틀","숲속 테마. 나무집+밧줄 건너기+미술 체험실","과학관 테마. 실험실+로봇코딩+VR체험 운영","스포츠 테마. 미니축구+농구+암벽등반+트램폴린","레고+블록 전문. 창의력 프로그램과 놀이존","워터파크 테마. 물놀이+미끄럼틀(여름 특별)","캠핑 테마. 텐트+모닥불+별보기 체험","동화 테마. 동화 속 주인공 역할놀이","모래놀이+물놀이. 감각 발달 전문 키즈존"],
+        뷔페:["한식/양식/일식 뷔페+대형 키즈놀이시설. 생일파티 패키지","시즌별 해산물 뷔페+80평 키즈존. 에어바운서, 미니카","프리미엄 코스 뷔페+120평 키즈파크. 돌잔치 전문","자연 속 가든 뷔페+야외 놀이터. 사계절 BBQ","씨푸드 뷔페+바다전망. 키즈놀이시설과 영화관","한우 뷔페+키즈파크. 숙성고기 무한리필","세계요리 뷔페. 각국 요리와 150평 놀이시설","브런치 뷔페+키즈존. 주말 패밀리 브런치 인기","한식 뷔페 전문. 정갈한 반찬과 넓은 놀이방","디저트 뷔페+키즈카페. 달콤한 디저트 무한리필","소고기 뷔페+샐러드바. 100평 실내 놀이시설","중식 뷔페+딤섬바. 키즈 패밀리룸 운영","일식 뷔페+초밥바. 어린이 특선 세트 별도","BBQ 뷔페+야외놀이터. 가든파티 패키지","돌잔치 전문 뷔페. 포토존+놀이시설+이벤트"],
+        빵집:["수제빵+쿠키만들기 체험 상시. 키즈존에 그림책+블록","주말 빵만들기 체험 인기. 아이용 앙금빵 재료 제공","유기농 밀가루 수제빵 전문. 소규모 키즈코너","천연발효빵+커피. 주말 베이킹클래스(예약제)","수제 샌드위치+빵. 나무장난감 키즈존 운영","독일식 빵 전문. 아이용 미니빵 세트 인기","식빵+잼 전문. 잼만들기 체험(주말)","크루아상+커피 전문. 아담한 키즈코너","통밀빵+건강빵 전문. 아이 영양 간식 판매","쌀빵 전문. 알레르기 프리 아이 빵 다수","호밀빵+사워도우. 발효 체험과 키즈존","바게트+치아바타. 이탈리안 빵 전문 키즈코너","앙버터+소금빵 인기. 미니 놀이방과 그림책","데니쉬+페이스트리. 북유럽풍 아이 간식","쌀빵+떡빵 전문. 알레르기 프리 아이 메뉴"],
+        "쿠키/베이킹":["쿠키+마카롱 만들기 체험 전문. 아이와 함께 디저트","케이크 데코레이션 체험. 생일케이크 직접 만들기","타르트+파이 전문. 주말 베이킹 클래스 운영","아이싱쿠키 체험 상시. 예쁜 쿠키 선물 만들기","마카롱+디저트 공방. 원데이클래스+키즈존","떡케이크 만들기 체험. 전통+현대 디저트 융합","초콜릿 만들기 체험. 발렌타인/화이트데이 인기","롤케이크 만들기 체험. 가족이 함께 즐기는 베이킹","컵케이크 데코 체험. 알록달록 아이들 작품 완성","빵+쿠키 종합 베이킹. 다양한 레시피 체험","케이크팝 만들기. 아이들이 직접 꾸미는 간식","타르트+에끌레어. 프렌치 디저트 체험 전문","슈가크래프트 전문. 설탕 공예 체험(예약제)","두부+곡물 쿠키. 건강한 베이킹 체험","비건 쿠키 전문. 알레르기 프리 베이킹"],
+    };
+    const PLAYROOMS_BY_CAT = {
+        "식당": ["실내놀이방","키즈존","볼풀","미끄럼틀"],
+        "카페": ["실외놀이터","키즈존","종합놀이시설","미끄럼틀"],
+        "키즈카페": ["종합놀이시설","볼풀","미끄럼틀","실내놀이방"],
+        "뷔페": ["종합놀이시설","실내놀이방","키즈존","볼풀"],
+        "베이커리": ["키즈존","실내놀이방","볼풀"],
+    };
+    const AGES = ["0~3세","3~5세","5~7세","3~7세","전연령"];
+    const TAG_POOL = {
+        고기집:[["한우","숯불구이"],["갈비","단체모임"],["삼겹살","가성비"],["돌잔치","생일파티"],["회식","가족모임"],["양고기","특수부위"],["숙성고기","프리미엄"],["무한리필","가족외식"],["흑돼지","제주맛"],["구이","숯불"],["한우모듬","접대"],["고기파티","단체"],["가성비고기","맛집"],["이베리코","유럽식"],["수제양념","장인"]],
+        횟집:[["횟어","바다전망"],["해산물","단체모임"],["초밥","가족외식"],["갑각류","돌잔치"],["물회","여행"],["전복","프리미엄"],["대게","겨울별미"],["매운탕","우맛"],["자연산","제철"],["모둠회","접대"],["킹크랩","특별한날"],["생선회","신선"],["수산직송","활어"],["오마카세","고급"],["바다체험","교육"]],
+        "술집/포차":[["치맥","부모모임"],["수제맥주","야외놀이터"],["닭발","저녁모임"],["안주","가족"],["포차","소모임"],["와인","데이트"],["이자카야","퓨전"],["루프탑","야경"],["하이볼","트렌디"],["비어가든","야외"],["크래프트","수제"],["바베큐","캠핑"],["생맥주","펍"],["야식","치킨"],["와인바","분위기"]],
+        치킨:[["치킨","체험프로그램"],["치맥","가성비"],["후라이드","생일파티"],["양념치킨","단체모임"],["치킨뷔페","가족외식"],["오븐치킨","건강"],["통닭","추억"],["글루텐프리","알레르기"],["닭강정","간식"],["숯불치킨","야외"],["겉바속촉","바삭"],["반반치킨","인기"],["핫치킨","매운맛"],["순살","아이메뉴"],["바비큐","그릴"]],
+        한식:[["한정식","돌잔치"],["보리밥","건강식"],["백반","가성비"],["한옥","프리미엄"],["생선구이","단체모임"],["비빔밥","가족외식"],["보쌈","소모임"],["돌솥밥","영양"],["감자탕","야식"],["쌈밥","건강"],["추어탕","보양"],["삼계탕","여름"],["순두부","맛집"],["국밥","아침"],["찜닭","간식"]],
+        양식:[["파스타","스테이크"],["마술쇼","이벤트"],["피자","체험프로그램"],["브런치","가족외식"],["유기농","건강식"],["화덕피자","수제"],["오믈렛","아이메뉴"],["스테이크","프리미엄"],["바비큐립","특별한날"],["피시앤칩스","캐주얼"],["나폴리","정통"],["크림파스타","인기"],["프렌치","고급"],["버거","간식"],["그릴","정찬"]],
+        중식:[["짜장면","패밀리룸"],["탕수육","아이메뉴"],["마라탕","가성비"],["중식코스","단체모임"],["꿔바로우","소모임"],["딤섬","체험"],["양꼬치","야식"],["훠궈","겨울별미"],["짬뽕","맛집"],["볶음밥","아이"],["만두","수제"],["광동요리","정통"],["마파두부","사천"],["소룡포","고급"],["면요리","가성비"]],
+        일식:[["오마카세","프리미엄"],["라멘","가성비"],["초밥","아이메뉴"],["돈카츠","가족외식"],["우동","소모임"],["규동","혼밥"],["텐동","바삭"],["이자카야","분위기"],["다다미","전통"],["카레","순한맛"],["장어","보양"],["소바","면요리"],["타코야키","간식"],["에비후라이","인기"],["정식","건강"]],
+        분식:[["떡볶이","가성비"],["칼국수","소모임"],["김밥","아이메뉴"],["라볶이","가족외식"],["분식","추억"],["순대","간식"],["만두","겨울별미"],["국수","여름별미"],["핫도그","간식"],["어묵","따뜻"],["치즈떡볶이","인기"],["도시락","소풍"],["우동","맛집"],["튀김","바삭"],["비빔국수","시원"]],
+        샤브샤브:[["샤브샤브","건강식"],["칼국수","가족외식"],["한우","프리미엄"],["미나리","소모임"],["전골","단체모임"],["버섯","영양"],["두부","다이어트"],["해물","겨울별미"],["약선","건강"],["유기농","자연식"],["오리","담백"],["콩나물","시원"],["야채","비건"],["보양","한방"],["소고기","고급"]],
+        해물탕:[["조개구이","해물탕"],["새우","가족외식"],["해물찜","단체모임"],["매운탕","우맛"],["바다전망","여행"],["꽃게","제철"],["아귀찜","별미"],["전복","보양"],["낙지","매운맛"],["조개","캠핑"],["간장게장","밥도둑"],["해물파전","안주"],["대하","가을"],["생선구이","건강"],["해물라면","간식"]],
+        멕시칸:[["타코","체험프로그램"],["부리또","가족외식"],["나초","생일파티"],["멕시칸","소모임"],["퓨전","단체모임"],["살사","매콤"],["퀘사디아","치즈"],["피에스타","파티"],["과카몰리","건강"],["그릴","바비큐"],["할라피뇨","매운맛"],["아보카도","트렌디"],["텍스멕스","퓨전"],["엔칠라다","정통"],["세비체","해산물"]],
+        디저트카페:[["수제디저트","소모임"],["유기농","수유실완비"],["케이크","그림책"],["라떼아트","체험프로그램"],["마카롱","육아맘"],["빙수","여름"],["와플","간식"],["아이스크림","아이"],["밀크티","트렌디"],["스콘","영국풍"],["허브티","건강"],["비건","친환경"],["케이크팝","인스타"],["타르트","수제"],["과일주스","신선"]],
+        브런치카페:[["야외놀이터","피크닉"],["반려동물","브런치"],["자연","대형카페"],["루프탑","힐링"],["농장체험","동물원"],["호수전망","산책"],["가든","감성"],["캠핑느낌","텐트"],["오션뷰","바다"],["팬케이크","아이메뉴"],["에그베네딕트","프리미엄"],["아보카도","건강"],["정원","꽃"],["유기농","팜투테이블"],["숲속","힐링"]],
+        키즈전용:[["생일파티","초대형"],["미술체험","단체모임"],["수영장","여름"],["에어바운서","역할놀이"],["아기전용존","돌잔치"],["우주테마","과학"],["공룡테마","발굴체험"],["스포츠","트램폴린"],["레고","창의력"],["워터파크","물놀이"],["캠핑","자연"],["동화","역할놀이"],["감각발달","교육"],["VR체험","첨단"],["블록","건축"]],
+        뷔페:[["돌잔치","생일파티"],["해산물뷔페","단체모임"],["프리미엄","코스뷔페"],["가든뷔페","야외놀이터"],["씨푸드","바다전망"],["한우뷔페","무한리필"],["브런치","주말"],["디저트","달콤"],["한식뷔페","정갈"],["중식뷔페","딤섬"],["일식뷔페","초밥"],["BBQ","가든파티"],["돌잔치전문","이벤트"],["소고기","프리미엄"],["셀프바","다양한"]],
+        빵집:[["빵만들기","체험프로그램"],["수제빵","주말이벤트"],["유기농","건강빵"],["베이킹클래스","예약제"],["샌드위치","소모임"],["크루아상","모닝"],["식빵","잼만들기"],["쌀빵","알레르기프리"],["호밀빵","건강"],["바게뜨","이탈리안"],["앙버터","인기"],["사워도우","천연발효"],["데니쉬","북유럽"],["떡빵","전통"],["쿠키","간식"]],
+        "쿠키/베이킹":[["쿠키만들기","체험프로그램"],["케이크데코","생일파티"],["타르트","베이킹클래스"],["아이싱쿠키","선물"],["마카롱","원데이클래스"],["떡케이크","전통"],["초콜릿","발렌타인"],["컵케이크","키즈"],["케이크팝","간식"],["에끌레어","프랑스"],["슈가크래프트","공예"],["건강쿠키","비건"],["알레르기프리","안전"],["비건베이킹","친환경"],["롤케이크","가족"]],
+    };
+    const SUBS_BY_CAT = {
+        "식당":["고기집","횟집","술집/포차","치킨","한식","양식","중식","일식","분식","샤브샤브","해물탕","멕시칸"],
+        "카페":["디저트카페","브런치카페"],
+        "키즈카페":["키즈전용"],
+        "뷔페":["뷔페"],
+        "베이커리":["빵집","쿠키/베이킹"],
+    };
+    const SUFFIXES = ["본점","직영점","매장","패밀리점","키즈점","플래그십","1호점","2호점","프리미엄","신관"];
+    function ph(r){const a={"서울":"02","경기":"031","인천":"032","부산":"051","대구":"053","대전":"042","광주":"062","울산":"052","경남":"055","충북":"043","충남":"041","강원":"033","제주":"064"};return `${a[r]||"02"}-${String(Math.floor(Math.random()*900)+100)}-${String(Math.floor(Math.random()*9000)+1000)}`;}
+    function hrs(s){
+        const sl=s==="술집/포차";const isCafe=["디저트카페","브런치카페"].includes(s);const isKids=s==="키즈전용";
+        let o,c;
+        if(sl){o=["15:00","16:00","17:00"];c=["01:00","02:00","24:00"];}
+        else if(isCafe){o=["09:00","09:30","10:00","10:30"];c=["20:00","21:00","22:00"];}
+        else if(isKids){o=["10:00","10:30","11:00"];c=["19:00","20:00","21:00"];}
+        else{o=["09:00","09:30","10:00","10:30","11:00","11:30"];c=["19:00","19:30","20:00","20:30","21:00","21:30","22:00"];}
+        const re=["(연중무휴)","(월 휴무)","(화 휴무)","(수 휴무)","(일 휴무)","(명절 휴무)",""];
+        return `${o[~~(Math.random()*o.length)]}~${c[~~(Math.random()*c.length)]} ${re[~~(Math.random()*re.length)]}`.trim();
+    }
+    function shuf(a){for(let i=a.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+    function generate(){
+        const stores=[];
+        const flatDistricts = [];
+        REGIONS.forEach(rObj => { rObj.ds.forEach(d => { flatDistricts.push({ region: rObj.r, ...d }); }); });
+        let distIdx = 0;
+        function nextDist() { if (distIdx >= flatDistricts.length) { shuf(flatDistricts); distIdx = 0; } return flatDistricts[distIdx++]; }
+        shuf(flatDistricts);
+        Object.entries(SUBS_BY_CAT).forEach(([cat,subs])=>{
+            subs.forEach(sub=>{
+                const names=shuf([...(N[sub]||[])]);const descs=D[sub]||["키즈프렌들리 가게입니다."];const tags=TAG_POOL[sub]||[["가족외식","아이"]];const playrooms = PLAYROOMS_BY_CAT[cat] || ["키즈존"];
+                for(let i=0;i<names.length;i++){
+                    const loc = nextDist();const desc=descs[i%descs.length];const tag=[...tags[i%tags.length]];const addrNum=~~(Math.random()*500)+1;
+                    const suffixPool = [...SUFFIXES, `${loc.n.replace(/시$|군$|구$|읍$/,'')}점`];const suffix = suffixPool[i % suffixPool.length];
+                    stores.push({name:`${names[i]} ${suffix}`,category:cat,subcategory:sub,region:loc.region,district:loc.n,address:`${loc.a} ${addrNum}`,lat:+(loc.la+(Math.random()-0.5)*0.02).toFixed(4),lng:+(loc.lo+(Math.random()-0.5)*0.02).toFixed(4),phone:ph(loc.region),hours:hrs(sub),playroom_type:playrooms[~~(Math.random()*playrooms.length)],playroom_desc:desc,age_range:AGES[~~(Math.random()*AGES.length)],has_parking:Math.random()>0.22,has_nursing_room:Math.random()>0.45,has_highchair:Math.random()>0.1,has_stroller_access:Math.random()>0.15,price_range:(cat==="뷔페"?"$$$":(cat==="키즈카페"?["$$","$$$"][~~(Math.random()*2)]:["$","$$","$$$"][~~(Math.random()*3)])),rating:+(3.5+Math.random()*1.5).toFixed(1),review_count:~~(20+Math.random()*780),tags:tag,description:desc});
+                }
+            });
+        });
+        return shuf(stores);
+    }
+    return {generate};
+})();
+async function seedIfNeeded(){
+    // Supabase 모드: 시드 불필요
+    if (SUPABASE_URL && SUPABASE_URL !== 'YOUR_SUPABASE_URL_HERE') {
+        console.log('[DB] Supabase 모드 - 시드 스킵');
+        return false;
+    }
+    // Supabase 미설정 시 기존 시드 로직 (폴백)
+    try{
+        const r=await fetch('tables/stores?limit=1');const res=await r.json();
+        if((res.total||0)>=100){console.log(`[시드] ${res.total}개 존재. 스킵.`);return false;}
+        console.log(`[시드] ${res.total||0}개 → 시딩 시작...`);const stores=SEED_DATA.generate();console.log(`[시드] ${stores.length}개 생성. 저장 중...`);
+        const bs=25;let saved=0;
+        for(let i=0;i<stores.length;i+=bs){const batch=stores.slice(i,i+bs);await Promise.all(batch.map(s=>fetch('tables/stores',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(s)})));saved+=batch.length;if(saved%100===0)console.log(`[시드] 진행: ${saved}/${stores.length}...`);}
+        console.log(`[시드] ✅ ${saved}개 저장 완료!`);return true;
+    }catch(e){console.error('[시드] 실패:',e);return false;}
+}
+    </script>
+    <script>
+/**
+ * 키즈고 - Main Application Script
+ */
+const state = {
+    stores: [], filtered: [], userLocation: null, currentView: 'grid',
+    filters: { category: [], subcategory: [], region: [], playroom: [], age: [], price: [], facilities: [], search: '', tag: '' },
+    sort: 'rating'
+};
+const categoryIcons = { '식당': '🍽️', '카페': '☕', '키즈카페': '🎪', '뷔페': '🍱', '베이커리': '🍞' };
+const subcategoryIcons = { '양식': '🍝', '한식': '🍚', '중식': '🥟', '일식': '🍣', '분식': '🍜', '고기집': '🥩', '횟집': '🐟', '술집/포차': '🍺', '치킨': '🍗', '샤브샤브': '🫕', '멕시칸': '🌮', '해물탕': '🦐', '디저트카페': '🍰', '브런치카페': '🥞', '빵집': '🥖', '뷔페': '🍱', '키즈전용': '🎠', '구이/BBQ': '🍖', '천곳/탕': '🥘', '피자': '🍕', '밥집': '🍚', '쿠키/베이킹': '🎂' };
+
+function buildSubcategoryMap() {
+    const map = {};
+    state.stores.forEach(store => { if (!store.category || !store.subcategory) return; if (!map[store.category]) map[store.category] = new Set(); map[store.category].add(store.subcategory); });
+    Object.keys(map).forEach(key => { map[key] = [...map[key]].sort(); });
+    return map;
+}
+
+document.addEventListener('DOMContentLoaded', async () => { setupEventListeners(); setupScrollEffects(); await seedIfNeeded(); await loadStores(); });
+
+async function loadStores() {
+    showLoading(true);
+    try {
+        // Supabase 모드
+        if (SUPABASE_URL && SUPABASE_URL !== 'YOUR_SUPABASE_URL_HERE') {
+            const response = await fetch(
+                `${SUPABASE_URL}/rest/v1/stores?status=eq.active&order=rating.desc&limit=1000`,
+                { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+            );
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            state.stores = data.map(store => ({
+                ...store,
+                tags: store.tags || [],
+                id: String(store.id)
+            }));
+        } else {
+            // 기존 tables API 폴백
+            let allStores = []; const limit = 100;
+            const firstRes = await fetch(`tables/stores?page=1&limit=${limit}`); const firstResult = await firstRes.json();
+            let total = firstResult.total || 0; allStores = firstResult.data || [];
+            if (allStores.length < limit && total > limit) {
+                const totalPages = Math.ceil(total / limit);
+                for (let p = 2; p <= totalPages; p++) {
+                    const res = await fetch(`tables/stores?page=${p}&limit=${limit}`);
+                    const result = await res.json();
+                    allStores = allStores.concat(result.data || []);
+                }
+            }
+            state.stores = allStores;
+        }
+        state.filtered = [...state.stores];
+        state.subcategoryMap = buildSubcategoryMap();
+        applySort();
+        renderStores();
+        console.log(`[DB] ${state.stores.length}개 가게 로드 완료`);
+    } catch (error) {
+        console.error('[DB] 로드 실패:', error);
+        state.stores = []; state.filtered = []; renderStores();
+        const grid = document.getElementById('storeGrid');
+        if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;"><div style="font-size:3rem;margin-bottom:16px;">😢</div><h3 style="color:#2D3436;margin-bottom:8px;">데이터를 불러올 수 없어요</h3><p style="color:#636E72;font-size:0.9rem;">잠시 후 다시 시도해 주세요</p></div>';
+    }
+    showLoading(false);
+}
+function updateLoadingProgress(loaded, total) { const el = document.getElementById('loadingProgress'); if (el) { const pct = total > 0 ? Math.round((loaded / total) * 100) : 0; el.textContent = `${loaded}/${total}개 로딩 중... (${pct}%)`; } }
+
+function setupEventListeners() {
+    const searchInput = document.getElementById('searchInput'); const searchBtn = document.getElementById('searchBtn');
+    searchBtn.addEventListener('click', () => performSearch());
+    searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') performSearch(); });
+    searchInput.addEventListener('input', debounce(() => { if (searchInput.value.length === 0) { state.filters.search = ''; state.filters.tag = ''; applyFilters(); } }, 300));
+    document.querySelectorAll('.quick-tag').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.quick-tag').forEach(b => b.classList.remove('active'));
+            const tag = btn.dataset.tag;
+            if (state.filters.search === tag && state.filters.tag === tag) { state.filters.tag = ''; state.filters.search = ''; searchInput.value = ''; }
+            else { btn.classList.add('active'); state.filters.tag = tag; state.filters.search = tag; searchInput.value = tag; }
+            applyFilters();
+        });
+    });
+    document.getElementById('locationBtn').addEventListener('click', getLocation);
+    document.getElementById('clearLocationBtn').addEventListener('click', clearLocation);
+    document.getElementById('sortSelect').addEventListener('change', (e) => { state.sort = e.target.value; applySort(); renderStores(); });
+    const filterToggle = document.getElementById('filterToggle'); const filterPanel = document.getElementById('filterPanel');
+    filterToggle.addEventListener('click', () => { filterPanel.classList.toggle('open'); filterToggle.classList.toggle('active'); });
+    setupCategoryFilter(); setupFilterChips('regionFilter', 'region'); setupFilterChips('playroomFilter', 'playroom'); setupFilterChips('ageFilter', 'age'); setupFilterChips('priceFilter', 'price');
+    document.querySelectorAll('#facilityFilter input').forEach(cb => { cb.addEventListener('change', () => { const facility = cb.dataset.facility; if (cb.checked) { if (!state.filters.facilities.includes(facility)) state.filters.facilities.push(facility); } else { state.filters.facilities = state.filters.facilities.filter(f => f !== facility); } }); });
+    document.getElementById('resetFilters').addEventListener('click', resetFilters);
+    document.getElementById('applyFilters').addEventListener('click', () => { applyFilters(); filterPanel.classList.remove('open'); filterToggle.classList.remove('active'); });
+    document.querySelectorAll('.view-btn').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); state.currentView = btn.dataset.view; updateView(); }); });
+    document.getElementById('detailModal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+}
+
+function setupFilterChips(containerId, filterKey) {
+    const container = document.getElementById(containerId); if (!container) return;
+    container.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const val = chip.dataset.value;
+            if (val === 'all') { state.filters[filterKey] = []; container.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); chip.classList.add('active'); }
+            else { const allChip = container.querySelector('[data-value="all"]'); if (allChip) allChip.classList.remove('active'); chip.classList.toggle('active'); const arr = state.filters[filterKey]; const idx = arr.indexOf(val); if (idx > -1) arr.splice(idx, 1); else arr.push(val); if (arr.length === 0 && allChip) allChip.classList.add('active'); }
+            updateChipCount(container, filterKey);
+        });
+    });
+}
+function updateChipCount(container, filterKey) { const group = container.closest('.filter-group'); if (!group) return; let badge = group.querySelector('.multi-count'); const count = state.filters[filterKey].length; if (count > 0) { if (!badge) { badge = document.createElement('span'); badge.className = 'multi-count'; group.querySelector('.filter-label').appendChild(badge); } badge.textContent = count; } else if (badge) { badge.remove(); } }
+
+function setupCategoryFilter() {
+    const container = document.getElementById('categoryFilter');
+    container.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const val = chip.dataset.value;
+            if (val === 'all') { state.filters.category = []; container.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); chip.classList.add('active'); }
+            else { const allChip = container.querySelector('[data-value="all"]'); if (allChip) allChip.classList.remove('active'); chip.classList.toggle('active'); const arr = state.filters.category; const idx = arr.indexOf(val); if (idx > -1) arr.splice(idx, 1); else arr.push(val); if (arr.length === 0 && allChip) allChip.classList.add('active'); }
+            state.filters.subcategory = []; renderSubcategoryChips(); updateChipCount(container, 'category');
+        });
+    });
+}
+function renderSubcategoryChips() {
+    const group = document.getElementById('subcategoryGroup'); const container = document.getElementById('subcategoryFilter'); const hint = document.getElementById('subcategoryHint'); const cats = state.filters.category;
+    if (cats.length === 0 || !state.subcategoryMap) { group.style.display = 'none'; container.innerHTML = ''; return; }
+    let allSubs = []; cats.forEach(cat => { const subs = state.subcategoryMap[cat] || []; subs.forEach(s => { if (!allSubs.includes(s)) allSubs.push(s); }); }); allSubs.sort();
+    if (allSubs.length === 0) { group.style.display = 'none'; return; }
+    const catLabels = cats.map(c => `${categoryIcons[c]||''} ${c}`).join(', '); hint.textContent = `(${catLabels} 세부)`;
+    let html = '<button class="chip active" data-value="all">전체</button>'; allSubs.forEach(sub => { const icon = subcategoryIcons[sub] || '🍽️'; const isActive = state.filters.subcategory.includes(sub) ? ' active' : ''; html += `<button class="chip${isActive}" data-value="${sub}">${icon} ${sub}</button>`; });
+    container.innerHTML = html; group.style.display = 'block'; group.classList.remove('subcategory-appear'); void group.offsetWidth; group.classList.add('subcategory-appear');
+    const allChip = container.querySelector('[data-value="all"]'); if (state.filters.subcategory.length > 0 && allChip) allChip.classList.remove('active');
+    container.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const val = chip.dataset.value;
+            if (val === 'all') { state.filters.subcategory = []; container.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); chip.classList.add('active'); }
+            else { if (allChip) allChip.classList.remove('active'); chip.classList.toggle('active'); const arr = state.filters.subcategory; const idx = arr.indexOf(val); if (idx > -1) arr.splice(idx, 1); else arr.push(val); if (arr.length === 0 && allChip) allChip.classList.add('active'); }
+            updateChipCount(container, 'subcategory');
+        });
+    });
+}
+
+function performSearch() { const query = document.getElementById('searchInput').value.trim(); state.filters.search = query; state.filters.tag = ''; document.querySelectorAll('.quick-tag').forEach(b => b.classList.remove('active')); applyFilters(); }
+
+function getLocation() {
+    const btn = document.getElementById('locationBtn'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>위치 확인 중...</span>';
+    if (!navigator.geolocation) { alert('이 브라우저에서는 위치 서비스를 지원하지 않습니다.'); btn.innerHTML = '<i class="fas fa-location-crosshairs"></i> <span>내 위치로 찾기</span>'; return; }
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            state.userLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
+            btn.style.display = 'none'; const info = document.getElementById('locationInfo'); info.style.display = 'flex';
+            document.getElementById('locationText').textContent = `현재 위치 (${state.userLocation.lat.toFixed(4)}, ${state.userLocation.lng.toFixed(4)})`;
+            if (state.sort === 'distance') { applySort(); renderStores(); }
+            state.stores.forEach(store => { if (store.lat && store.lng) { store._distance = calculateDistance(state.userLocation.lat, state.userLocation.lng, store.lat, store.lng); } });
+            applyFilters();
+        },
+        (error) => { let msg = '위치를 가져올 수 없습니다.'; if (error.code === 1) msg = '위치 권한이 거부되었습니다. 설정에서 허용해주세요.'; alert(msg); btn.innerHTML = '<i class="fas fa-location-crosshairs"></i> <span>내 위치로 찾기</span>'; },
+        { enableHighAccuracy: true, timeout: 10000 }
+    );
+}
+function clearLocation() { state.userLocation = null; state.stores.forEach(s => delete s._distance); document.getElementById('locationBtn').style.display = 'flex'; document.getElementById('locationBtn').innerHTML = '<i class="fas fa-location-crosshairs"></i> <span>내 위치로 찾기</span>'; document.getElementById('locationInfo').style.display = 'none'; applyFilters(); }
+function calculateDistance(lat1, lon1, lat2, lon2) { const R = 6371; const dLat = (lat2 - lat1) * Math.PI / 180; const dLon = (lon2 - lon1) * Math.PI / 180; const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2); const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); return R * c; }
+function formatDistance(km) { if (km < 1) return `${Math.round(km * 1000)}m`; return `${km.toFixed(1)}km`; }
+
+function applyFilters() {
+    const f = state.filters;
+    state.filtered = state.stores.filter(store => {
+        if (f.category.length > 0 && !f.category.includes(store.category)) return false;
+        if (f.subcategory.length > 0 && !f.subcategory.includes(store.subcategory)) return false;
+        if (f.region.length > 0 && !f.region.includes(store.region)) return false;
+        if (f.playroom.length > 0 && !f.playroom.includes(store.playroom_type)) return false;
+        if (f.age.length > 0 && !f.age.includes(store.age_range)) return false;
+        if (f.price.length > 0 && !f.price.includes(store.price_range)) return false;
+        for (const fac of f.facilities) { if (!store[fac]) return false; }
+        if (f.search || f.tag) {
+            const searchable = [store.name, store.address, store.category, store.subcategory, store.region, store.district, store.description, store.playroom_desc, ...(store.tags || [])].join(' ').toLowerCase();
+            let matchSearch = true; let matchTag = true;
+            if (f.search) matchSearch = searchable.includes(f.search.toLowerCase());
+            if (f.tag) { const tags = (store.tags || []).map(t => t.toLowerCase()); const tagSearch = f.tag.toLowerCase(); matchTag = tags.some(t => t.includes(tagSearch)); }
+            if (f.search && f.tag && f.search === f.tag) { if (!matchSearch && !matchTag) return false; } else { if (f.search && !matchSearch) return false; if (f.tag && !matchTag) return false; }
+        }
+        return true;
+    });
+    let activeCount = 0; activeCount += f.category.length; activeCount += f.subcategory.length; activeCount += f.region.length; activeCount += f.playroom.length; activeCount += f.age.length; activeCount += f.price.length; activeCount += f.facilities.length;
+    const filterCountEl = document.getElementById('filterCount'); if (activeCount > 0) { filterCountEl.textContent = activeCount; filterCountEl.style.display = 'inline-flex'; } else { filterCountEl.style.display = 'none'; }
+    applySort(); renderStores(); updateResultsTitle();
+}
+function resetFilters() {
+    state.filters = { category: [], subcategory: [], region: [], playroom: [], age: [], price: [], facilities: [], search: '', tag: '' };
+    document.querySelectorAll('.filter-chips .chip').forEach(chip => { chip.classList.toggle('active', chip.dataset.value === 'all'); });
+    document.querySelectorAll('#facilityFilter input').forEach(cb => cb.checked = false);
+    document.getElementById('searchInput').value = ''; document.querySelectorAll('.quick-tag').forEach(b => b.classList.remove('active'));
+    document.getElementById('filterCount').style.display = 'none'; document.querySelectorAll('.multi-count').forEach(el => el.remove());
+    document.getElementById('subcategoryGroup').style.display = 'none'; document.getElementById('subcategoryFilter').innerHTML = '';
+    applyFilters();
+}
+function resetAll() { resetFilters(); document.getElementById('filterPanel').classList.remove('open'); document.getElementById('filterToggle').classList.remove('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+function applySort() {
+    const s = state.sort;
+    state.filtered.sort((a, b) => {
+        switch (s) { case 'rating': return (b.rating || 0) - (a.rating || 0); case 'review': return (b.review_count || 0) - (a.review_count || 0); case 'distance': return (a._distance || 9999) - (b._distance || 9999); case 'price_low': return (a.price_range || '').length - (b.price_range || '').length; case 'price_high': return (b.price_range || '').length - (a.price_range || '').length; default: return 0; }
+    });
+}
+
+function renderStores() {
+    const grid = document.getElementById('storeGrid'); const emptyState = document.getElementById('emptyState'); const countEl = document.getElementById('resultsCount');
+    countEl.textContent = `${state.filtered.length}개`;
+    if (state.filtered.length === 0) { grid.innerHTML = ''; emptyState.style.display = 'block'; return; }
+    emptyState.style.display = 'none'; grid.innerHTML = state.filtered.map(store => createStoreCard(store)).join('');
+    if (state.currentView === 'map') renderMap();
+}
+function createStoreCard(store) {
+    const icon = categoryIcons[store.category] || '🏠'; const subIcon = subcategoryIcons[store.subcategory] || icon; const stars = renderStars(store.rating || 0);
+    let distanceHtml = ''; if (store._distance !== undefined) { distanceHtml = `<span class="card-distance"><i class="fas fa-location-dot"></i> ${formatDistance(store._distance)}</span>`; }
+    const facilities = []; if (store.has_parking) facilities.push('<span class="facility-badge"><i class="fas fa-parking"></i> 주차</span>'); if (store.has_nursing_room) facilities.push('<span class="facility-badge"><i class="fas fa-baby-carriage"></i> 수유실</span>'); if (store.has_highchair) facilities.push('<span class="facility-badge"><i class="fas fa-chair"></i> 유아의자</span>'); if (store.has_stroller_access) facilities.push('<span class="facility-badge"><i class="fas fa-wheelchair"></i> 유모차</span>');
+    const tags = (store.tags || []).map(tag => `<span class="tag">#${tag}</span>`).join('');
+    return `<div class="store-card" onclick="openDetail('${store.id}')"><div class="card-image"><span class="card-image-icon">${subIcon}</span><div class="card-badges"><span class="badge badge-category">${icon} ${store.category}</span><span class="badge badge-playroom">🎈 ${store.playroom_type || ''}</span></div>${distanceHtml}</div><div class="card-body"><div class="card-title">${store.name}<span class="price-tag">${store.price_range || ''}</span></div><div class="card-location"><i class="fas fa-map-marker-alt"></i>${store.district ? store.region + ' ' + store.district : store.address}</div><div class="card-rating"><span class="stars">${stars}</span><span class="rating-num">${(store.rating || 0).toFixed(1)}</span><span class="review-count">리뷰 ${store.review_count || 0}개</span></div><p class="card-desc">${store.description || ''}</p><div class="card-facilities">${facilities.join('')}</div><div class="card-tags">${tags}</div></div></div>`;
+}
+function renderStars(rating) { let stars = ''; const full = Math.floor(rating); const half = rating % 1 >= 0.5; for (let i = 0; i < full; i++) stars += '★'; if (half) stars += '★'; for (let i = stars.length; i < 5; i++) stars += '☆'; return stars; }
+function updateResultsTitle() { const title = document.getElementById('resultsTitle'); const parts = []; if (state.filters.region.length > 0) parts.push(state.filters.region.join('·')); if (state.filters.category.length > 0) parts.push(state.filters.category.join('·')); if (state.filters.subcategory.length > 0) parts.push(state.filters.subcategory.join('·')); if (state.filters.search) parts.push(`"${state.filters.search}"`); if (state.filters.tag) parts.push(`#${state.filters.tag}`); title.textContent = parts.length > 0 ? `${parts.join(' ')} 검색 결과` : '전체 키즈 프렌들리 가게'; }
+
+function updateView() {
+    const grid = document.getElementById('storeGrid'); const mapContainer = document.getElementById('mapContainer');
+    grid.classList.remove('list-view'); mapContainer.style.display = 'none';
+    switch (state.currentView) { case 'list': grid.classList.add('list-view'); grid.style.display = 'grid'; break; case 'map': mapContainer.style.display = 'block'; grid.style.display = 'grid'; renderMap(); break; default: grid.style.display = 'grid'; }
+}
+function renderMap() {
+    const mapView = document.getElementById('mapView');
+    if (state.filtered.length === 0) { mapView.innerHTML = '<div class="map-placeholder"><i class="fas fa-map-marked-alt"></i><p>표시할 가게가 없어요</p><span>필터를 조정해 보세요</span></div>'; return; }
+    const stores = state.filtered.filter(s => s.lat && s.lng); if (stores.length === 0) return;
+    const minLat = Math.min(...stores.map(s => s.lat)); const maxLat = Math.max(...stores.map(s => s.lat)); const minLng = Math.min(...stores.map(s => s.lng)); const maxLng = Math.max(...stores.map(s => s.lng));
+    const padLat = (maxLat - minLat) * 0.15 || 0.01; const padLng = (maxLng - minLng) * 0.15 || 0.01;
+    const latRange = (maxLat + padLat) - (minLat - padLat); const lngRange = (maxLng + padLng) - (minLng - padLng);
+    const mapWidth = mapView.offsetWidth; const mapHeight = mapView.offsetHeight;
+    let markersHtml = stores.map(store => { const x = ((store.lng - (minLng - padLng)) / lngRange) * (mapWidth - 60) + 30; const y = mapHeight - ((store.lat - (minLat - padLat)) / latRange) * (mapHeight - 60) - 30; return `<div class="map-marker" style="left:${x}px; top:${y}px;" onclick="event.stopPropagation(); openDetail('${store.id}')"><div class="marker-icon"><i class="fas fa-map-pin"></i></div><div class="marker-tooltip">${categoryIcons[store.category] || '📍'} ${store.name}</div></div>`; }).join('');
+    if (state.userLocation) { const ux = ((state.userLocation.lng - (minLng - padLng)) / lngRange) * (mapWidth - 60) + 30; const uy = mapHeight - ((state.userLocation.lat - (minLat - padLat)) / latRange) * (mapHeight - 60) - 30; if (ux > 0 && ux < mapWidth && uy > 0 && uy < mapHeight) { markersHtml += `<div class="map-marker" style="left:${ux}px; top:${uy}px;"><div class="marker-icon" style="background: #3B82F6;"><i class="fas fa-user" style="font-size:0.65rem;"></i></div><div class="marker-tooltip">📍 내 위치</div></div>`; } }
+    mapView.innerHTML = `<div style="position:absolute;inset:0;background:linear-gradient(135deg,#E8F4FD 0%,#F0F8FF 50%,#E8F0FE 100%);"></div><div style="position:absolute;inset:0;opacity:0.15;background-image:radial-gradient(circle,#94A3B8 1px,transparent 1px);background-size:20px 20px;"></div>${markersHtml}<div style="position:absolute;bottom:12px;left:12px;background:rgba(255,255,255,0.9);border-radius:8px;padding:8px 12px;font-size:0.75rem;color:#636E72;backdrop-filter:blur(4px);">📍 ${stores.length}개 가게 표시 중</div>`;
+}
+
+function openDetail(id) {
+    const store = state.stores.find(s => s.id === id); if (!store) return;
+    const modal = document.getElementById('detailModal'); const body = document.getElementById('modalBody');
+    const icon = categoryIcons[store.category] || '🏠'; const subIcon = subcategoryIcons[store.subcategory] || icon; const stars = renderStars(store.rating || 0);
+    const facilityItems = [ { key: 'has_parking', icon: 'fa-parking', label: '주차 가능' }, { key: 'has_nursing_room', icon: 'fa-baby-carriage', label: '수유실' }, { key: 'has_highchair', icon: 'fa-chair', label: '유아 의자' }, { key: 'has_stroller_access', icon: 'fa-wheelchair', label: '유모차 접근' } ];
+    const facilitiesHtml = facilityItems.map(f => { const available = store[f.key]; return `<div class="modal-facility ${available ? 'available' : 'unavailable'}"><i class="fas ${f.icon}"></i>${f.label}${available ? '<i class="fas fa-check" style="margin-left:4px;font-size:0.7rem;"></i>' : '<i class="fas fa-times" style="margin-left:4px;font-size:0.7rem;"></i>'}</div>`; }).join('');
+    const tagsHtml = (store.tags || []).map(tag => `<span class="modal-tag">#${tag}</span>`).join('');
+    let distanceInfo = ''; if (store._distance !== undefined) { distanceInfo = `<div class="modal-info-item"><i class="fas fa-route"></i><div><div class="info-label">거리</div><div class="info-value">${formatDistance(store._distance)} (직선거리)</div></div></div>`; }
+    body.innerHTML = `<div class="modal-hero">${subIcon}</div><div class="modal-content"><div class="modal-title">${store.name}</div><div class="modal-subtitle">${store.category} · ${store.subcategory || ''} · ${store.price_range || ''}</div><div class="modal-rating"><span class="stars">${stars}</span><span class="rating-num">${(store.rating || 0).toFixed(1)}</span><span class="review-count">리뷰 ${store.review_count || 0}개</span></div><p style="font-size:0.92rem;line-height:1.7;color:var(--text);margin-bottom:20px;">${store.description || ''}</p><div class="modal-info-grid"><div class="modal-info-item"><i class="fas fa-map-marker-alt"></i><div><div class="info-label">주소</div><div class="info-value">${store.address || ''}</div></div></div><div class="modal-info-item"><i class="fas fa-phone"></i><div><div class="info-label">전화</div><div class="info-value">${store.phone || '정보 없음'}</div></div></div><div class="modal-info-item"><i class="fas fa-clock"></i><div><div class="info-label">영업시간</div><div class="info-value">${store.hours || '정보 없음'}</div></div></div><div class="modal-info-item"><i class="fas fa-child"></i><div><div class="info-label">권장 연령</div><div class="info-value">${store.age_range || '전연령'}</div></div></div>${distanceInfo}</div><div class="modal-section"><div class="modal-section-title"><i class="fas fa-puzzle-piece"></i> 놀이시설 정보</div><div style="margin-bottom:8px;"><span class="badge badge-playroom" style="font-size:0.85rem;padding:6px 14px;">🎈 ${store.playroom_type || ''}</span></div><div class="playroom-desc">${store.playroom_desc || '상세 정보가 없습니다.'}</div></div><div class="modal-section"><div class="modal-section-title"><i class="fas fa-check-circle"></i> 편의시설</div><div class="modal-facilities">${facilitiesHtml}</div></div>${tagsHtml ? `<div class="modal-section"><div class="modal-section-title"><i class="fas fa-hashtag"></i> 태그</div><div class="modal-tags">${tagsHtml}</div></div>` : ''}<div class="modal-cta"><a href="tel:${store.phone || ''}" class="btn-call" onclick="event.stopPropagation();"><i class="fas fa-phone"></i> 전화하기</a><a href="https://map.kakao.com/link/to/${encodeURIComponent(store.name)},${store.lat},${store.lng}" target="_blank" class="btn-directions" onclick="event.stopPropagation();"><i class="fas fa-directions"></i> 길찾기</a></div></div>`;
+    modal.style.display = 'flex'; document.body.style.overflow = 'hidden';
+}
+function closeModal() { document.getElementById('detailModal').style.display = 'none'; document.body.style.overflow = ''; }
+function setupScrollEffects() { const backToTop = document.getElementById('backToTop'); window.addEventListener('scroll', () => { backToTop.style.display = window.scrollY > 400 ? 'flex' : 'none'; }); backToTop.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); }); }
+function showLoading(show) { document.getElementById('loading').style.display = show ? 'block' : 'none'; }
+function debounce(func, wait) { let timeout; return function executedFunction(...args) { clearTimeout(timeout); timeout = setTimeout(() => func.apply(this, args), wait); }; }
+    </script>
+</body>
+</html>
