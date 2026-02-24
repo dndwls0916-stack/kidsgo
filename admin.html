@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <!-- CSV 파서 -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <style>
         :root {
             --primary: #FF6B9D;
@@ -229,11 +231,109 @@
         /* Hidden sections */
         .hidden { display: none !important; }
 
+        /* Supabase 설정 */
+        .supabase-config {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 16px; padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15); margin-bottom: 24px;
+        }
+        .supabase-config .section-title { color: #00d4aa; }
+        .supabase-config .section-title i { color: #00d4aa; }
+        .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+        .config-field label { display: block; font-size: 0.78rem; color: #a0aec0; margin-bottom: 6px; font-weight: 600; }
+        .config-field input {
+            width: 100%; padding: 10px 14px; border-radius: 10px;
+            border: 1.5px solid #2d3748; background: #2d3748; color: #e2e8f0;
+            font-family: 'Courier New', monospace; font-size: 0.78rem;
+            transition: border-color 0.3s;
+        }
+        .config-field input:focus { border-color: #00d4aa; outline: none; }
+        .config-field input.connected { border-color: #00b894; background: #1a3a2e; }
+        .config-status { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; }
+        .config-status.ok { color: #00b894; }
+        .config-status.err { color: #e17055; }
+        .config-status.idle { color: #636e72; }
+
+        /* 탭 네비게이션 */
+        .tab-nav { display: flex; gap: 4px; margin-bottom: 24px; }
+        .tab-btn {
+            flex: 1; padding: 12px 16px; border: none; border-radius: 10px;
+            font-family: var(--font); font-size: 0.85rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s; background: #f1f2f6; color: var(--text-light);
+        }
+        .tab-btn.active { background: var(--primary); color: white; }
+        .tab-btn .badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            background: white; color: var(--primary); border-radius: 50%;
+            width: 20px; height: 20px; font-size: 0.7rem; font-weight: 700;
+            margin-left: 6px;
+        }
+        .tab-btn.active .badge { background: rgba(255,255,255,0.3); color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* 수정요청 카드 */
+        .request-list { display: flex; flex-direction: column; gap: 12px; }
+        .request-card {
+            background: var(--card); border-radius: 14px; padding: 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06); border-left: 4px solid var(--warning);
+            transition: box-shadow 0.2s;
+        }
+        .request-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+        .request-card.approved { border-left-color: var(--success); opacity: 0.7; }
+        .request-card.rejected { border-left-color: var(--danger); opacity: 0.7; }
+        .request-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .request-store { font-size: 1rem; font-weight: 700; color: var(--text); }
+        .request-date { font-size: 0.75rem; color: var(--text-light); }
+        .request-field {
+            display: inline-block; background: var(--primary-light); color: var(--primary-dark);
+            padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .request-values {
+            display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px;
+            align-items: center; margin-bottom: 12px;
+        }
+        .val-box {
+            padding: 8px 12px; border-radius: 8px; font-size: 0.82rem;
+            word-break: break-all;
+        }
+        .val-old { background: #fff5f5; color: #c0392b; border: 1px solid #fad7d7; text-decoration: line-through; }
+        .val-new { background: #f0fff4; color: #00b894; border: 1px solid #b2f5c8; font-weight: 600; }
+        .val-arrow { text-align: center; font-size: 1.2rem; color: var(--text-light); }
+        .request-reason { font-size: 0.78rem; color: var(--text-light); margin-bottom: 12px; font-style: italic; }
+        .request-actions { display: flex; gap: 8px; justify-content: flex-end; }
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+        }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-approved { background: #d1e7dd; color: #0a3622; }
+        .status-rejected { background: #f8d7da; color: #58151c; }
+
+        /* 빈 상태 */
+        .empty-state { text-align: center; padding: 48px 24px; color: var(--text-light); }
+        .empty-state i { font-size: 3rem; margin-bottom: 12px; opacity: 0.3; }
+        .empty-state p { font-size: 0.9rem; }
+
+        /* 필터 탭 */
+        .filter-tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+        .filter-tab {
+            padding: 6px 16px; border-radius: 20px; border: 1.5px solid var(--border);
+            background: white; font-family: var(--font); font-size: 0.8rem;
+            cursor: pointer; transition: all 0.2s; font-weight: 500;
+        }
+        .filter-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+
         @media (max-width: 768px) {
             .steps { flex-wrap: wrap; }
             .step { flex: none; width: calc(50% - 2px); }
             .mapping-grid { grid-template-columns: 1fr; }
             .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            .config-grid { grid-template-columns: 1fr; }
+            .request-values { grid-template-columns: 1fr; }
+            .val-arrow { display: none; }
+            .tab-nav { flex-direction: column; }
         }
     </style>
 </head>
@@ -241,11 +341,68 @@
 
     <!-- Header -->
     <div class="header">
-        <h1><i class="fas fa-database"></i> 키즈고 관리자 - 데이터 업로드</h1>
+        <h1><i class="fas fa-shield-alt"></i> 키즈고 관리자</h1>
         <a href="index.html"><i class="fas fa-arrow-left"></i> 메인으로</a>
     </div>
 
     <div class="container">
+
+        <!-- Supabase 설정 -->
+        <div class="supabase-config" id="supabaseConfig">
+            <div class="section-title"><i class="fas fa-plug"></i> Supabase 연결 설정</div>
+            <div class="config-grid">
+                <div class="config-field">
+                    <label>PROJECT URL</label>
+                    <input type="text" id="sbUrl" placeholder="https://xxxx.supabase.co" autocomplete="off">
+                </div>
+                <div class="config-field">
+                    <label>ANON KEY</label>
+                    <input type="password" id="sbKey" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." autocomplete="off">
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <button class="btn btn-secondary" onclick="connectSupabase()">
+                    <i class="fas fa-link"></i> 연결하기
+                </button>
+                <div class="config-status idle" id="configStatus">
+                    <i class="fas fa-circle"></i> 연결 전
+                </div>
+            </div>
+        </div>
+
+        <!-- 탭 네비게이션 -->
+        <div class="tab-nav" id="tabNav" style="display:none;">
+            <button class="tab-btn active" onclick="switchTab('requests')" id="tabRequests">
+                <i class="fas fa-edit"></i> 정보수정 요청
+                <span class="badge" id="pendingBadge">0</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('upload')" id="tabUpload">
+                <i class="fas fa-upload"></i> CSV 데이터 업로드
+            </button>
+        </div>
+
+        <!-- 수정요청 탭 -->
+        <div class="tab-content active" id="tabContentRequests" style="display:none;">
+            <div class="section">
+                <div class="section-title"><i class="fas fa-inbox"></i> 정보수정 요청 목록</div>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="filterRequests('pending')" id="ftPending">⏳ 대기중</button>
+                    <button class="filter-tab" onclick="filterRequests('approved')" id="ftApproved">✅ 승인됨</button>
+                    <button class="filter-tab" onclick="filterRequests('rejected')" id="ftRejected">❌ 거절됨</button>
+                    <button class="filter-tab" onclick="filterRequests('all')" id="ftAll">전체</button>
+                </div>
+                <div class="request-list" id="requestList">
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>Supabase에 연결하면 요청 목록이 표시됩니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CSV 업로드 탭 -->
+        <div class="tab-content" id="tabContentUpload">
+
         <!-- Stats -->
         <div class="stats-bar" id="statsBar">
             <div class="stat-card">
@@ -356,9 +513,260 @@
                 <button class="btn btn-primary" onclick="location.href='index.html'"><i class="fas fa-home"></i> 메인에서 확인</button>
             </div>
         </div>
-    </div>
+
+        </div><!-- /tabContentUpload -->
+    </div><!-- /container -->
 
 <script>
+// ===== Supabase 클라이언트 =====
+let sb = null;
+let allRequests = [];
+let currentFilter = 'pending';
+
+async function connectSupabase() {
+    const url = document.getElementById('sbUrl').value.trim();
+    const key = document.getElementById('sbKey').value.trim();
+    const statusEl = document.getElementById('configStatus');
+
+    if (!url || !key) {
+        statusEl.className = 'config-status err';
+        statusEl.innerHTML = '<i class="fas fa-times-circle"></i> URL과 Key를 모두 입력해주세요.';
+        return;
+    }
+
+    statusEl.className = 'config-status idle';
+    statusEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 연결 중...';
+
+    try {
+        sb = supabase.createClient(url, key);
+        // 연결 테스트
+        const { error } = await sb.from('edit_requests').select('id').limit(1);
+        if (error) throw error;
+
+        statusEl.className = 'config-status ok';
+        statusEl.innerHTML = '<i class="fas fa-check-circle"></i> 연결 성공!';
+
+        // 입력창 연결됨 표시
+        document.getElementById('sbUrl').classList.add('connected');
+        document.getElementById('sbKey').classList.add('connected');
+
+        // 탭 표시 및 수정요청 탭 활성화
+        document.getElementById('tabNav').style.display = 'flex';
+        document.getElementById('tabContentRequests').style.display = 'block';
+        switchTab('requests');
+
+        // 데이터 로드
+        await loadRequests();
+        loadStats();
+
+    } catch(e) {
+        statusEl.className = 'config-status err';
+        statusEl.innerHTML = `<i class="fas fa-times-circle"></i> 연결 실패: ${e.message}`;
+        sb = null;
+    }
+}
+
+// ===== 탭 전환 =====
+function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+    if (tab === 'requests') {
+        document.getElementById('tabRequests').classList.add('active');
+        document.getElementById('tabContentRequests').style.display = 'block';
+        document.getElementById('tabContentRequests').classList.add('active');
+        document.getElementById('tabContentUpload').style.display = 'none';
+    } else {
+        document.getElementById('tabUpload').classList.add('active');
+        document.getElementById('tabContentUpload').style.display = 'block';
+        document.getElementById('tabContentUpload').classList.add('active');
+        document.getElementById('tabContentRequests').style.display = 'none';
+    }
+}
+
+// ===== 수정요청 로드 =====
+async function loadRequests() {
+    if (!sb) return;
+    const { data, error } = await sb
+        .from('edit_requests')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) { console.error(error); return; }
+    allRequests = data || [];
+
+    // pending 배지 업데이트
+    const pendingCount = allRequests.filter(r => r.status === 'pending').length;
+    document.getElementById('pendingBadge').textContent = pendingCount;
+
+    renderRequests();
+}
+
+// ===== 필터 =====
+function filterRequests(status) {
+    currentFilter = status;
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    const map = { pending: 'ftPending', approved: 'ftApproved', rejected: 'ftRejected', all: 'ftAll' };
+    document.getElementById(map[status]).classList.add('active');
+    renderRequests();
+}
+
+// ===== 수정요청 렌더링 =====
+function renderRequests() {
+    const list = document.getElementById('requestList');
+    const filtered = currentFilter === 'all' ? allRequests : allRequests.filter(r => r.status === currentFilter);
+
+    if (filtered.length === 0) {
+        const msgs = { pending: '대기 중인 수정요청이 없습니다.', approved: '승인된 요청이 없습니다.', rejected: '거절된 요청이 없습니다.', all: '수정요청이 없습니다.' };
+        list.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>${msgs[currentFilter]}</p></div>`;
+        return;
+    }
+
+    list.innerHTML = filtered.map(req => {
+        const date = new Date(req.created_at).toLocaleString('ko-KR');
+        const statusBadge = {
+            pending: '<span class="status-badge status-pending">⏳ 대기중</span>',
+            approved: '<span class="status-badge status-approved">✅ 승인됨</span>',
+            rejected: '<span class="status-badge status-rejected">❌ 거절됨</span>',
+        }[req.status] || '';
+
+        const actions = req.status === 'pending' ? `
+            <button class="btn btn-sm btn-danger" onclick="rejectRequest(${req.id})">
+                <i class="fas fa-times"></i> 거절
+            </button>
+            <button class="btn btn-sm btn-secondary" onclick="approveRequest(${req.id}, '${escHtml(req.store_name)}', '${escHtml(req.field_name)}', '${escHtml(req.new_value)}')">
+                <i class="fas fa-check"></i> 승인
+            </button>
+        ` : statusBadge;
+
+        return `
+        <div class="request-card ${req.status}" id="req-${req.id}">
+            <div class="request-header">
+                <div>
+                    <div class="request-store">🏪 ${escHtml(req.store_name)}</div>
+                    <span class="request-field">${escHtml(req.field_name)}</span>
+                </div>
+                <div class="request-date">${date}</div>
+            </div>
+            <div class="request-values">
+                <div class="val-box val-old">${escHtml(req.old_value || '(없음)')}</div>
+                <div class="val-arrow">→</div>
+                <div class="val-box val-new">${escHtml(req.new_value)}</div>
+            </div>
+            ${req.reason ? `<div class="request-reason">💬 사유: ${escHtml(req.reason)}</div>` : ''}
+            <div class="request-actions">${actions}</div>
+        </div>`;
+    }).join('');
+}
+
+function escHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ===== 승인 처리 =====
+async function approveRequest(id, storeName, fieldName, newValue) {
+    if (!sb) return;
+    if (!confirm(`"${storeName}"의 ${fieldName} 필드를 "${newValue}"로 변경하시겠습니까?`)) return;
+
+    try {
+        // 1. stores 테이블에서 가게 찾기
+        const { data: stores, error: findErr } = await sb
+            .from('stores')
+            .select('id')
+            .ilike('name', storeName)
+            .limit(5);
+
+        if (findErr) throw findErr;
+
+        if (!stores || stores.length === 0) {
+            alert(`⚠️ stores 테이블에서 "${storeName}"을 찾을 수 없습니다.\n가게 이름이 정확히 일치해야 합니다.`);
+            return;
+        }
+
+        // 여러 건이면 첫 번째 사용
+        const storeId = stores[0].id;
+
+        // boolean 필드 변환
+        const boolFields = ['has_parking','has_nursing_room','has_highchair','has_stroller_access'];
+        let parsedValue = newValue;
+        if (boolFields.includes(fieldName)) {
+            parsedValue = ['true','1','o','O','예','Y','y','있음','가능'].includes(newValue);
+        } else if (['lat','lng','rating'].includes(fieldName)) {
+            parsedValue = parseFloat(newValue);
+        } else if (fieldName === 'review_count') {
+            parsedValue = parseInt(newValue);
+        }
+
+        // 2. stores 테이블 업데이트
+        const { error: updateErr } = await sb
+            .from('stores')
+            .update({ [fieldName]: parsedValue })
+            .eq('id', storeId);
+
+        if (updateErr) throw updateErr;
+
+        // 3. edit_requests status → approved
+        const { error: statusErr } = await sb
+            .from('edit_requests')
+            .update({ status: 'approved' })
+            .eq('id', id);
+
+        if (statusErr) throw statusErr;
+
+        // UI 업데이트
+        allRequests = allRequests.map(r => r.id === id ? {...r, status: 'approved'} : r);
+        const pendingCount = allRequests.filter(r => r.status === 'pending').length;
+        document.getElementById('pendingBadge').textContent = pendingCount;
+        renderRequests();
+
+        showToast('✅ 승인 완료! stores 테이블이 업데이트되었습니다.');
+
+    } catch(e) {
+        alert('오류 발생: ' + e.message);
+        console.error(e);
+    }
+}
+
+// ===== 거절 처리 =====
+async function rejectRequest(id) {
+    if (!sb) return;
+    if (!confirm('이 요청을 거절하시겠습니까?')) return;
+
+    try {
+        const { error } = await sb
+            .from('edit_requests')
+            .update({ status: 'rejected' })
+            .eq('id', id);
+
+        if (error) throw error;
+
+        allRequests = allRequests.map(r => r.id === id ? {...r, status: 'rejected'} : r);
+        const pendingCount = allRequests.filter(r => r.status === 'pending').length;
+        document.getElementById('pendingBadge').textContent = pendingCount;
+        renderRequests();
+
+        showToast('❌ 거절 처리되었습니다.');
+    } catch(e) {
+        alert('오류 발생: ' + e.message);
+    }
+}
+
+// ===== 토스트 알림 =====
+function showToast(msg) {
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        position:fixed; bottom:24px; right:24px; z-index:9999;
+        background:#2d3748; color:white; padding:14px 20px;
+        border-radius:12px; font-size:0.85rem; font-weight:600;
+        box-shadow:0 4px 20px rgba(0,0,0,0.2);
+        animation: fadeIn 0.3s ease;
+    `;
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
 // ===== State =====
 let csvData = null;   // 파싱된 전체 데이터 {headers:[], rows:[]}
 let mapping = {};     // {dbField: csvColumn}
@@ -391,7 +799,8 @@ const DB_FIELDS = [
 
 // ===== Init =====
 document.addEventListener('DOMContentLoaded', () => {
-    loadStats();
+    // CSV 업로드 탭은 연결 후 표시
+    document.getElementById('tabContentUpload').style.display = 'none';
     setupDragDrop();
     document.getElementById('fileInput').addEventListener('change', handleFile);
 });
