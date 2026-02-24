@@ -286,8 +286,11 @@
             <button class="tab-btn active" onclick="switchTab('requests')" id="tabRequests">
                 <i class="fas fa-edit"></i> 정보수정 요청 <span class="badge" id="pendingBadge">0</span>
             </button>
+            <button class="tab-btn" onclick="switchTab('storeRequests')" id="tabStoreRequests">
+                <i class="fas fa-store"></i> 가게등록 요청 <span class="badge" id="storePendingBadge">0</span>
+            </button>
             <button class="tab-btn" onclick="switchTab('upload')" id="tabUpload">
-                <i class="fas fa-upload"></i> CSV 데이터 업로드
+                <i class="fas fa-upload"></i> CSV 업로드
             </button>
         </div>
 
@@ -302,6 +305,22 @@
                     <button class="filter-tab" onclick="filterRequests('all')" id="ftAll">전체</button>
                 </div>
                 <div class="request-list" id="requestList">
+                    <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>불러오는 중...</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 가게등록 요청 탭 -->
+        <div class="tab-content" id="tabContentStoreRequests">
+            <div class="section">
+                <div class="section-title"><i class="fas fa-store"></i> 가게 등록 요청 목록</div>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="filterStoreRequests('pending')" id="sftPending">⏳ 대기중</button>
+                    <button class="filter-tab" onclick="filterStoreRequests('approved')" id="sftApproved">✅ 승인됨</button>
+                    <button class="filter-tab" onclick="filterStoreRequests('rejected')" id="sftRejected">❌ 거절됨</button>
+                    <button class="filter-tab" onclick="filterStoreRequests('all')" id="sftAll">전체</button>
+                </div>
+                <div class="request-list" id="storeRequestList">
                     <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>불러오는 중...</p></div>
                 </div>
             </div>
@@ -482,6 +501,7 @@ async function showAdmin(email) {
     document.getElementById('adminWrap').style.display = 'block';
     document.getElementById('headerUser').textContent = email;
     await loadRequests();
+    await loadStoreRequests();
     loadStats();
 }
 
@@ -500,11 +520,131 @@ function switchTab(tab) {
         document.getElementById('tabRequests').classList.add('active');
         document.getElementById('tabContentRequests').style.display = 'block';
         document.getElementById('tabContentRequests').classList.add('active');
+    } else if (tab === 'storeRequests') {
+        document.getElementById('tabStoreRequests').classList.add('active');
+        document.getElementById('tabContentStoreRequests').style.display = 'block';
+        document.getElementById('tabContentStoreRequests').classList.add('active');
     } else {
         document.getElementById('tabUpload').classList.add('active');
         document.getElementById('tabContentUpload').style.display = 'block';
         document.getElementById('tabContentUpload').classList.add('active');
     }
+}
+
+// ===== 가게등록 요청 =====
+let allStoreRequests = [];
+let currentStoreFilter = 'pending';
+
+async function loadStoreRequests() {
+    if (!sb) return;
+    const { data, error } = await sb.from('store_requests').select('*').order('created_at', { ascending: false });
+    if (error) { console.error(error); return; }
+    allStoreRequests = data || [];
+    const pendingCount = allStoreRequests.filter(r => r.status === 'pending').length;
+    document.getElementById('storePendingBadge').textContent = pendingCount;
+    renderStoreRequests();
+}
+
+function filterStoreRequests(status) {
+    currentStoreFilter = status;
+    document.querySelectorAll('#tabContentStoreRequests .filter-tab').forEach(t => t.classList.remove('active'));
+    const map = { pending: 'sftPending', approved: 'sftApproved', rejected: 'sftRejected', all: 'sftAll' };
+    document.getElementById(map[status]).classList.add('active');
+    renderStoreRequests();
+}
+
+function renderStoreRequests() {
+    const list = document.getElementById('storeRequestList');
+    const filtered = currentStoreFilter === 'all' ? allStoreRequests : allStoreRequests.filter(r => r.status === currentStoreFilter);
+
+    if (filtered.length === 0) {
+        const msgs = { pending: '대기 중인 등록요청이 없습니다.', approved: '승인된 요청이 없습니다.', rejected: '거절된 요청이 없습니다.', all: '등록요청이 없습니다.' };
+        list.innerHTML = `<div class="empty-state"><i class="fas fa-store"></i><p>${msgs[currentStoreFilter]}</p></div>`;
+        return;
+    }
+
+    list.innerHTML = filtered.map(req => {
+        const date = new Date(req.created_at).toLocaleString('ko-KR');
+        const statusBadge = {
+            pending: '<span class="status-badge status-pending">⏳ 대기중</span>',
+            approved: '<span class="status-badge status-approved">✅ 승인됨</span>',
+            rejected: '<span class="status-badge status-rejected">❌ 거절됨</span>',
+        }[req.status] || '';
+
+        const facilities = [
+            req.has_parking ? '주차' : null,
+            req.has_nursing_room ? '수유실' : null,
+            req.has_highchair ? '유아의자' : null,
+            req.has_stroller_access ? '유모차' : null,
+        ].filter(Boolean).join(', ') || '-';
+
+        const actions = req.status === 'pending' ? `
+            <button class="btn btn-sm btn-danger" onclick="rejectStoreRequest(${req.id})"><i class="fas fa-times"></i> 거절</button>
+            <button class="btn btn-sm btn-secondary" onclick="approveStoreRequest(${req.id})"><i class="fas fa-check"></i> 승인 (stores에 등록)</button>
+        ` : statusBadge;
+
+        return `
+        <div class="request-card ${req.status}" id="sreq-${req.id}">
+            <div class="request-header">
+                <div>
+                    <div class="request-store">🏪 ${escHtml(req.name)}</div>
+                    <span class="request-field">${escHtml(req.category || '')} ${req.subcategory ? '· ' + escHtml(req.subcategory) : ''}</span>
+                </div>
+                <div class="request-date">${date}</div>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; margin-bottom:10px; font-size:0.82rem;">
+                <div><b>지역</b> ${escHtml(req.region || '-')} ${req.district ? escHtml(req.district) : ''}</div>
+                <div><b>주소</b> ${escHtml(req.address || '-')}</div>
+                <div><b>전화</b> ${escHtml(req.phone || '-')}</div>
+                <div><b>영업시간</b> ${escHtml(req.hours || '-')}</div>
+                <div><b>키즈시설</b> ${escHtml(req.playroom_type || '-')} ${req.playroom_desc ? '· ' + escHtml(req.playroom_desc) : ''}</div>
+                <div><b>편의시설</b> ${facilities}</div>
+                <div><b>연령</b> ${escHtml(req.age_range || '-')}</div>
+                <div><b>가격대</b> ${escHtml(req.price_range || '-')}</div>
+                ${req.tags ? `<div><b>태그</b> ${escHtml(req.tags.join(', '))}</div>` : ''}
+                ${req.description ? `<div style="grid-column:1/-1"><b>소개</b> ${escHtml(req.description)}</div>` : ''}
+            </div>
+            <div class="request-actions">${actions}</div>
+        </div>`;
+    }).join('');
+}
+
+async function approveStoreRequest(id) {
+    if (!sb) return;
+    const req = allStoreRequests.find(r => r.id === id);
+    if (!req) return;
+    if (!confirm(`"${req.name}"을 stores 테이블에 등록하시겠습니까?`)) return;
+
+    try {
+        // stores 테이블에 insert
+        const { status, created_at, id: reqId, ...storeData } = req;
+        const { error: insertErr } = await sb.from('stores').insert(storeData);
+        if (insertErr) throw insertErr;
+
+        // store_requests status → approved
+        const { error: statusErr } = await sb.from('store_requests').update({ status: 'approved' }).eq('id', id);
+        if (statusErr) throw statusErr;
+
+        allStoreRequests = allStoreRequests.map(r => r.id === id ? {...r, status: 'approved'} : r);
+        document.getElementById('storePendingBadge').textContent = allStoreRequests.filter(r => r.status === 'pending').length;
+        renderStoreRequests();
+        showToast(`✅ "${req.name}" stores에 등록 완료!`);
+    } catch(e) {
+        alert('오류: ' + e.message);
+    }
+}
+
+async function rejectStoreRequest(id) {
+    if (!sb) return;
+    if (!confirm('이 요청을 거절하시겠습니까?')) return;
+    try {
+        const { error } = await sb.from('store_requests').update({ status: 'rejected' }).eq('id', id);
+        if (error) throw error;
+        allStoreRequests = allStoreRequests.map(r => r.id === id ? {...r, status: 'rejected'} : r);
+        document.getElementById('storePendingBadge').textContent = allStoreRequests.filter(r => r.status === 'pending').length;
+        renderStoreRequests();
+        showToast('❌ 거절 처리되었습니다.');
+    } catch(e) { alert('오류: ' + e.message); }
 }
 
 // ===== 수정요청 로드 =====

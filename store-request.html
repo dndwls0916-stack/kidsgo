@@ -5,381 +5,365 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>가게 등록 요청 | 키즈고</title>
   <meta name="description" content="키즈고에 가게 등록을 요청하세요." />
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
   <style>
-/* ===== CSS Variables & Reset ===== */
 :root {
-    --primary: #FF6B9D;
-    --primary-dark: #E85588;
-    --primary-light: #FFD4E3;
-    --secondary: #4ECDC4;
-    --secondary-dark: #3BB5AD;
-    --accent: #FFE66D;
-    --accent-dark: #F5D12E;
-    --bg: #FFF8F0;
-    --bg-card: #FFFFFF;
-    --text: #2D3436;
-    --text-light: #636E72;
-    --text-lighter: #B2BEC3;
-    --border: #F0E6DD;
-    --shadow: 0 2px 16px rgba(0,0,0,0.06);
-    --shadow-hover: 0 8px 32px rgba(255,107,157,0.15);
-    --radius: 16px;
-    --radius-sm: 10px;
-    --radius-xs: 6px;
+    --primary: #FF6B9D; --primary-dark: #E85588; --primary-light: #FFD4E3;
+    --secondary: #4ECDC4; --secondary-dark: #3BB5AD;
+    --bg: #FFF8F0; --bg-card: #FFFFFF; --text: #2D3436; --text-light: #636E72; --text-lighter: #B2BEC3;
+    --border: #F0E6DD; --shadow: 0 2px 16px rgba(0,0,0,0.06);
+    --radius: 16px; --radius-sm: 10px;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --font: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+.container { max-width: 760px; margin: 0 auto; padding: 0 20px; }
 
-/* Header */
 .header { background: linear-gradient(135deg, var(--primary) 0%, #FF8E9E 50%, var(--secondary) 100%); padding: 16px 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(255,107,157,0.3); }
 .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; gap: 16px; }
-.logo { display: flex; align-items: center; gap: 8px; color: white; font-size: 1.5rem; font-weight: 800; cursor: pointer; flex-shrink: 0; }
+.logo { display: flex; align-items: center; gap: 8px; color: white; font-size: 1.5rem; font-weight: 800; cursor: pointer; text-decoration: none; }
 .logo i { font-size: 1.3rem; background: rgba(255,255,255,0.25); border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; }
-.tagline { color: rgba(255,255,255,0.9); font-size: 0.85rem; font-weight: 400; }
+.tagline { color: rgba(255,255,255,0.9); font-size: 0.85rem; }
 
-/* Hero */
-.hero { background: linear-gradient(180deg, #FFF0F5 0%, var(--bg) 100%); padding: 48px 0 32px; text-align: center; }
-.hero-inner { max-width: 700px; margin: 0 auto; padding: 0 20px; }
-.hero h1 { font-size: 1.8rem; font-weight: 700; line-height: 1.4; margin-bottom: 8px; color: var(--text); }
-.hero h1 strong { color: var(--primary); }
-.hero-sub { color: var(--text-light); font-size: 0.95rem; margin-bottom: 28px; }
+.page-hero { background: linear-gradient(180deg, #FFF0F5 0%, var(--bg) 100%); padding: 36px 0 24px; text-align: center; }
+.page-hero h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; }
+.page-hero h1 strong { color: var(--primary); }
+.page-hero p { color: var(--text-light); font-size: 0.92rem; }
 
-/* Search */
-.search-box { display: flex; align-items: center; background: white; border-radius: 50px; padding: 6px 6px 6px 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); border: 2px solid transparent; transition: var(--transition); max-width: 600px; margin: 0 auto; }
-.search-box:focus-within { border-color: var(--primary); box-shadow: 0 4px 24px rgba(255,107,157,0.2); }
-.search-box i { color: var(--text-lighter); font-size: 1.1rem; }
-.search-box input { flex: 1; border: none; outline: none; padding: 12px; font-size: 1rem; font-family: var(--font); background: transparent; }
-.search-btn { background: var(--primary); color: white; border: none; border-radius: 50px; padding: 12px 28px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: var(--transition); font-family: var(--font); white-space: nowrap; }
-.search-btn:hover { background: var(--primary-dark); transform: scale(1.02); }
+.form-wrap { padding: 24px 0 60px; }
+.form-panel { background: white; border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); margin-bottom: 20px; }
+.form-panel-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding-bottom: 12px; border-bottom: 1.5px solid var(--border); }
+.form-panel-title i { color: var(--primary); }
 
-/* Quick Tags */
-.quick-tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
-.quick-tag { background: white; border: 1.5px solid var(--border); border-radius: 50px; padding: 8px 16px; font-size: 0.82rem; color: var(--text-light); cursor: pointer; transition: var(--transition); font-family: var(--font); font-weight: 500; }
-.quick-tag:hover, .quick-tag.active { background: var(--primary-light); border-color: var(--primary); color: var(--primary-dark); }
-.quick-tag i { margin-right: 4px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-grid.col1 { grid-template-columns: 1fr; }
+.form-group { display: flex; flex-direction: column; }
+.form-group.span2 { grid-column: span 2; }
+.form-label { font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.form-label i { color: var(--primary); width: 16px; text-align: center; }
+.required { color: var(--primary); font-size: 0.72rem; margin-left: 2px; }
+.form-input, .form-select, .form-textarea {
+    width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 11px 14px; font-size: 0.9rem; font-family: var(--font); color: var(--text);
+    background: var(--bg); transition: var(--transition); outline: none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--primary); background: white; box-shadow: 0 0 0 3px rgba(255,107,157,0.1);
+}
+.form-input::placeholder, .form-textarea::placeholder { color: var(--text-lighter); }
+.form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%23636E72'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-color: var(--bg); cursor: pointer; }
+.form-textarea { min-height: 80px; resize: vertical; }
+.form-hint { font-size: 0.75rem; color: var(--text-lighter); margin-top: 4px; }
 
-/* Filter */
-.filter-section { padding: 16px 0 0; }
-.location-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-.location-btn { display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--secondary) 0%, #45B7AA 100%); color: white; border: none; border-radius: 50px; padding: 10px 20px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: var(--transition); font-family: var(--font); white-space: nowrap; }
-.location-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(78,205,196,0.3); }
-.location-btn i { animation: pulse 2s infinite; }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-.location-info { display: flex; align-items: center; gap: 8px; background: #E8F8F5; border-radius: 50px; padding: 8px 16px; font-size: 0.85rem; color: var(--secondary-dark); font-weight: 500; }
-.clear-location { background: none; border: none; color: var(--text-lighter); cursor: pointer; font-size: 0.8rem; padding: 2px; }
-.sort-box select { appearance: none; background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%23636E72'/%3E%3C/svg%3E") no-repeat right 12px center; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 36px 10px 14px; font-size: 0.88rem; font-family: var(--font); color: var(--text); cursor: pointer; font-weight: 500; }
+/* 체크박스 그룹 */
+.checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; }
+.checkbox-item { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.checkbox-item input { display: none; }
+.checkbox-label {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 8px 14px; font-size: 0.82rem; color: var(--text-light); transition: var(--transition); font-weight: 500;
+}
+.checkbox-item input:checked + .checkbox-label { background: #E8F8F5; border-color: var(--secondary); color: var(--secondary-dark); }
 
-/* Filter Toggle & Panel */
-.filter-toggle { display: flex; align-items: center; gap: 8px; background: white; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 20px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: var(--transition); font-family: var(--font); color: var(--text); width: 100%; justify-content: center; }
-.filter-toggle:hover, .filter-toggle.active { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
-.filter-count { background: var(--primary); color: white; border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; }
-.filter-panel { background: white; border-radius: var(--radius); margin-top: 12px; padding: 24px; box-shadow: var(--shadow); display: none; animation: slideDown 0.3s ease; }
-.filter-panel.open { display: block; }
-@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-.filter-grid { display: grid; gap: 20px; }
-.filter-group { border-bottom: 1px solid var(--border); padding-bottom: 16px; }
-.filter-group:last-child { border-bottom: none; padding-bottom: 0; }
-.filter-label { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 10px; }
-.filter-label i { color: var(--primary); width: 18px; text-align: center; }
-.filter-hint { font-size: 0.75rem; font-weight: 400; color: var(--text-lighter); margin-left: 4px; }
-.subcategory-appear { animation: slideDown 0.3s ease; }
-.filter-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip { background: var(--bg); border: 1.5px solid var(--border); border-radius: 50px; padding: 7px 16px; font-size: 0.82rem; cursor: pointer; transition: var(--transition); font-family: var(--font); font-weight: 500; color: var(--text-light); }
-.chip:hover { border-color: var(--primary); color: var(--primary); }
-.chip.active { background: var(--primary); color: white; border-color: var(--primary); }
-.multi-count { display: inline-flex; align-items: center; justify-content: center; background: var(--primary); color: white; font-size: 0.65rem; font-weight: 700; min-width: 18px; height: 18px; border-radius: 50px; padding: 0 5px; margin-left: 6px; line-height: 1; }
+/* 제출 버튼 */
+.btn-submit {
+    width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--primary); color: white; border: none; border-radius: var(--radius-sm);
+    padding: 16px; font-size: 1rem; font-weight: 700; cursor: pointer;
+    font-family: var(--font); transition: var(--transition);
+}
+.btn-submit:hover { background: var(--primary-dark); transform: translateY(-1px); }
+.btn-submit:disabled { background: var(--text-lighter); cursor: not-allowed; transform: none; }
 
-/* Facility */
-.facility-toggles { display: flex; flex-wrap: wrap; gap: 10px; }
-.toggle-item { display: flex; align-items: center; cursor: pointer; }
-.toggle-item input { display: none; }
-.toggle-label { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.82rem; color: var(--text-light); transition: var(--transition); font-weight: 500; }
-.toggle-item input:checked + .toggle-label { background: #E8F8F5; border-color: var(--secondary); color: var(--secondary-dark); }
-.toggle-label i { font-size: 0.9rem; }
+/* 성공 메시지 */
+.success-msg { display: none; text-align: center; padding: 48px 24px; background: linear-gradient(135deg, #E8F8F5, #FFF0F5); border-radius: var(--radius); }
+.success-msg i { font-size: 3rem; color: var(--secondary); margin-bottom: 12px; display: block; }
+.success-msg h3 { font-size: 1.2rem; margin-bottom: 8px; }
+.success-msg p { color: var(--text-light); font-size: 0.9rem; margin-bottom: 20px; }
+.btn-back { display: inline-flex; align-items: center; gap: 8px; background: var(--secondary); color: white; border: none; border-radius: 50px; padding: 12px 28px; font-size: 0.92rem; font-weight: 600; cursor: pointer; font-family: var(--font); transition: var(--transition); text-decoration: none; margin: 4px; }
+.btn-back:hover { background: var(--secondary-dark); }
+.btn-back.pink { background: var(--primary); }
+.btn-back.pink:hover { background: var(--primary-dark); }
 
-/* Filter Actions */
-.filter-actions { display: flex; gap: 12px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
-.btn-reset { flex: 1; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 12px; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: var(--font); color: var(--text-light); transition: var(--transition); }
-.btn-reset:hover { background: #f5f5f5; }
-.btn-apply { flex: 2; background: var(--primary); color: white; border: none; border-radius: var(--radius-sm); padding: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: var(--font); transition: var(--transition); }
-.btn-apply:hover { background: var(--primary-dark); }
-
-/* Results */
-.results-section { padding: 24px 0 60px; }
-.results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
-.results-header h2 { font-size: 1.15rem; font-weight: 700; }
-.results-count { background: var(--primary-light); color: var(--primary-dark); border-radius: 50px; padding: 4px 14px; font-size: 0.82rem; font-weight: 700; }
-.view-toggle { display: flex; gap: 4px; margin-bottom: 16px; }
-.view-btn { background: white; border: 1.5px solid var(--border); border-radius: var(--radius-xs); padding: 8px 14px; cursor: pointer; color: var(--text-lighter); transition: var(--transition); font-size: 0.9rem; }
-.view-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
-
-/* Map */
-.map-container { margin-bottom: 20px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
-.map-view { height: 400px; background: #E8F0FE; position: relative; }
-.map-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-light); }
-.map-placeholder i { font-size: 3rem; margin-bottom: 12px; color: var(--primary); }
-.map-placeholder p { font-weight: 600; font-size: 1.1rem; }
-.map-placeholder span { font-size: 0.85rem; color: var(--text-lighter); }
-.map-marker { position: absolute; transform: translate(-50%, -100%); cursor: pointer; z-index: 5; transition: var(--transition); }
-.map-marker:hover { z-index: 10; transform: translate(-50%, -100%) scale(1.15); }
-.marker-icon { background: var(--primary); color: white; width: 36px; height: 36px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: 2px solid white; }
-.marker-icon i { transform: rotate(45deg); font-size: 0.75rem; }
-.marker-tooltip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: white; border-radius: var(--radius-sm); padding: 8px 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); white-space: nowrap; font-size: 0.8rem; font-weight: 600; display: none; z-index: 20; }
-.map-marker:hover .marker-tooltip { display: block; }
-
-/* Store Grid & Card */
-.store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
-.store-grid.list-view { grid-template-columns: 1fr; }
-.store-card { background: var(--bg-card); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); cursor: pointer; transition: var(--transition); border: 1.5px solid transparent; position: relative; }
-.store-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: var(--primary-light); }
-.card-image { height: 180px; background: linear-gradient(135deg, #FFE0EB 0%, #FFD4E3 30%, #E8F8F5 70%, #D4F1EC 100%); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.card-image-icon { font-size: 3.5rem; opacity: 0.6; }
-.card-badges { position: absolute; top: 12px; left: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
-.badge { background: rgba(255,255,255,0.95); border-radius: 50px; padding: 4px 10px; font-size: 0.72rem; font-weight: 700; backdrop-filter: blur(4px); }
-.badge-category { color: var(--primary-dark); }
-.badge-playroom { color: var(--secondary-dark); }
-.card-distance { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.65); color: white; border-radius: 50px; padding: 4px 10px; font-size: 0.72rem; font-weight: 600; backdrop-filter: blur(4px); }
-.card-body { padding: 16px; }
-.card-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
-.card-title .price-tag { color: var(--accent-dark); font-size: 0.82rem; font-weight: 700; }
-.card-location { font-size: 0.82rem; color: var(--text-light); margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
-.card-location i { color: var(--primary); font-size: 0.75rem; }
-.card-rating { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
-.stars { color: #FFB800; font-size: 0.82rem; letter-spacing: 1px; }
-.rating-num { font-weight: 700; font-size: 0.88rem; color: var(--text); }
-.review-count { font-size: 0.78rem; color: var(--text-lighter); }
-.card-desc { font-size: 0.83rem; color: var(--text-light); line-height: 1.5; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.card-facilities { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-.facility-badge { display: flex; align-items: center; gap: 4px; background: #F0FAF8; color: var(--secondary-dark); border-radius: 50px; padding: 3px 10px; font-size: 0.72rem; font-weight: 600; }
-.facility-badge i { font-size: 0.68rem; }
-.card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-.tag { background: var(--bg); color: var(--text-light); border-radius: 50px; padding: 3px 10px; font-size: 0.72rem; font-weight: 500; }
-.store-grid.list-view .store-card { display: grid; grid-template-columns: 260px 1fr; }
-.store-grid.list-view .card-image { height: 100%; min-height: 200px; }
-
-/* Loading & Empty */
-.loading { text-align: center; padding: 60px 20px; }
-.spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading p { color: var(--text-light); font-size: 0.9rem; }
-.empty-state { text-align: center; padding: 80px 20px; }
-.empty-state i { font-size: 3rem; color: var(--text-lighter); margin-bottom: 16px; }
-.empty-state h3 { font-size: 1.2rem; margin-bottom: 8px; }
-.empty-state p { color: var(--text-light); font-size: 0.9rem; margin-bottom: 20px; }
-.btn-reset-all { background: var(--primary); color: white; border: none; border-radius: 50px; padding: 12px 32px; font-size: 0.95rem; font-weight: 600; cursor: pointer; font-family: var(--font); transition: var(--transition); }
-.btn-reset-all:hover { background: var(--primary-dark); }
-
-/* Modal */
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; animation: fadeIn 0.3s ease; backdrop-filter: blur(4px); }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.modal { background: white; border-radius: var(--radius) var(--radius) 0 0; width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s ease; position: relative; }
-@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-.modal-close { position: sticky; top: 12px; float: right; margin: 12px; background: rgba(0,0,0,0.06); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5; color: var(--text-light); font-size: 1rem; transition: var(--transition); }
-.modal-close:hover { background: rgba(0,0,0,0.12); }
-.modal-hero { height: 220px; background: linear-gradient(135deg, #FFE0EB 0%, #E8F8F5 100%); display: flex; align-items: center; justify-content: center; font-size: 5rem; opacity: 0.5; position: relative; }
-.modal-hero-badges { position: absolute; bottom: 16px; left: 16px; display: flex; gap: 8px; }
-.modal-content { padding: 24px 20px 40px; }
-.modal-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; }
-.modal-subtitle { color: var(--text-light); font-size: 0.88rem; margin-bottom: 16px; }
-.modal-rating { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
-.modal-rating .stars { font-size: 1rem; }
-.modal-rating .rating-num { font-size: 1.1rem; }
-.modal-info-grid { display: grid; gap: 12px; margin-bottom: 24px; }
-.modal-info-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px; background: var(--bg); border-radius: var(--radius-sm); }
-.modal-info-item i { color: var(--primary); width: 20px; text-align: center; margin-top: 2px; flex-shrink: 0; }
-.modal-info-item .info-label { font-size: 0.75rem; color: var(--text-lighter); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-.modal-info-item .info-value { font-size: 0.9rem; font-weight: 500; color: var(--text); margin-top: 2px; }
-.modal-section { margin-bottom: 20px; }
-.modal-section-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-.modal-section-title i { color: var(--primary); }
-.playroom-desc { background: linear-gradient(135deg, #FFF0F5, #F0FAF8); border-radius: var(--radius-sm); padding: 16px; font-size: 0.88rem; line-height: 1.7; color: var(--text); }
-.modal-facilities { display: flex; flex-wrap: wrap; gap: 10px; }
-.modal-facility { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; }
-.modal-facility.available { background: #E8F8F5; color: var(--secondary-dark); }
-.modal-facility.unavailable { background: #F5F5F5; color: var(--text-lighter); text-decoration: line-through; }
-.modal-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-.modal-tag { background: var(--primary-light); color: var(--primary-dark); border-radius: 50px; padding: 6px 14px; font-size: 0.82rem; font-weight: 600; }
-.modal-cta { display: flex; gap: 10px; margin-top: 24px; }
-.btn-call { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--secondary); color: white; border: none; border-radius: var(--radius-sm); padding: 14px; font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: var(--font); transition: var(--transition); }
-.btn-call:hover { background: var(--secondary-dark); }
-.btn-directions { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--primary); color: white; border: none; border-radius: var(--radius-sm); padding: 14px; font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: var(--font); transition: var(--transition); }
-.btn-directions:hover { background: var(--primary-dark); }
-
-/* Back to Top */
-.back-to-top { position: fixed; bottom: 24px; right: 24px; width: 48px; height: 48px; background: var(--primary); color: white; border: none; border-radius: 50%; box-shadow: 0 4px 16px rgba(255,107,157,0.3); cursor: pointer; font-size: 1.1rem; z-index: 50; transition: var(--transition); }
-.back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(255,107,157,0.4); }
-
-/* Ad Slots */
-.ad-slot { width: 100%; max-width: 100%; overflow: hidden; }
-.ad-placeholder { background: linear-gradient(135deg, #f8f9fa 0%, #eef0f2 100%); border: 2px dashed #d1d5db; border-radius: 12px; text-align: center; color: #9ca3af; font-size: 0.85rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; transition: var(--transition); }
-.ad-placeholder:hover { border-color: var(--primary-light); background: linear-gradient(135deg, #fff0f5 0%, #fef3f7 100%); }
-.ad-placeholder p { margin: 0; }
-.ad-placeholder small { font-size: 0.72rem; color: #b0b8c4; }
-.ad-label { display: inline-block; background: #e5e7eb; color: #6b7280; font-size: 0.6rem; font-weight: 700; letter-spacing: 1px; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; }
-.ad-slot-top { padding: 10px 16px; display: flex; justify-content: center; background: rgba(255,255,255,0.6); backdrop-filter: blur(6px); }
-.ad-slot-top .ad-placeholder { max-width: 728px; width: 100%; min-height: 90px; padding: 12px 20px; }
-.ad-slot-infeed { margin-bottom: 20px; }
-.ad-slot-infeed .ad-placeholder { max-width: 100%; min-height: 100px; padding: 20px; background: linear-gradient(135deg, #fff5f8 0%, #f0fffe 100%); border-color: var(--primary-light); }
-.ad-placeholder.ad-native { gap: 8px; }
-.ad-placeholder.ad-native .ad-label { background: var(--primary-light); color: var(--primary-dark); }
-.ad-slot-bottom { position: fixed; bottom: 0; left: 0; right: 0; z-index: 999; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); box-shadow: 0 -2px 20px rgba(0,0,0,0.08); padding: 8px 16px; display: flex; justify-content: center; align-items: center; }
-.ad-slot-bottom .ad-placeholder { max-width: 728px; width: 100%; min-height: 50px; padding: 8px 16px; flex-direction: row; gap: 12px; }
-.ad-close { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: #e5e7eb; border: none; width: 24px; height: 24px; border-radius: 50%; font-size: 14px; line-height: 1; color: #6b7280; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
-.ad-close:hover { background: #d1d5db; color: #374151; }
-
-/* Footer */
-.footer { margin-bottom: 70px; background: var(--text); color: rgba(255,255,255,0.7); padding: 48px 0 24px; }
-.footer-inner { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 32px; }
+.footer { background: var(--text); color: rgba(255,255,255,0.7); padding: 48px 0 24px; margin-top: 0; }
+.footer-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 32px; }
 .footer-brand .logo { color: white; font-size: 1.3rem; margin-bottom: 12px; }
 .footer-brand p { font-size: 0.88rem; line-height: 1.6; }
 .footer-links h4 { color: white; font-size: 0.9rem; font-weight: 700; margin-bottom: 12px; }
 .footer-links a { display: block; color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.85rem; padding: 4px 0; transition: var(--transition); }
 .footer-links a:hover { color: var(--primary-light); }
-.footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; text-align: center; font-size: 0.82rem; }
+.footer-bottom { max-width: 1200px; margin: 0 auto; padding: 24px 20px 0; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.82rem; }
 
-/* Responsive */
 @media (max-width: 768px) {
-    .header-inner { flex-direction: column; gap: 4px; text-align: center; }
-    .tagline { font-size: 0.78rem; }
-    .hero { padding: 32px 0 24px; }
-    .hero h1 { font-size: 1.4rem; }
-    .search-box { flex-direction: row; }
-    .search-btn { padding: 10px 20px; font-size: 0.88rem; }
-    .quick-tags { gap: 6px; }
-    .quick-tag { padding: 6px 12px; font-size: 0.78rem; }
-    .location-bar { flex-direction: column; gap: 8px; }
-    .location-btn { width: 100%; justify-content: center; }
-    .sort-box { width: 100%; }
-    .sort-box select { width: 100%; }
-    .store-grid { grid-template-columns: 1fr; }
-    .store-grid.list-view .store-card { grid-template-columns: 1fr; }
-    .store-grid.list-view .card-image { height: 180px; min-height: auto; }
-    .modal { max-height: 95vh; }
-    .modal-hero { height: 160px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.span2 { grid-column: span 1; }
     .footer-inner { grid-template-columns: 1fr; gap: 24px; }
-    .map-view { height: 300px; }
-    .modal-cta { flex-direction: column; }
-    .ad-slot-top .ad-placeholder { min-height: 60px; font-size: 0.75rem; }
-    .ad-slot-infeed .ad-placeholder { min-height: 80px; padding: 14px; }
-    .ad-slot-bottom .ad-placeholder { max-width: 320px; min-height: 50px; font-size: 0.75rem; }
+    .page-hero h1 { font-size: 1.3rem; }
 }
-@media (min-width: 769px) and (max-width: 1024px) {
-    .store-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (min-width: 1024px) {
-    .modal { border-radius: var(--radius); max-width: 640px; margin-bottom: 5vh; }
-    .modal-overlay { align-items: center; }
-}
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--text-lighter); border-radius: 3px; }
-    </style>
+  </style>
 </head>
-
 <body>
-  <!-- Header (index.html에서 그대로 가져옴) -->
-  <header class="header">
-    <div class="header-inner">
-      <div class="logo" onclick="location.href='index.html'">
-        <i class="fas fa-baby"></i>
-        <span>키즈고</span>
-      </div>
-      <p class="tagline">놀이방 있는 식당 & 카페, 한 눈에 찾아보세요!</p>
-    </div>
-  </header>
 
-  <section class="results-section">
-    <div class="container">
-      <div class="results-header">
-        <h2>가게 등록 요청</h2>
-        <span class="results-count">안내</span>
-      </div>
+<header class="header">
+  <div class="header-inner">
+    <a class="logo" href="index.html"><i class="fas fa-baby"></i><span>키즈고</span></a>
+    <p class="tagline">놀이방 있는 식당 & 카페, 한 눈에 찾아보세요!</p>
+  </div>
+</header>
 
-      <div class="filter-panel open" style="display:block;">
-        <div class="filter-grid">
-          <div class="filter-group" style="border-bottom:none;padding-bottom:0;">
-            <div class="modal-section-title"><i class="fas fa-store"></i> 등록 방법</div>
-            <p style="color:var(--text-light);margin-bottom:12px;">
-              키즈고는 아이와 함께 가기 좋은 공간 정보를 모아 제공합니다.
-              아래 폼으로 등록 요청을 보내주시면 확인 후 반영합니다.
-            </p>
+<div class="page-hero">
+  <div class="container">
+    <h1>가게 <strong>등록 요청</strong></h1>
+    <p>키즈프렌들리 가게 정보를 알려주세요. 확인 후 등록해드립니다.</p>
+  </div>
+</div>
 
-            <div class="modal-info-grid">
-              <div class="modal-info-item">
-                <i class="fas fa-check"></i>
-                <div>
-                  <div class="info-label">필수</div>
-                  <div class="info-value">매장명, 주소</div>
-                </div>
-              </div>
-              <div class="modal-info-item">
-                <i class="fas fa-plus"></i>
-                <div>
-                  <div class="info-label">선택</div>
-                  <div class="info-value">연락처 / 키즈 편의시설 / 네이버·인스타 링크 / 참고사항</div>
-                </div>
-              </div>
-            </div>
+<section class="form-wrap">
+  <div class="container">
 
-            <div class="modal-cta">
-              <!-- ✅ 여기 링크만 너 폼 링크로 바꿔 -->
-              <a class="btn-directions" href="https://forms.gle/여기에-등록요청-폼-링크" target="_blank" rel="noopener">
-                <i class="fas fa-paper-plane"></i> 등록 요청하기
-              </a>
-              <a class="btn-call" href="faq.html">
-                <i class="fas fa-question-circle"></i> FAQ 보기
-              </a>
-            </div>
+    <div id="formPanel">
 
-            <p style="margin-top:14px;font-size:0.82rem;color:var(--text-lighter);">
-              제출된 정보는 검토 후 반영되며, 모든 요청이 즉시 반영되지는 않을 수 있습니다.
-            </p>
+      <!-- 기본 정보 -->
+      <div class="form-panel">
+        <div class="form-panel-title"><i class="fas fa-store"></i> 기본 정보</div>
+        <div class="form-grid">
+          <div class="form-group span2">
+            <label class="form-label"><i class="fas fa-store"></i> 가게 이름 <span class="required">*필수</span></label>
+            <input type="text" class="form-input" id="f-name" placeholder="예: 맛있는 고기집 강남점" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-tag"></i> 업종 <span class="required">*필수</span></label>
+            <select class="form-select" id="f-category">
+              <option value="">선택해주세요</option>
+              <option value="식당">식당</option>
+              <option value="카페">카페</option>
+              <option value="키즈카페">키즈카페</option>
+              <option value="뷔페">뷔페</option>
+              <option value="베이커리">베이커리</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-utensils"></i> 세부 업종</label>
+            <input type="text" class="form-input" id="f-subcategory" placeholder="예: 한식, 이탈리안, 고기집">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-map-marker-alt"></i> 지역(시/도) <span class="required">*필수</span></label>
+            <select class="form-select" id="f-region">
+              <option value="">선택해주세요</option>
+              <option>서울</option><option>경기</option><option>인천</option>
+              <option>부산</option><option>대구</option><option>대전</option>
+              <option>광주</option><option>울산</option><option>세종</option>
+              <option>강원</option><option>충북</option><option>충남</option>
+              <option>경북</option><option>경남</option><option>전북</option>
+              <option>전남</option><option>제주</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-map"></i> 구/군</label>
+            <input type="text" class="form-input" id="f-district" placeholder="예: 강남구, 수원시">
+          </div>
+          <div class="form-group span2">
+            <label class="form-label"><i class="fas fa-location-arrow"></i> 상세 주소 <span class="required">*필수</span></label>
+            <input type="text" class="form-input" id="f-address" placeholder="예: 서울 강남구 테헤란로 123">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-phone"></i> 전화번호</label>
+            <input type="text" class="form-input" id="f-phone" placeholder="예: 02-123-4567">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-clock"></i> 영업시간</label>
+            <input type="text" class="form-input" id="f-hours" placeholder="예: 11:00~22:00 (월 휴무)">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-won-sign"></i> 가격대</label>
+            <select class="form-select" id="f-price-range">
+              <option value="">선택해주세요</option>
+              <option value="$">$ (저렴, ~1만원)</option>
+              <option value="$$">$$ (보통, 1~3만원)</option>
+              <option value="$$$">$$$ (고급, 3만원+)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-users"></i> 권장 연령</label>
+            <select class="form-select" id="f-age-range">
+              <option value="전연령">전연령</option>
+              <option value="0~3세">0~3세</option>
+              <option value="3~5세">3~5세</option>
+              <option value="5~10세">5~10세</option>
+              <option value="초등학생">초등학생</option>
+            </select>
           </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- Footer (index.html 그대로 가져옴 + 링크만 수정) -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-inner">
-        <div class="footer-brand">
-          <div class="logo"><i class="fas fa-baby"></i> 키즈고</div>
-          <p>아이와 함께하는 행복한 외식, 키즈고가 함께합니다.</p>
-        </div>
-        <div class="footer-links">
-          <h4>서비스</h4>
-          <a href="store-request.html">가게 등록 요청</a>
-          <a href="guide.html">이용 가이드</a>
-          <a href="faq.html">자주 묻는 질문</a>
-        </div>
-        <div class="footer-links">
-          <h4>문의</h4>
-          <a href="mailto:info@kidsgo.kr">info@kidsgo.kr</a>
-          <a href="https://instagram.com/kidsgo" target="_blank" rel="noopener">Instagram @kidsgo</a>
-        </div>
-        <div class="footer-links">
-          <h4>법적 고지</h4>
-          <a href="terms.html">이용약관</a>
-          <a href="privacy.html">개인정보처리방침</a>
+      <!-- 키즈 시설 -->
+      <div class="form-panel">
+        <div class="form-panel-title"><i class="fas fa-child"></i> 키즈 시설 정보</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-gamepad"></i> 놀이시설 유형</label>
+            <select class="form-select" id="f-playroom-type">
+              <option value="키즈존">키즈존</option>
+              <option value="실내놀이방">실내놀이방</option>
+              <option value="볼풀">볼풀</option>
+              <option value="미끄럼틀">미끄럼틀</option>
+              <option value="트램펄린">트램펄린</option>
+              <option value="키즈카페형">키즈카페형</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-info-circle"></i> 놀이시설 설명</label>
+            <input type="text" class="form-input" id="f-playroom-desc" placeholder="예: 볼풀+미끄럼틀, CCTV 완비">
+          </div>
+          <div class="form-group span2">
+            <label class="form-label"><i class="fas fa-check-square"></i> 편의시설</label>
+            <div class="checkbox-group">
+              <label class="checkbox-item"><input type="checkbox" id="f-parking"><span class="checkbox-label"><i class="fas fa-parking"></i> 주차 가능</span></label>
+              <label class="checkbox-item"><input type="checkbox" id="f-nursing"><span class="checkbox-label"><i class="fas fa-baby-carriage"></i> 수유실</span></label>
+              <label class="checkbox-item"><input type="checkbox" id="f-highchair"><span class="checkbox-label"><i class="fas fa-chair"></i> 유아의자</span></label>
+              <label class="checkbox-item"><input type="checkbox" id="f-stroller"><span class="checkbox-label"><i class="fas fa-wheelchair"></i> 유모차 접근</span></label>
+            </div>
+          </div>
+          <div class="form-group span2">
+            <label class="form-label"><i class="fas fa-tags"></i> 태그</label>
+            <input type="text" class="form-input" id="f-tags" placeholder="쉼표로 구분: 생일파티, 돌잔치, 단체모임">
+            <p class="form-hint">쉼표(,)로 구분해서 입력해주세요</p>
+          </div>
+          <div class="form-group span2">
+            <label class="form-label"><i class="fas fa-align-left"></i> 가게 소개</label>
+            <textarea class="form-textarea" id="f-description" placeholder="가게에 대한 간단한 소개를 적어주세요"></textarea>
+          </div>
         </div>
       </div>
-      <div class="footer-bottom">
-        <p>&copy; 2026 키즈고(KidsGo). All rights reserved.</p>
-        <a href="admin.html" style="color:#94A3B8;font-size:0.72rem;text-decoration:none;margin-top:4px;display:inline-block;">관리자</a>
-      </div>
+
+      <button class="btn-submit" id="submitBtn" onclick="submitRequest()">
+        <i class="fas fa-paper-plane"></i> 등록 요청 보내기
+      </button>
+
+    </div><!-- /formPanel -->
+
+    <!-- 성공 메시지 -->
+    <div class="success-msg" id="successMsg">
+      <i class="fas fa-check-circle"></i>
+      <h3>등록 요청이 접수되었습니다!</h3>
+      <p>확인 후 등록해드리겠습니다. 감사합니다 🙏</p>
+      <a class="btn-back" href="index.html"><i class="fas fa-home"></i> 홈으로</a>
+      <button class="btn-back pink" onclick="resetForm()"><i class="fas fa-plus"></i> 추가 요청</button>
     </div>
-  </footer>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo"><i class="fas fa-baby"></i> 키즈고</div>
+      <p>아이와 함께하는 행복한 외식, 키즈고가 함께합니다.</p>
+    </div>
+    <div class="footer-links">
+      <h4>서비스</h4>
+      <a href="store-request.html">가게 등록 요청</a>
+      <a href="edit-request.html">정보 수정 요청</a>
+    </div>
+    <div class="footer-links">
+      <h4>문의</h4>
+      <a href="mailto:info@kidsgo.kr">info@kidsgo.kr</a>
+    </div>
+    <div class="footer-links">
+      <h4>법적 고지</h4>
+      <a href="terms.html">이용약관</a>
+      <a href="privacy.html">개인정보처리방침</a>
+    </div>
+  </div>
+  <div class="footer-bottom"><p>&copy; 2026 키즈고(KidsGo). All rights reserved.</p></div>
+</footer>
+
+<script>
+const SUPABASE_URL = 'https://vzjqfogqymthtmbzyxkz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_911v8puVJ_Qm-iex5F1gcg_suBEEkur';
+
+async function submitRequest() {
+    const name = document.getElementById('f-name').value.trim();
+    const category = document.getElementById('f-category').value;
+    const region = document.getElementById('f-region').value;
+    const address = document.getElementById('f-address').value.trim();
+
+    if (!name) { alert('가게 이름을 입력해주세요.'); return; }
+    if (!category) { alert('업종을 선택해주세요.'); return; }
+    if (!region) { alert('지역을 선택해주세요.'); return; }
+    if (!address) { alert('상세 주소를 입력해주세요.'); return; }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 전송 중...';
+
+    const tagsRaw = document.getElementById('f-tags').value.trim();
+    const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+    const payload = {
+        name,
+        category,
+        subcategory: document.getElementById('f-subcategory').value.trim() || null,
+        region,
+        district: document.getElementById('f-district').value.trim() || null,
+        address,
+        phone: document.getElementById('f-phone').value.trim() || null,
+        hours: document.getElementById('f-hours').value.trim() || null,
+        playroom_type: document.getElementById('f-playroom-type').value || null,
+        playroom_desc: document.getElementById('f-playroom-desc').value.trim() || null,
+        age_range: document.getElementById('f-age-range').value || '전연령',
+        has_parking: document.getElementById('f-parking').checked,
+        has_nursing_room: document.getElementById('f-nursing').checked,
+        has_highchair: document.getElementById('f-highchair').checked,
+        has_stroller_access: document.getElementById('f-stroller').checked,
+        price_range: document.getElementById('f-price-range').value || '$$',
+        tags: tags.length > 0 ? tags : null,
+        description: document.getElementById('f-description').value.trim() || null,
+        status: 'pending'
+    };
+
+    try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/store_requests`, {
+            method: 'POST',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok || response.status === 201) {
+            document.getElementById('formPanel').style.display = 'none';
+            document.getElementById('successMsg').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            const err = await response.text();
+            console.error('제출 실패:', err);
+            alert('전송에 실패했습니다. 잠시 후 다시 시도해주세요.');
+        }
+    } catch(e) {
+        console.error('네트워크 에러:', e);
+        alert('네트워크 오류가 발생했습니다.');
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> 등록 요청 보내기';
+}
+
+function resetForm() {
+    document.querySelectorAll('input[type=text], input[type=tel], textarea').forEach(el => el.value = '');
+    document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+    document.querySelectorAll('input[type=checkbox]').forEach(el => el.checked = false);
+    document.getElementById('formPanel').style.display = 'block';
+    document.getElementById('successMsg').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
 </body>
 </html>
