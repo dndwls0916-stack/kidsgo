@@ -3,258 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>키즈고 관리자 - CSV 데이터 업로드</title>
+    <title>키즈고 관리자</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <!-- CSV 파서 -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <style>
         :root {
-            --primary: #FF6B9D;
-            --primary-dark: #E85588;
-            --primary-light: #FFD4E3;
-            --secondary: #4ECDC4;
-            --bg: #FFF8F0;
-            --card: #FFFFFF;
-            --text: #2D3436;
-            --text-light: #636E72;
-            --border: #E8E8E8;
-            --success: #00b894;
-            --warning: #fdcb6e;
-            --danger: #e17055;
+            --primary: #FF6B9D; --primary-dark: #E85588; --primary-light: #FFD4E3;
+            --secondary: #4ECDC4; --secondary-dark: #3BB5AD;
+            --bg: #FFF8F0; --card: #FFFFFF; --text: #2D3436; --text-light: #636E72;
+            --border: #E8E8E8; --success: #00b894; --warning: #fdcb6e; --danger: #e17055;
             --font: 'Noto Sans KR', sans-serif;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
-        
-        /* Header */
+
+        /* ===== 로그인 화면 ===== */
+        .login-wrap {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #FF6B9D 0%, #4ECDC4 100%);
+        }
+        .login-box {
+            background: white; border-radius: 24px; padding: 48px 40px;
+            width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        .login-logo {
+            text-align: center; margin-bottom: 32px;
+        }
+        .login-logo i { font-size: 2.5rem; color: var(--primary); }
+        .login-logo h1 { font-size: 1.4rem; font-weight: 800; margin-top: 8px; }
+        .login-logo p { font-size: 0.82rem; color: var(--text-light); margin-top: 4px; }
+        .login-field { margin-bottom: 16px; }
+        .login-field label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+        .login-field input {
+            width: 100%; padding: 12px 16px; border: 1.5px solid var(--border);
+            border-radius: 10px; font-family: var(--font); font-size: 0.9rem;
+            transition: border-color 0.2s; outline: none;
+        }
+        .login-field input:focus { border-color: var(--primary); }
+        .login-btn {
+            width: 100%; padding: 14px; background: var(--primary); color: white;
+            border: none; border-radius: 10px; font-family: var(--font);
+            font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.3s;
+            margin-top: 8px;
+        }
+        .login-btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .login-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+        .login-error {
+            background: #fff5f5; color: var(--danger); border: 1px solid #fad7d7;
+            border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; margin-top: 12px;
+            display: none;
+        }
+
+        /* ===== 메인 레이아웃 ===== */
+        .admin-wrap { display: none; }
         .header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white; padding: 16px 24px;
             display: flex; align-items: center; justify-content: space-between;
         }
         .header h1 { font-size: 1.1rem; font-weight: 700; }
-        .header h1 i { margin-right: 8px; }
-        .header a { color: white; text-decoration: none; font-size: 0.85rem; opacity: 0.9; }
-        .header a:hover { opacity: 1; }
-
-        /* Container */
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .header-user { font-size: 0.82rem; opacity: 0.9; }
+        .logout-btn {
+            background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 8px; padding: 6px 14px; font-size: 0.8rem; font-weight: 600;
+            cursor: pointer; font-family: var(--font); transition: all 0.2s;
+        }
+        .logout-btn:hover { background: rgba(255,255,255,0.35); }
         .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
 
-        /* Stats Bar */
-        .stats-bar {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px; margin-bottom: 24px;
-        }
-        .stat-card {
-            background: var(--card); border-radius: 12px; padding: 16px;
-            text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
+        /* ===== Stats ===== */
+        .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 24px; }
+        .stat-card { background: var(--card); border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
         .stat-card .num { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
         .stat-card .label { font-size: 0.75rem; color: var(--text-light); margin-top: 4px; }
 
-        /* Sections */
-        .section {
-            background: var(--card); border-radius: 16px; padding: 24px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 24px;
-        }
-        .section-title {
-            font-size: 1rem; font-weight: 700; margin-bottom: 16px;
-            display: flex; align-items: center; gap: 8px;
-        }
-        .section-title i { color: var(--primary); }
-
-        /* Step Indicator */
-        .steps {
-            display: flex; gap: 4px; margin-bottom: 24px;
-        }
-        .step {
-            flex: 1; text-align: center; padding: 10px 8px;
-            background: #f1f2f6; border-radius: 8px; font-size: 0.78rem;
-            font-weight: 500; color: var(--text-light); transition: all 0.3s;
-            position: relative;
-        }
-        .step.active { background: var(--primary); color: white; }
-        .step.done { background: var(--success); color: white; }
-        .step .step-num {
-            display: inline-flex; align-items: center; justify-content: center;
-            width: 22px; height: 22px; border-radius: 50%;
-            background: rgba(255,255,255,0.3); font-size: 0.7rem;
-            font-weight: 700; margin-right: 4px;
-        }
-
-        /* Upload Zone */
-        .upload-zone {
-            border: 2.5px dashed var(--border); border-radius: 16px;
-            padding: 48px 24px; text-align: center; cursor: pointer;
-            transition: all 0.3s; position: relative;
-        }
-        .upload-zone:hover, .upload-zone.dragover {
-            border-color: var(--primary); background: rgba(255,107,157,0.04);
-        }
-        .upload-zone i { font-size: 2.5rem; color: var(--primary-light); margin-bottom: 12px; }
-        .upload-zone h3 { font-size: 1rem; margin-bottom: 8px; }
-        .upload-zone p { font-size: 0.82rem; color: var(--text-light); }
-        .upload-zone input { display: none; }
-
-        /* Template Download */
-        .template-bar {
-            display: flex; align-items: center; justify-content: space-between;
-            background: linear-gradient(135deg, #f0fffe 0%, #fff5f8 100%);
-            border-radius: 12px; padding: 14px 18px; margin-bottom: 16px;
-            border: 1px solid #e0f5f3;
-        }
-        .template-bar span { font-size: 0.82rem; color: var(--text-light); }
-        .template-bar span i { color: var(--secondary); margin-right: 6px; }
-        
-        /* Buttons */
-        .btn {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 10px 20px; border-radius: 10px; border: none;
-            font-family: var(--font); font-size: 0.85rem; font-weight: 600;
-            cursor: pointer; transition: all 0.3s;
-        }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
-        .btn-primary:disabled { background: #ccc; cursor: not-allowed; transform: none; }
-        .btn-secondary { background: var(--secondary); color: white; }
-        .btn-secondary:hover { background: var(--secondary-dark); }
-        .btn-outline {
-            background: white; color: var(--primary); border: 1.5px solid var(--primary);
-        }
-        .btn-outline:hover { background: var(--primary-light); }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-danger:hover { background: #d63031; }
-        .btn-sm { padding: 7px 14px; font-size: 0.78rem; }
-
-        /* Preview Table */
-        .preview-wrapper {
-            overflow-x: auto; border: 1px solid var(--border);
-            border-radius: 12px; max-height: 400px; overflow-y: auto;
-        }
-        .preview-table {
-            width: 100%; border-collapse: collapse; font-size: 0.78rem;
-            min-width: 800px;
-        }
-        .preview-table th {
-            background: #f8f9fa; position: sticky; top: 0; z-index: 2;
-            padding: 10px 12px; text-align: left; font-weight: 600;
-            border-bottom: 2px solid var(--border); white-space: nowrap;
-        }
-        .preview-table td {
-            padding: 8px 12px; border-bottom: 1px solid #f1f2f6;
-            max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-        }
-        .preview-table tr:hover td { background: #fef9f0; }
-        .preview-info { 
-            padding: 12px 16px; background: #f8f9fa; border-top: 1px solid var(--border);
-            font-size: 0.78rem; color: var(--text-light); 
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
-        /* Mapping Section */
-        .mapping-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 12px;
-        }
-        .mapping-item {
-            display: flex; align-items: center; gap: 8px;
-            padding: 10px 14px; background: #f8f9fa; border-radius: 10px;
-            font-size: 0.82rem;
-        }
-        .mapping-item .field-name {
-            min-width: 120px; font-weight: 600; color: var(--primary-dark);
-        }
-        .mapping-item .field-required { color: var(--danger); font-size: 0.7rem; }
-        .mapping-item i.fa-arrow-right { color: var(--text-light); font-size: 0.7rem; }
-        .mapping-item select {
-            flex: 1; padding: 6px 10px; border: 1.5px solid var(--border);
-            border-radius: 8px; font-family: var(--font); font-size: 0.8rem;
-            background: white; cursor: pointer;
-        }
-        .mapping-item select:focus { border-color: var(--primary); outline: none; }
-        .mapping-item select.mapped { border-color: var(--success); background: #f0fff4; }
-        .mapping-item select.unmapped { border-color: var(--warning); }
-
-        /* Progress */
-        .progress-bar {
-            width: 100%; height: 12px; background: #f1f2f6;
-            border-radius: 6px; overflow: hidden; margin: 12px 0;
-        }
-        .progress-fill {
-            height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 6px; transition: width 0.3s; width: 0%;
-        }
-        .progress-text { font-size: 0.82rem; color: var(--text-light); text-align: center; }
-
-        /* Result Log */
-        .result-log {
-            background: #1e272e; color: #d2dae2; border-radius: 12px;
-            padding: 16px; font-family: 'Courier New', monospace;
-            font-size: 0.78rem; max-height: 300px; overflow-y: auto;
-            line-height: 1.8;
-        }
-        .result-log .success { color: #00b894; }
-        .result-log .error { color: #e17055; }
-        .result-log .info { color: #74b9ff; }
-        .result-log .warn { color: #fdcb6e; }
-
-        /* Actions Bar */
-        .actions-bar {
-            display: flex; gap: 12px; justify-content: flex-end;
-            flex-wrap: wrap; margin-top: 16px;
-        }
-
-        /* Alert */
-        .alert {
-            padding: 12px 16px; border-radius: 10px; font-size: 0.82rem;
-            margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
-        }
-        .alert-info { background: #dff9fb; color: #0984e3; border: 1px solid #74b9ff; }
-        .alert-warning { background: #ffeaa7; color: #6c5ce7; border: 1px solid #fdcb6e; }
-        .alert-success { background: #e0fce7; color: #00b894; border: 1px solid #55efc4; }
-
-        /* Existing data controls */
-        .existing-controls {
-            display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
-        }
-        .radio-group { display: flex; gap: 16px; }
-        .radio-group label {
-            display: flex; align-items: center; gap: 6px;
-            font-size: 0.82rem; cursor: pointer;
-        }
-
-        /* Hidden sections */
-        .hidden { display: none !important; }
-
-        /* Supabase 설정 */
-        .supabase-config {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border-radius: 16px; padding: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15); margin-bottom: 24px;
-        }
-        .supabase-config .section-title { color: #00d4aa; }
-        .supabase-config .section-title i { color: #00d4aa; }
-        .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-        .config-field label { display: block; font-size: 0.78rem; color: #a0aec0; margin-bottom: 6px; font-weight: 600; }
-        .config-field input {
-            width: 100%; padding: 10px 14px; border-radius: 10px;
-            border: 1.5px solid #2d3748; background: #2d3748; color: #e2e8f0;
-            font-family: 'Courier New', monospace; font-size: 0.78rem;
-            transition: border-color 0.3s;
-        }
-        .config-field input:focus { border-color: #00d4aa; outline: none; }
-        .config-field input.connected { border-color: #00b894; background: #1a3a2e; }
-        .config-status { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; }
-        .config-status.ok { color: #00b894; }
-        .config-status.err { color: #e17055; }
-        .config-status.idle { color: #636e72; }
-
-        /* 탭 네비게이션 */
+        /* ===== 탭 ===== */
         .tab-nav { display: flex; gap: 4px; margin-bottom: 24px; }
         .tab-btn {
             flex: 1; padding: 12px 16px; border: none; border-radius: 10px;
@@ -265,59 +93,19 @@
         .tab-btn .badge {
             display: inline-flex; align-items: center; justify-content: center;
             background: white; color: var(--primary); border-radius: 50%;
-            width: 20px; height: 20px; font-size: 0.7rem; font-weight: 700;
-            margin-left: 6px;
+            width: 20px; height: 20px; font-size: 0.7rem; font-weight: 700; margin-left: 6px;
         }
         .tab-btn.active .badge { background: rgba(255,255,255,0.3); color: white; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* 수정요청 카드 */
-        .request-list { display: flex; flex-direction: column; gap: 12px; }
-        .request-card {
-            background: var(--card); border-radius: 14px; padding: 18px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.06); border-left: 4px solid var(--warning);
-            transition: box-shadow 0.2s;
-        }
-        .request-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
-        .request-card.approved { border-left-color: var(--success); opacity: 0.7; }
-        .request-card.rejected { border-left-color: var(--danger); opacity: 0.7; }
-        .request-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-        .request-store { font-size: 1rem; font-weight: 700; color: var(--text); }
-        .request-date { font-size: 0.75rem; color: var(--text-light); }
-        .request-field {
-            display: inline-block; background: var(--primary-light); color: var(--primary-dark);
-            padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
-            margin-bottom: 10px;
-        }
-        .request-values {
-            display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px;
-            align-items: center; margin-bottom: 12px;
-        }
-        .val-box {
-            padding: 8px 12px; border-radius: 8px; font-size: 0.82rem;
-            word-break: break-all;
-        }
-        .val-old { background: #fff5f5; color: #c0392b; border: 1px solid #fad7d7; text-decoration: line-through; }
-        .val-new { background: #f0fff4; color: #00b894; border: 1px solid #b2f5c8; font-weight: 600; }
-        .val-arrow { text-align: center; font-size: 1.2rem; color: var(--text-light); }
-        .request-reason { font-size: 0.78rem; color: var(--text-light); margin-bottom: 12px; font-style: italic; }
-        .request-actions { display: flex; gap: 8px; justify-content: flex-end; }
-        .status-badge {
-            display: inline-flex; align-items: center; gap: 4px;
-            padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
-        }
-        .status-pending { background: #fff3cd; color: #856404; }
-        .status-approved { background: #d1e7dd; color: #0a3622; }
-        .status-rejected { background: #f8d7da; color: #58151c; }
+        /* ===== Section ===== */
+        .section { background: var(--card); border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 24px; }
+        .section-title { font-size: 1rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .section-title i { color: var(--primary); }
 
-        /* 빈 상태 */
-        .empty-state { text-align: center; padding: 48px 24px; color: var(--text-light); }
-        .empty-state i { font-size: 3rem; margin-bottom: 12px; opacity: 0.3; }
-        .empty-state p { font-size: 0.9rem; }
-
-        /* 필터 탭 */
-        .filter-tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+        /* ===== 수정요청 카드 ===== */
+        .filter-tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
         .filter-tab {
             padding: 6px 16px; border-radius: 20px; border: 1.5px solid var(--border);
             background: white; font-family: var(--font); font-size: 0.8rem;
@@ -325,56 +113,178 @@
         }
         .filter-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
 
+        .request-list { display: flex; flex-direction: column; gap: 12px; }
+        .request-card {
+            background: var(--card); border-radius: 14px; padding: 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06); border-left: 4px solid var(--warning);
+        }
+        .request-card.approved { border-left-color: var(--success); opacity: 0.75; }
+        .request-card.rejected { border-left-color: var(--danger); opacity: 0.75; }
+        .request-card.manual { border-left-color: #a29bfe; }
+        .request-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 4px; }
+        .request-store { font-size: 1rem; font-weight: 700; }
+        .request-date { font-size: 0.75rem; color: var(--text-light); }
+        .request-field {
+            display: inline-block; background: var(--primary-light); color: var(--primary-dark);
+            padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-bottom: 10px;
+        }
+        .request-field.manual-tag { background: #e8e5ff; color: #6c5ce7; }
+        .request-values { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center; margin-bottom: 10px; }
+        .val-box { padding: 8px 12px; border-radius: 8px; font-size: 0.82rem; word-break: break-all; }
+        .val-old { background: #fff5f5; color: #c0392b; border: 1px solid #fad7d7; text-decoration: line-through; }
+        .val-new { background: #f0fff4; color: #00b894; border: 1px solid #b2f5c8; font-weight: 600; }
+        .val-arrow { text-align: center; font-size: 1.2rem; color: var(--text-light); }
+        .request-reason { font-size: 0.78rem; color: var(--text-light); margin-bottom: 10px; font-style: italic; }
+        .request-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+        .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-approved { background: #d1e7dd; color: #0a3622; }
+        .status-rejected { background: #f8d7da; color: #58151c; }
+
+        /* ===== 직접 편집 폼 (수동 항목용) ===== */
+        .manual-edit-form {
+            background: #f8f6ff; border: 1.5px solid #a29bfe; border-radius: 10px;
+            padding: 14px; margin-top: 10px; display: none;
+        }
+        .manual-edit-form.open { display: block; }
+        .manual-edit-form label { font-size: 0.78rem; font-weight: 600; color: #6c5ce7; margin-bottom: 6px; display: block; }
+        .manual-edit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin-bottom: 10px; }
+        .manual-edit-grid .edit-field label { font-size: 0.75rem; color: var(--text-light); margin-bottom: 4px; display: block; }
+        .manual-edit-grid .edit-field input,
+        .manual-edit-grid .edit-field select {
+            width: 100%; padding: 8px 10px; border: 1.5px solid var(--border);
+            border-radius: 8px; font-family: var(--font); font-size: 0.82rem; background: white;
+        }
+        .manual-save-btn {
+            background: #6c5ce7; color: white; border: none; border-radius: 8px;
+            padding: 8px 16px; font-family: var(--font); font-size: 0.82rem;
+            font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .manual-save-btn:hover { background: #5a4fcf; }
+
+        /* ===== Buttons ===== */
+        .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 10px; border: none; font-family: var(--font); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .btn-primary:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+        .btn-secondary { background: var(--secondary); color: white; }
+        .btn-secondary:hover { background: var(--secondary-dark); }
+        .btn-outline { background: white; color: var(--primary); border: 1.5px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: #d63031; }
+        .btn-purple { background: #6c5ce7; color: white; }
+        .btn-purple:hover { background: #5a4fcf; }
+        .btn-sm { padding: 7px 14px; font-size: 0.78rem; }
+
+        /* ===== CSV 업로드 ===== */
+        .steps { display: flex; gap: 4px; margin-bottom: 24px; }
+        .step { flex: 1; text-align: center; padding: 10px 8px; background: #f1f2f6; border-radius: 8px; font-size: 0.78rem; font-weight: 500; color: var(--text-light); transition: all 0.3s; }
+        .step.active { background: var(--primary); color: white; }
+        .step.done { background: var(--success); color: white; }
+        .step .step-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.3); font-size: 0.7rem; font-weight: 700; margin-right: 4px; }
+        .upload-zone { border: 2.5px dashed var(--border); border-radius: 16px; padding: 48px 24px; text-align: center; cursor: pointer; transition: all 0.3s; }
+        .upload-zone:hover, .upload-zone.dragover { border-color: var(--primary); background: rgba(255,107,157,0.04); }
+        .upload-zone i { font-size: 2.5rem; color: var(--primary-light); margin-bottom: 12px; display: block; }
+        .upload-zone h3 { font-size: 1rem; margin-bottom: 8px; }
+        .upload-zone p { font-size: 0.82rem; color: var(--text-light); }
+        .upload-zone input { display: none; }
+        .template-bar { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #f0fffe 0%, #fff5f8 100%); border-radius: 12px; padding: 14px 18px; margin-bottom: 16px; border: 1px solid #e0f5f3; }
+        .template-bar span { font-size: 0.82rem; color: var(--text-light); }
+        .preview-wrapper { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; max-height: 400px; overflow-y: auto; }
+        .preview-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; min-width: 800px; }
+        .preview-table th { background: #f8f9fa; position: sticky; top: 0; z-index: 2; padding: 10px 12px; text-align: left; font-weight: 600; border-bottom: 2px solid var(--border); white-space: nowrap; }
+        .preview-table td { padding: 8px 12px; border-bottom: 1px solid #f1f2f6; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .preview-table tr:hover td { background: #fef9f0; }
+        .preview-info { padding: 12px 16px; background: #f8f9fa; border-top: 1px solid var(--border); font-size: 0.78rem; color: var(--text-light); display: flex; justify-content: space-between; align-items: center; }
+        .mapping-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+        .mapping-item { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: #f8f9fa; border-radius: 10px; font-size: 0.82rem; }
+        .mapping-item .field-name { min-width: 120px; font-weight: 600; color: var(--primary-dark); }
+        .mapping-item .field-required { color: var(--danger); font-size: 0.7rem; }
+        .mapping-item select { flex: 1; padding: 6px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-family: var(--font); font-size: 0.8rem; background: white; cursor: pointer; }
+        .mapping-item select:focus { border-color: var(--primary); outline: none; }
+        .mapping-item select.mapped { border-color: var(--success); background: #f0fff4; }
+        .mapping-item select.unmapped { border-color: var(--warning); }
+        .progress-bar { width: 100%; height: 12px; background: #f1f2f6; border-radius: 6px; overflow: hidden; margin: 12px 0; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 6px; transition: width 0.3s; width: 0%; }
+        .progress-text { font-size: 0.82rem; color: var(--text-light); text-align: center; }
+        .result-log { background: #1e272e; color: #d2dae2; border-radius: 12px; padding: 16px; font-family: 'Courier New', monospace; font-size: 0.78rem; max-height: 300px; overflow-y: auto; line-height: 1.8; }
+        .result-log .success { color: #00b894; }
+        .result-log .error { color: #e17055; }
+        .result-log .info { color: #74b9ff; }
+        .result-log .warn { color: #fdcb6e; }
+        .actions-bar { display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap; margin-top: 16px; }
+        .alert { padding: 12px 16px; border-radius: 10px; font-size: 0.82rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .alert-info { background: #dff9fb; color: #0984e3; border: 1px solid #74b9ff; }
+        .alert-warning { background: #ffeaa7; color: #6c5ce7; border: 1px solid #fdcb6e; }
+        .existing-controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        .radio-group { display: flex; gap: 16px; }
+        .radio-group label { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; cursor: pointer; }
+        .hidden { display: none !important; }
+        .empty-state { text-align: center; padding: 48px 24px; color: var(--text-light); }
+        .empty-state i { font-size: 3rem; margin-bottom: 12px; opacity: 0.3; display: block; }
+
         @media (max-width: 768px) {
+            .login-box { margin: 16px; padding: 32px 24px; }
             .steps { flex-wrap: wrap; }
             .step { flex: none; width: calc(50% - 2px); }
             .mapping-grid { grid-template-columns: 1fr; }
             .stats-bar { grid-template-columns: repeat(2, 1fr); }
-            .config-grid { grid-template-columns: 1fr; }
+            .tab-nav { flex-direction: column; }
             .request-values { grid-template-columns: 1fr; }
             .val-arrow { display: none; }
-            .tab-nav { flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
+<!-- ===== 로그인 화면 ===== -->
+<div class="login-wrap" id="loginWrap">
+    <div class="login-box">
+        <div class="login-logo">
+            <i class="fas fa-baby"></i>
+            <h1>키즈고 관리자</h1>
+            <p>관리자 계정으로 로그인하세요</p>
+        </div>
+        <div class="login-field">
+            <label>이메일</label>
+            <input type="email" id="loginEmail" placeholder="admin@kidsgo.kr" autocomplete="email">
+        </div>
+        <div class="login-field">
+            <label>비밀번호</label>
+            <input type="password" id="loginPassword" placeholder="비밀번호 입력" autocomplete="current-password"
+                   onkeydown="if(event.key==='Enter') doLogin()">
+        </div>
+        <button class="login-btn" id="loginBtn" onclick="doLogin()">
+            <i class="fas fa-sign-in-alt"></i> 로그인
+        </button>
+        <div class="login-error" id="loginError"></div>
+    </div>
+</div>
+
+<!-- ===== 관리자 메인 ===== -->
+<div class="admin-wrap" id="adminWrap">
     <div class="header">
         <h1><i class="fas fa-shield-alt"></i> 키즈고 관리자</h1>
-        <a href="index.html"><i class="fas fa-arrow-left"></i> 메인으로</a>
+        <div class="header-right">
+            <span class="header-user" id="headerUser"></span>
+            <button class="logout-btn" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
+        </div>
     </div>
 
     <div class="container">
-
-        <!-- Supabase 설정 -->
-        <div class="supabase-config" id="supabaseConfig">
-            <div class="section-title"><i class="fas fa-plug"></i> Supabase 연결 설정</div>
-            <div class="config-grid">
-                <div class="config-field">
-                    <label>PROJECT URL</label>
-                    <input type="text" id="sbUrl" placeholder="https://xxxx.supabase.co" autocomplete="off">
-                </div>
-                <div class="config-field">
-                    <label>ANON KEY</label>
-                    <input type="password" id="sbKey" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." autocomplete="off">
-                </div>
-            </div>
-            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-                <button class="btn btn-secondary" onclick="connectSupabase()">
-                    <i class="fas fa-link"></i> 연결하기
-                </button>
-                <div class="config-status idle" id="configStatus">
-                    <i class="fas fa-circle"></i> 연결 전
-                </div>
-            </div>
+        <!-- Stats -->
+        <div class="stats-bar">
+            <div class="stat-card"><div class="num" id="statTotal">-</div><div class="label">현재 등록 가게</div></div>
+            <div class="stat-card"><div class="num" id="statCat">-</div><div class="label">업종 수</div></div>
+            <div class="stat-card"><div class="num" id="statRegion">-</div><div class="label">지역 수</div></div>
+            <div class="stat-card"><div class="num" id="statAvgRating">-</div><div class="label">평균 평점</div></div>
         </div>
 
-        <!-- 탭 네비게이션 -->
-        <div class="tab-nav" id="tabNav" style="display:none;">
+        <!-- 탭 -->
+        <div class="tab-nav">
             <button class="tab-btn active" onclick="switchTab('requests')" id="tabRequests">
-                <i class="fas fa-edit"></i> 정보수정 요청
-                <span class="badge" id="pendingBadge">0</span>
+                <i class="fas fa-edit"></i> 정보수정 요청 <span class="badge" id="pendingBadge">0</span>
             </button>
             <button class="tab-btn" onclick="switchTab('upload')" id="tabUpload">
                 <i class="fas fa-upload"></i> CSV 데이터 업로드
@@ -382,7 +292,7 @@
         </div>
 
         <!-- 수정요청 탭 -->
-        <div class="tab-content active" id="tabContentRequests" style="display:none;">
+        <div class="tab-content active" id="tabContentRequests">
             <div class="section">
                 <div class="section-title"><i class="fas fa-inbox"></i> 정보수정 요청 목록</div>
                 <div class="filter-tabs">
@@ -392,213 +302,219 @@
                     <button class="filter-tab" onclick="filterRequests('all')" id="ftAll">전체</button>
                 </div>
                 <div class="request-list" id="requestList">
-                    <div class="empty-state">
-                        <i class="fas fa-inbox"></i>
-                        <p>Supabase에 연결하면 요청 목록이 표시됩니다.</p>
-                    </div>
+                    <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>불러오는 중...</p></div>
                 </div>
             </div>
         </div>
 
         <!-- CSV 업로드 탭 -->
         <div class="tab-content" id="tabContentUpload">
-
-        <!-- Stats -->
-        <div class="stats-bar" id="statsBar">
-            <div class="stat-card">
-                <div class="num" id="statTotal">-</div>
-                <div class="label">현재 등록 가게</div>
-            </div>
-            <div class="stat-card">
-                <div class="num" id="statCat">-</div>
-                <div class="label">업종 수</div>
-            </div>
-            <div class="stat-card">
-                <div class="num" id="statRegion">-</div>
-                <div class="label">지역 수</div>
-            </div>
-            <div class="stat-card">
-                <div class="num" id="statAvgRating">-</div>
-                <div class="label">평균 평점</div>
-            </div>
-        </div>
-
-        <!-- Steps -->
-        <div class="steps">
-            <div class="step active" id="step1"><span class="step-num">1</span> CSV 파일 선택</div>
-            <div class="step" id="step2"><span class="step-num">2</span> 미리보기 확인</div>
-            <div class="step" id="step3"><span class="step-num">3</span> 컬럼 매핑</div>
-            <div class="step" id="step4"><span class="step-num">4</span> 업로드</div>
-        </div>
-
-        <!-- Step 1: File Upload -->
-        <div class="section" id="sectionUpload">
-            <div class="section-title"><i class="fas fa-file-csv"></i> Step 1. CSV 파일 선택</div>
-
-            <div class="template-bar">
-                <span><i class="fas fa-download"></i> 올바른 형식이 필요하신가요?</span>
-                <button class="btn btn-outline btn-sm" onclick="downloadTemplate()">
-                    <i class="fas fa-file-download"></i> CSV 템플릿 다운로드
-                </button>
+            <div class="steps">
+                <div class="step active" id="step1"><span class="step-num">1</span> CSV 파일 선택</div>
+                <div class="step" id="step2"><span class="step-num">2</span> 미리보기 확인</div>
+                <div class="step" id="step3"><span class="step-num">3</span> 컬럼 매핑</div>
+                <div class="step" id="step4"><span class="step-num">4</span> 업로드</div>
             </div>
 
-            <div class="alert alert-info">
-                <i class="fas fa-info-circle"></i>
-                <span>Python 크롤링 등으로 수집한 가게 데이터를 CSV/엑셀로 정리한 후 업로드하세요. 컬럼 이름이 달라도 다음 단계에서 매핑할 수 있습니다.</span>
-            </div>
-
-            <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <h3>CSV 파일을 드래그하거나 클릭하여 선택</h3>
-                <p>지원 형식: .csv, .tsv (UTF-8 인코딩 권장, 최대 10MB)</p>
-                <input type="file" id="fileInput" accept=".csv,.tsv,.txt">
-            </div>
-        </div>
-
-        <!-- Step 2: Preview -->
-        <div class="section hidden" id="sectionPreview">
-            <div class="section-title"><i class="fas fa-table"></i> Step 2. 데이터 미리보기</div>
-            <div class="alert alert-info" id="previewAlert"></div>
-            <div class="preview-wrapper">
-                <table class="preview-table" id="previewTable">
-                    <thead id="previewHead"></thead>
-                    <tbody id="previewBody"></tbody>
-                </table>
-            </div>
-            <div class="preview-info">
-                <span id="previewCount"></span>
-                <span>처음 20행만 미리보기로 표시됩니다</span>
-            </div>
-            <div class="actions-bar">
-                <button class="btn btn-outline" onclick="goStep(1)"><i class="fas fa-arrow-left"></i> 다시 선택</button>
-                <button class="btn btn-primary" onclick="goStep(3)">컬럼 매핑하기 <i class="fas fa-arrow-right"></i></button>
-            </div>
-        </div>
-
-        <!-- Step 3: Mapping -->
-        <div class="section hidden" id="sectionMapping">
-            <div class="section-title"><i class="fas fa-exchange-alt"></i> Step 3. 컬럼 매핑</div>
-            <div class="alert alert-warning">
-                <i class="fas fa-exclamation-triangle"></i>
-                <span>CSV 컬럼을 키즈고 DB 필드에 연결하세요. <b>name(가게이름)</b>은 필수입니다. 나머지는 비워두면 기본값이 적용됩니다.</span>
-            </div>
-            <div class="mapping-grid" id="mappingGrid"></div>
-            
-            <div style="margin-top:20px; padding:16px; background:#f8f9fa; border-radius:12px;">
-                <div class="section-title" style="margin-bottom:12px;"><i class="fas fa-cog"></i> 기존 데이터 처리</div>
-                <div class="existing-controls">
-                    <div class="radio-group">
-                        <label><input type="radio" name="existingData" value="keep" checked> 기존 데이터 유지 + 추가</label>
-                        <label><input type="radio" name="existingData" value="clear"> 기존 데이터 삭제 후 교체</label>
-                    </div>
+            <div class="section" id="sectionUpload">
+                <div class="section-title"><i class="fas fa-file-csv"></i> Step 1. CSV 파일 선택</div>
+                <div class="template-bar">
+                    <span><i class="fas fa-download"></i> 올바른 형식이 필요하신가요?</span>
+                    <button class="btn btn-outline btn-sm" onclick="downloadTemplate()"><i class="fas fa-file-download"></i> CSV 템플릿 다운로드</button>
+                </div>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Python 크롤링 등으로 수집한 가게 데이터를 CSV로 정리한 후 업로드하세요. 컬럼 이름이 달라도 다음 단계에서 매핑할 수 있습니다.</span>
+                </div>
+                <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>CSV 파일을 드래그하거나 클릭하여 선택</h3>
+                    <p>지원 형식: .csv, .tsv (UTF-8 인코딩 권장, 최대 10MB)</p>
+                    <input type="file" id="fileInput" accept=".csv,.tsv,.txt">
                 </div>
             </div>
 
-            <div class="actions-bar">
-                <button class="btn btn-outline" onclick="goStep(2)"><i class="fas fa-arrow-left"></i> 미리보기</button>
-                <button class="btn btn-primary" id="btnStartUpload" onclick="startUpload()">
-                    <i class="fas fa-upload"></i> 업로드 시작
-                </button>
+            <div class="section hidden" id="sectionPreview">
+                <div class="section-title"><i class="fas fa-table"></i> Step 2. 데이터 미리보기</div>
+                <div class="alert alert-info" id="previewAlert"></div>
+                <div class="preview-wrapper">
+                    <table class="preview-table"><thead id="previewHead"></thead><tbody id="previewBody"></tbody></table>
+                </div>
+                <div class="preview-info"><span id="previewCount"></span><span>처음 20행만 미리보기로 표시됩니다</span></div>
+                <div class="actions-bar">
+                    <button class="btn btn-outline" onclick="goStep(1)"><i class="fas fa-arrow-left"></i> 다시 선택</button>
+                    <button class="btn btn-primary" onclick="goStep(3)">컬럼 매핑하기 <i class="fas fa-arrow-right"></i></button>
+                </div>
             </div>
-        </div>
 
-        <!-- Step 4: Upload Progress -->
-        <div class="section hidden" id="sectionResult">
-            <div class="section-title"><i class="fas fa-rocket"></i> Step 4. 업로드 진행</div>
-            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-            <div class="progress-text" id="progressText">준비 중...</div>
-            <div class="result-log" id="resultLog"></div>
-            <div class="actions-bar" id="resultActions" style="display:none;">
-                <button class="btn btn-outline" onclick="location.reload()"><i class="fas fa-redo"></i> 새로 업로드</button>
-                <button class="btn btn-primary" onclick="location.href='index.html'"><i class="fas fa-home"></i> 메인에서 확인</button>
+            <div class="section hidden" id="sectionMapping">
+                <div class="section-title"><i class="fas fa-exchange-alt"></i> Step 3. 컬럼 매핑</div>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>CSV 컬럼을 키즈고 DB 필드에 연결하세요. <b>name(가게이름)</b>은 필수입니다.</span>
+                </div>
+                <div class="mapping-grid" id="mappingGrid"></div>
+                <div style="margin-top:20px; padding:16px; background:#f8f9fa; border-radius:12px;">
+                    <div class="section-title" style="margin-bottom:12px;"><i class="fas fa-cog"></i> 기존 데이터 처리</div>
+                    <div class="existing-controls">
+                        <div class="radio-group">
+                            <label><input type="radio" name="existingData" value="keep" checked> 기존 데이터 유지 + 추가</label>
+                            <label><input type="radio" name="existingData" value="clear"> 기존 데이터 삭제 후 교체</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="actions-bar">
+                    <button class="btn btn-outline" onclick="goStep(2)"><i class="fas fa-arrow-left"></i> 미리보기</button>
+                    <button class="btn btn-primary" id="btnStartUpload" onclick="startUpload()"><i class="fas fa-upload"></i> 업로드 시작</button>
+                </div>
             </div>
-        </div>
 
+            <div class="section hidden" id="sectionResult">
+                <div class="section-title"><i class="fas fa-rocket"></i> Step 4. 업로드 진행</div>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                <div class="progress-text" id="progressText">준비 중...</div>
+                <div class="result-log" id="resultLog"></div>
+                <div class="actions-bar" id="resultActions" style="display:none;">
+                    <button class="btn btn-outline" onclick="location.reload()"><i class="fas fa-redo"></i> 새로 업로드</button>
+                    <button class="btn btn-primary" onclick="location.href='index.html'"><i class="fas fa-home"></i> 메인에서 확인</button>
+                </div>
+            </div>
         </div><!-- /tabContentUpload -->
     </div><!-- /container -->
+</div><!-- /adminWrap -->
 
 <script>
-// ===== Supabase 클라이언트 =====
+// ===== Supabase 초기화 (Vercel 환경변수 주입) =====
+// vercel.json 또는 환경변수로 아래 값이 주입됩니다
+const SUPABASE_URL = 'https://vzjqfogqymthtmbzyxkz.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_911v8puVJ_Qm-iex5F1gcg_suBEEkur';
 let sb = null;
 let allRequests = [];
 let currentFilter = 'pending';
 
-async function connectSupabase() {
-    const url = document.getElementById('sbUrl').value.trim();
-    const key = document.getElementById('sbKey').value.trim();
-    const statusEl = document.getElementById('configStatus');
+// ===== DOMContentLoaded =====
+document.addEventListener('DOMContentLoaded', () => {
+    // Supabase 클라이언트 초기화
+    if (!SUPABASE_URL.includes('%%')) {
+        sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        checkSession();
+    } else {
+        // 환경변수 미설정 → URL/Key 직접 입력 폼 표시
+        showManualInput();
+    }
+    setupDragDrop();
+    document.getElementById('fileInput').addEventListener('change', handleFile);
+});
 
-    if (!url || !key) {
-        statusEl.className = 'config-status err';
-        statusEl.innerHTML = '<i class="fas fa-times-circle"></i> URL과 Key를 모두 입력해주세요.';
+// 환경변수 미설정 시 로그인 폼에 입력 필드 추가
+function showManualInput() {
+    const loginBox = document.querySelector('.login-box');
+    const extraHtml = `
+        <div style="margin-bottom:20px; padding:14px; background:#f0fffe; border-radius:10px; border:1px solid #b2ebf2;">
+            <p style="font-size:0.78rem; color:#0984e3; margin-bottom:10px;"><i class="fas fa-info-circle"></i> Vercel 환경변수가 설정되지 않았습니다. 아래에 직접 입력하세요.</p>
+            <div style="margin-bottom:8px;">
+                <label style="font-size:0.78rem; font-weight:600; display:block; margin-bottom:4px;">Supabase Project URL</label>
+                <input type="text" id="manualUrl" placeholder="https://xxxx.supabase.co" style="width:100%; padding:8px 12px; border:1.5px solid #b2ebf2; border-radius:8px; font-size:0.82rem;">
+            </div>
+            <div>
+                <label style="font-size:0.78rem; font-weight:600; display:block; margin-bottom:4px;">Supabase Anon Key</label>
+                <input type="password" id="manualKey" placeholder="eyJ..." style="width:100%; padding:8px 12px; border:1.5px solid #b2ebf2; border-radius:8px; font-size:0.82rem;">
+            </div>
+        </div>
+    `;
+    loginBox.querySelector('.login-logo').insertAdjacentHTML('afterend', extraHtml);
+}
+
+// ===== 세션 확인 =====
+async function checkSession() {
+    if (!sb) return;
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+        showAdmin(session.user.email);
+    }
+}
+
+// ===== 로그인 =====
+async function doLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const errorEl = document.getElementById('loginError');
+    const btn = document.getElementById('loginBtn');
+
+    if (!email || !password) {
+        errorEl.textContent = '이메일과 비밀번호를 입력해주세요.';
+        errorEl.style.display = 'block';
         return;
     }
 
-    statusEl.className = 'config-status idle';
-    statusEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 연결 중...';
-
-    try {
+    // 환경변수 미설정 시 sb 재초기화
+    if (!sb || SUPABASE_URL.includes('%%')) {
+        const url = document.getElementById('manualUrl')?.value.trim();
+        const key = document.getElementById('manualKey')?.value.trim();
+        if (!url || !key) {
+            errorEl.textContent = 'Supabase URL과 Key를 입력해주세요.';
+            errorEl.style.display = 'block';
+            return;
+        }
         sb = supabase.createClient(url, key);
-        // 연결 테스트
-        const { error } = await sb.from('edit_requests').select('id').limit(1);
-        if (error) throw error;
-
-        statusEl.className = 'config-status ok';
-        statusEl.innerHTML = '<i class="fas fa-check-circle"></i> 연결 성공!';
-
-        // 입력창 연결됨 표시
-        document.getElementById('sbUrl').classList.add('connected');
-        document.getElementById('sbKey').classList.add('connected');
-
-        // 탭 표시 및 수정요청 탭 활성화
-        document.getElementById('tabNav').style.display = 'flex';
-        document.getElementById('tabContentRequests').style.display = 'block';
-        switchTab('requests');
-
-        // 데이터 로드
-        await loadRequests();
-        loadStats();
-
-    } catch(e) {
-        statusEl.className = 'config-status err';
-        statusEl.innerHTML = `<i class="fas fa-times-circle"></i> 연결 실패: ${e.message}`;
-        sb = null;
     }
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 로그인 중...';
+    errorEl.style.display = 'none';
+
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+    if (error) {
+        errorEl.textContent = '로그인 실패: 이메일 또는 비밀번호를 확인해주세요.';
+        errorEl.style.display = 'block';
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> 로그인';
+        return;
+    }
+
+    showAdmin(data.user.email);
+}
+
+// ===== 관리자 화면 표시 =====
+async function showAdmin(email) {
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('adminWrap').style.display = 'block';
+    document.getElementById('headerUser').textContent = email;
+    await loadRequests();
+    loadStats();
+}
+
+// ===== 로그아웃 =====
+async function doLogout() {
+    if (!sb) return;
+    await sb.auth.signOut();
+    location.reload();
 }
 
 // ===== 탭 전환 =====
 function switchTab(tab) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
+    document.querySelectorAll('.tab-content').forEach(c => { c.classList.remove('active'); c.style.display = 'none'; });
     if (tab === 'requests') {
         document.getElementById('tabRequests').classList.add('active');
         document.getElementById('tabContentRequests').style.display = 'block';
         document.getElementById('tabContentRequests').classList.add('active');
-        document.getElementById('tabContentUpload').style.display = 'none';
     } else {
         document.getElementById('tabUpload').classList.add('active');
         document.getElementById('tabContentUpload').style.display = 'block';
         document.getElementById('tabContentUpload').classList.add('active');
-        document.getElementById('tabContentRequests').style.display = 'none';
     }
 }
 
 // ===== 수정요청 로드 =====
 async function loadRequests() {
     if (!sb) return;
-    const { data, error } = await sb
-        .from('edit_requests')
-        .select('*')
-        .order('created_at', { ascending: false });
-
+    const { data, error } = await sb.from('edit_requests').select('*').order('created_at', { ascending: false });
     if (error) { console.error(error); return; }
     allRequests = data || [];
-
-    // pending 배지 업데이트
     const pendingCount = allRequests.filter(r => r.status === 'pending').length;
     document.getElementById('pendingBadge').textContent = pendingCount;
-
     renderRequests();
 }
 
@@ -610,6 +526,15 @@ function filterRequests(status) {
     document.getElementById(map[status]).classList.add('active');
     renderRequests();
 }
+
+// ===== 수정 항목별 설정 =====
+const FIELD_MAP = {
+    '영업시간': 'hours',
+    '전화번호': 'phone',
+    '주소': 'address',
+    '키즈존정보': 'playroom_desc',
+};
+const MANUAL_FIELDS = ['편의시설', '폐업', '기타'];
 
 // ===== 수정요청 렌더링 =====
 function renderRequests() {
@@ -624,27 +549,55 @@ function renderRequests() {
 
     list.innerHTML = filtered.map(req => {
         const date = new Date(req.created_at).toLocaleString('ko-KR');
+        const isManual = MANUAL_FIELDS.includes(req.field_name);
         const statusBadge = {
             pending: '<span class="status-badge status-pending">⏳ 대기중</span>',
             approved: '<span class="status-badge status-approved">✅ 승인됨</span>',
             rejected: '<span class="status-badge status-rejected">❌ 거절됨</span>',
         }[req.status] || '';
 
-        const actions = req.status === 'pending' ? `
-            <button class="btn btn-sm btn-danger" onclick="rejectRequest(${req.id})">
-                <i class="fas fa-times"></i> 거절
-            </button>
-            <button class="btn btn-sm btn-secondary" onclick="approveRequest(${req.id}, '${escHtml(req.store_name)}', '${escHtml(req.field_name)}', '${escHtml(req.new_value)}')">
-                <i class="fas fa-check"></i> 승인
-            </button>
-        ` : statusBadge;
+        let actions = statusBadge;
+        if (req.status === 'pending') {
+            if (isManual) {
+                actions = `
+                    <button class="btn btn-sm btn-danger" onclick="rejectRequest(${req.id})"><i class="fas fa-times"></i> 거절</button>
+                    <button class="btn btn-sm btn-purple" onclick="toggleManualEdit(${req.id})"><i class="fas fa-pen"></i> 직접 수정</button>
+                `;
+            } else {
+                actions = `
+                    <button class="btn btn-sm btn-danger" onclick="rejectRequest(${req.id})"><i class="fas fa-times"></i> 거절</button>
+                    <button class="btn btn-sm btn-secondary" onclick="approveRequest(${req.id}, '${escStr(req.store_name)}', '${escStr(req.field_name)}', '${escStr(req.new_value)}')"><i class="fas fa-check"></i> 승인</button>
+                `;
+            }
+        }
+
+        // 편의시설 직접 편집 폼
+        const manualForm = isManual && req.status === 'pending' ? `
+        <div class="manual-edit-form" id="manualForm-${req.id}">
+            <label>🔧 "${escHtml(req.store_name)}" 가게 정보를 직접 수정하세요</label>
+            <div style="font-size:0.78rem; color:#6c5ce7; margin-bottom:10px;">
+                사용자 요청 내용: <b>${escHtml(req.new_value)}</b>
+                ${req.reason ? ` / 사유: ${escHtml(req.reason)}` : ''}
+            </div>
+            <div class="manual-edit-grid">
+                <div class="edit-field"><label>주차 가능</label><select id="ef-parking-${req.id}"><option value="">변경 안 함</option><option value="true">있음</option><option value="false">없음</option></select></div>
+                <div class="edit-field"><label>수유실</label><select id="ef-nursing-${req.id}"><option value="">변경 안 함</option><option value="true">있음</option><option value="false">없음</option></select></div>
+                <div class="edit-field"><label>유아의자</label><select id="ef-highchair-${req.id}"><option value="">변경 안 함</option><option value="true">있음</option><option value="false">없음</option></select></div>
+                <div class="edit-field"><label>유모차 접근</label><select id="ef-stroller-${req.id}"><option value="">변경 안 함</option><option value="true">있음</option><option value="false">없음</option></select></div>
+                ${req.field_name === '폐업' ? `<div class="edit-field"><label>가게 상태 (폐업 시 이름에 [폐업] 추가)</label><input type="text" id="ef-name-${req.id}" placeholder="예: 맛있는고기집 [폐업]"></div>` : ''}
+            </div>
+            <div style="display:flex; gap:8px; justify-content:flex-end;">
+                <button class="btn btn-sm btn-outline" onclick="toggleManualEdit(${req.id})">취소</button>
+                <button class="manual-save-btn" onclick="saveManualEdit(${req.id}, '${escStr(req.store_name)}')"><i class="fas fa-save"></i> 저장 및 승인</button>
+            </div>
+        </div>` : '';
 
         return `
-        <div class="request-card ${req.status}" id="req-${req.id}">
+        <div class="request-card ${req.status}${isManual && req.status==='pending' ? ' manual' : ''}" id="req-${req.id}">
             <div class="request-header">
                 <div>
                     <div class="request-store">🏪 ${escHtml(req.store_name)}</div>
-                    <span class="request-field">${escHtml(req.field_name)}</span>
+                    <span class="request-field ${isManual ? 'manual-tag' : ''}">${escHtml(req.field_name)}</span>
                 </div>
                 <div class="request-date">${date}</div>
             </div>
@@ -655,6 +608,7 @@ function renderRequests() {
             </div>
             ${req.reason ? `<div class="request-reason">💬 사유: ${escHtml(req.reason)}</div>` : ''}
             <div class="request-actions">${actions}</div>
+            ${manualForm}
         </div>`;
     }).join('');
 }
@@ -663,171 +617,116 @@ function escHtml(str) {
     if (!str) return '';
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
+function escStr(str) {
+    if (!str) return '';
+    return String(str).replace(/'/g,"\\'").replace(/"/g,'\\"');
+}
 
-// ===== 승인 처리 =====
+// ===== 직접 수정 폼 토글 =====
+function toggleManualEdit(id) {
+    const form = document.getElementById(`manualForm-${id}`);
+    if (form) form.classList.toggle('open');
+}
+
+// ===== 수동 항목 저장 =====
+async function saveManualEdit(id, storeName) {
+    if (!sb) return;
+    try {
+        const { data: stores, error: findErr } = await sb.from('stores').select('id').ilike('name', storeName).limit(1);
+        if (findErr) throw findErr;
+        if (!stores || stores.length === 0) {
+            alert(`"${storeName}" 가게를 stores 테이블에서 찾을 수 없습니다.`);
+            return;
+        }
+        const storeId = stores[0].id;
+        const updates = {};
+
+        const parking = document.getElementById(`ef-parking-${id}`)?.value;
+        const nursing = document.getElementById(`ef-nursing-${id}`)?.value;
+        const highchair = document.getElementById(`ef-highchair-${id}`)?.value;
+        const stroller = document.getElementById(`ef-stroller-${id}`)?.value;
+        const name = document.getElementById(`ef-name-${id}`)?.value.trim();
+
+        if (parking !== '') updates.has_parking = parking === 'true';
+        if (nursing !== '') updates.has_nursing_room = nursing === 'true';
+        if (highchair !== '') updates.has_highchair = highchair === 'true';
+        if (stroller !== '') updates.has_stroller_access = stroller === 'true';
+        if (name) updates.name = name;
+
+        if (Object.keys(updates).length === 0) {
+            alert('변경할 항목을 선택해주세요.');
+            return;
+        }
+
+        const { error: updateErr } = await sb.from('stores').update(updates).eq('id', storeId);
+        if (updateErr) throw updateErr;
+
+        const { error: statusErr } = await sb.from('edit_requests').update({ status: 'approved' }).eq('id', id);
+        if (statusErr) throw statusErr;
+
+        allRequests = allRequests.map(r => r.id === id ? {...r, status: 'approved'} : r);
+        document.getElementById('pendingBadge').textContent = allRequests.filter(r => r.status === 'pending').length;
+        renderRequests();
+        showToast('✅ 저장 완료! stores 테이블이 업데이트되었습니다.');
+    } catch(e) {
+        alert('오류: ' + e.message);
+    }
+}
+
+// ===== 자동 승인 =====
 async function approveRequest(id, storeName, fieldName, newValue) {
     if (!sb) return;
-    if (!confirm(`"${storeName}"의 ${fieldName} 필드를 "${newValue}"로 변경하시겠습니까?`)) return;
-
+    if (!confirm(`"${storeName}"의 ${fieldName}을 "${newValue}"로 변경할까요?`)) return;
     try {
-        // 1. stores 테이블에서 가게 찾기
-        const { data: stores, error: findErr } = await sb
-            .from('stores')
-            .select('id')
-            .ilike('name', storeName)
-            .limit(5);
-
+        const { data: stores, error: findErr } = await sb.from('stores').select('id').ilike('name', storeName).limit(1);
         if (findErr) throw findErr;
+        if (!stores || stores.length === 0) { alert(`"${storeName}" 가게를 찾을 수 없습니다.`); return; }
 
-        if (!stores || stores.length === 0) {
-            alert(`⚠️ stores 테이블에서 "${storeName}"을 찾을 수 없습니다.\n가게 이름이 정확히 일치해야 합니다.`);
-            return;
-        }
-
-        // 여러 건이면 첫 번째 사용
-        const storeId = stores[0].id;
-
-        // 한글 필드명 → 영문 변환
-        const fieldNameMap = {
-            '영업시간': 'hours',
-            '전화번호': 'phone',
-            '주소': 'address',
-            '키즈존정보': 'playroom_desc',
-        };
-        // 자동 반영 불가 항목
-        const manualFields = ['편의시설', '폐업', '기타'];
-        if (manualFields.includes(fieldName)) {
-            alert(`"${fieldName}" 항목은 내용을 직접 확인 후 수동으로 처리해주세요.\n(자동 반영 불가 항목)`);
-            // status만 approved로 변경
-            const { error: statusErr2 } = await sb.from('edit_requests').update({ status: 'approved' }).eq('id', id);
-            if (!statusErr2) {
-                allRequests = allRequests.map(r => r.id === id ? {...r, status: 'approved'} : r);
-                const pendingCount = allRequests.filter(r => r.status === 'pending').length;
-                document.getElementById('pendingBadge').textContent = pendingCount;
-                renderRequests();
-                showToast('✅ 확인 처리되었습니다. (수동 반영 필요)');
-            }
-            return;
-        }
-        fieldName = fieldNameMap[fieldName] || fieldName;
-
-        // boolean 필드 변환
-        const boolFields = ['has_parking','has_nursing_room','has_highchair','has_stroller_access'];
+        const mappedField = FIELD_MAP[fieldName] || fieldName;
         let parsedValue = newValue;
-        if (boolFields.includes(fieldName)) {
+        if (['has_parking','has_nursing_room','has_highchair','has_stroller_access'].includes(mappedField)) {
             parsedValue = ['true','1','o','O','예','Y','y','있음','가능'].includes(newValue);
-        } else if (['lat','lng','rating'].includes(fieldName)) {
+        } else if (['lat','lng','rating'].includes(mappedField)) {
             parsedValue = parseFloat(newValue);
-        } else if (fieldName === 'review_count') {
+        } else if (mappedField === 'review_count') {
             parsedValue = parseInt(newValue);
         }
 
-        // 2. stores 테이블 업데이트
-        const { error: updateErr } = await sb
-            .from('stores')
-            .update({ [fieldName]: parsedValue })
-            .eq('id', storeId);
-
+        const { error: updateErr } = await sb.from('stores').update({ [mappedField]: parsedValue }).eq('id', stores[0].id);
         if (updateErr) throw updateErr;
 
-        // 3. edit_requests status → approved
-        const { error: statusErr } = await sb
-            .from('edit_requests')
-            .update({ status: 'approved' })
-            .eq('id', id);
-
+        const { error: statusErr } = await sb.from('edit_requests').update({ status: 'approved' }).eq('id', id);
         if (statusErr) throw statusErr;
 
-        // UI 업데이트
         allRequests = allRequests.map(r => r.id === id ? {...r, status: 'approved'} : r);
-        const pendingCount = allRequests.filter(r => r.status === 'pending').length;
-        document.getElementById('pendingBadge').textContent = pendingCount;
+        document.getElementById('pendingBadge').textContent = allRequests.filter(r => r.status === 'pending').length;
         renderRequests();
-
-        showToast('✅ 승인 완료! stores 테이블이 업데이트되었습니다.');
-
-    } catch(e) {
-        alert('오류 발생: ' + e.message);
-        console.error(e);
-    }
+        showToast('✅ 승인 완료!');
+    } catch(e) { alert('오류: ' + e.message); }
 }
 
-// ===== 거절 처리 =====
+// ===== 거절 =====
 async function rejectRequest(id) {
     if (!sb) return;
     if (!confirm('이 요청을 거절하시겠습니까?')) return;
-
     try {
-        const { error } = await sb
-            .from('edit_requests')
-            .update({ status: 'rejected' })
-            .eq('id', id);
-
+        const { error } = await sb.from('edit_requests').update({ status: 'rejected' }).eq('id', id);
         if (error) throw error;
-
         allRequests = allRequests.map(r => r.id === id ? {...r, status: 'rejected'} : r);
-        const pendingCount = allRequests.filter(r => r.status === 'pending').length;
-        document.getElementById('pendingBadge').textContent = pendingCount;
+        document.getElementById('pendingBadge').textContent = allRequests.filter(r => r.status === 'pending').length;
         renderRequests();
-
         showToast('❌ 거절 처리되었습니다.');
-    } catch(e) {
-        alert('오류 발생: ' + e.message);
-    }
+    } catch(e) { alert('오류: ' + e.message); }
 }
 
-// ===== 토스트 알림 =====
+// ===== 토스트 =====
 function showToast(msg) {
-    const toast = document.createElement('div');
-    toast.style.cssText = `
-        position:fixed; bottom:24px; right:24px; z-index:9999;
-        background:#2d3748; color:white; padding:14px 20px;
-        border-radius:12px; font-size:0.85rem; font-weight:600;
-        box-shadow:0 4px 20px rgba(0,0,0,0.2);
-        animation: fadeIn 0.3s ease;
-    `;
-    toast.textContent = msg;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
+    const t = document.createElement('div');
+    t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:#2d3748;color:white;padding:14px 20px;border-radius:12px;font-size:0.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,0.2);';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 3000);
 }
-
-// ===== State =====
-let csvData = null;   // 파싱된 전체 데이터 {headers:[], rows:[]}
-let mapping = {};     // {dbField: csvColumn}
-
-// DB 필드 정의
-const DB_FIELDS = [
-    { key: 'name',               label: '가게 이름',     required: true },
-    { key: 'category',           label: '업종(대분류)',   required: false, hint: '식당/카페/키즈카페/뷔페/베이커리' },
-    { key: 'subcategory',        label: '세부업종',       required: false, hint: '한식/양식/고기집/횟집 등' },
-    { key: 'region',             label: '지역(시/도)',    required: false, hint: '서울/경기/부산 등' },
-    { key: 'district',           label: '구/군',          required: false },
-    { key: 'address',            label: '상세주소',       required: false },
-    { key: 'lat',                label: '위도',           required: false },
-    { key: 'lng',                label: '경도',           required: false },
-    { key: 'phone',              label: '전화번호',       required: false },
-    { key: 'hours',              label: '영업시간',       required: false },
-    { key: 'playroom_type',      label: '놀이방 유형',    required: false, hint: '실내놀이방/키즈존/볼풀 등' },
-    { key: 'playroom_desc',      label: '놀이방 설명',    required: false },
-    { key: 'age_range',          label: '권장 연령',      required: false, hint: '0~3세/3~5세/전연령 등' },
-    { key: 'has_parking',        label: '주차 여부',      required: false, hint: 'true/false 또는 O/X' },
-    { key: 'has_nursing_room',   label: '수유실 여부',    required: false },
-    { key: 'has_highchair',      label: '유아의자 여부',  required: false },
-    { key: 'has_stroller_access',label: '유모차 접근',    required: false },
-    { key: 'price_range',        label: '가격대',         required: false, hint: '$/$$/$$$ 또는 저렴/보통/고급' },
-    { key: 'rating',             label: '평점',           required: false, hint: '1~5 숫자' },
-    { key: 'review_count',       label: '리뷰 수',       required: false },
-    { key: 'tags',               label: '태그',           required: false, hint: '쉼표 구분: 생일파티,돌잔치' },
-    { key: 'description',        label: '가게 소개',      required: false },
-];
-
-// ===== Init =====
-document.addEventListener('DOMContentLoaded', () => {
-    // CSV 업로드 탭은 연결 후 표시
-    document.getElementById('tabContentUpload').style.display = 'none';
-    setupDragDrop();
-    document.getElementById('fileInput').addEventListener('change', handleFile);
-});
 
 // ===== Stats =====
 async function loadStats() {
@@ -836,9 +735,7 @@ async function loadStats() {
         const res = await r.json();
         const total = res.total || 0;
         document.getElementById('statTotal').textContent = total.toLocaleString();
-        
         if (total > 0) {
-            // 전체 데이터 간단 통계
             let allData = [];
             const pages = Math.ceil(Math.min(total, 500) / 100);
             for (let p = 1; p <= pages; p++) {
@@ -846,221 +743,114 @@ async function loadStats() {
                 const pres = await pr.json();
                 allData = allData.concat(pres.data || []);
             }
-            const cats = new Set(allData.map(d => d.category).filter(Boolean));
-            const regions = new Set(allData.map(d => d.region).filter(Boolean));
-            const avgRating = allData.reduce((s,d) => s + (d.rating||0), 0) / allData.length;
-            
-            document.getElementById('statCat').textContent = cats.size;
-            document.getElementById('statRegion').textContent = regions.size;
-            document.getElementById('statAvgRating').textContent = avgRating.toFixed(1);
+            document.getElementById('statCat').textContent = new Set(allData.map(d => d.category).filter(Boolean)).size;
+            document.getElementById('statRegion').textContent = new Set(allData.map(d => d.region).filter(Boolean)).size;
+            document.getElementById('statAvgRating').textContent = (allData.reduce((s,d) => s + (d.rating||0), 0) / allData.length).toFixed(1);
         }
-    } catch(e) {
-        console.error('Stats load error:', e);
-    }
+    } catch(e) { console.error(e); }
 }
 
-// ===== Drag & Drop =====
+// ===== CSV 업로드 =====
+let csvData = null;
+let mapping = {};
+
+const DB_FIELDS = [
+    { key: 'name', label: '가게 이름', required: true },
+    { key: 'category', label: '업종(대분류)', required: false, hint: '식당/카페/키즈카페/뷔페/베이커리' },
+    { key: 'subcategory', label: '세부업종', required: false },
+    { key: 'region', label: '지역(시/도)', required: false },
+    { key: 'district', label: '구/군', required: false },
+    { key: 'address', label: '상세주소', required: false },
+    { key: 'lat', label: '위도', required: false },
+    { key: 'lng', label: '경도', required: false },
+    { key: 'phone', label: '전화번호', required: false },
+    { key: 'hours', label: '영업시간', required: false },
+    { key: 'playroom_type', label: '놀이방 유형', required: false },
+    { key: 'playroom_desc', label: '놀이방 설명', required: false },
+    { key: 'age_range', label: '권장 연령', required: false },
+    { key: 'has_parking', label: '주차 여부', required: false },
+    { key: 'has_nursing_room', label: '수유실 여부', required: false },
+    { key: 'has_highchair', label: '유아의자 여부', required: false },
+    { key: 'has_stroller_access', label: '유모차 접근', required: false },
+    { key: 'price_range', label: '가격대', required: false },
+    { key: 'rating', label: '평점', required: false },
+    { key: 'review_count', label: '리뷰 수', required: false },
+    { key: 'tags', label: '태그', required: false },
+    { key: 'description', label: '가게 소개', required: false },
+];
+
 function setupDragDrop() {
     const zone = document.getElementById('uploadZone');
-    ['dragenter','dragover'].forEach(e => {
-        zone.addEventListener(e, (ev) => { ev.preventDefault(); zone.classList.add('dragover'); });
-    });
-    ['dragleave','drop'].forEach(e => {
-        zone.addEventListener(e, (ev) => { ev.preventDefault(); zone.classList.remove('dragover'); });
-    });
-    zone.addEventListener('drop', (ev) => {
-        const file = ev.dataTransfer.files[0];
-        if (file) processFile(file);
-    });
+    if (!zone) return;
+    ['dragenter','dragover'].forEach(e => zone.addEventListener(e, ev => { ev.preventDefault(); zone.classList.add('dragover'); }));
+    ['dragleave','drop'].forEach(e => zone.addEventListener(e, ev => { ev.preventDefault(); zone.classList.remove('dragover'); }));
+    zone.addEventListener('drop', ev => { const f = ev.dataTransfer.files[0]; if (f) parseFile(f); });
 }
 
-// ===== File Handling =====
-function handleFile(e) {
-    const file = e.target.files[0];
-    if (file) processFile(file);
-}
+function handleFile(e) { const f = e.target.files[0]; if (f) parseFile(f); }
 
-function processFile(file) {
-    if (file.size > 10 * 1024 * 1024) {
-        alert('파일이 10MB를 초과합니다.');
-        return;
-    }
-    
-    const zone = document.getElementById('uploadZone');
-    zone.innerHTML = `
-        <i class="fas fa-spinner fa-spin" style="color:var(--primary);"></i>
-        <h3>파일 분석 중...</h3>
-        <p>${file.name} (${(file.size/1024).toFixed(1)}KB)</p>
-    `;
-
+function parseFile(file) {
     Papa.parse(file, {
-        header: true,
-        skipEmptyLines: true,
-        encoding: 'UTF-8',
-        complete: function(results) {
-            if (results.errors.length > 0 && results.data.length === 0) {
-                alert('CSV 파싱 오류: ' + results.errors[0].message);
-                location.reload();
-                return;
-            }
-            csvData = {
-                headers: results.meta.fields || [],
-                rows: results.data,
-                fileName: file.name
-            };
-            renderPreview();
-            goStep(2);
-        },
-        error: function(err) {
-            alert('파일 읽기 실패: ' + err.message);
-            location.reload();
-        }
+        header: true, skipEmptyLines: true,
+        complete: r => { csvData = { headers: r.meta.fields, rows: r.data }; goStep(2); showPreview(); },
+        error: e => alert('파일 파싱 오류: ' + e.message)
     });
 }
 
-// ===== Preview =====
-function renderPreview() {
-    if (!csvData) return;
-    const { headers, rows } = csvData;
-
-    document.getElementById('previewAlert').innerHTML = `
-        <i class="fas fa-check-circle"></i>
-        <span><b>${csvData.fileName}</b> · 컬럼 ${headers.length}개 · 데이터 <b>${rows.length}행</b> 감지</span>
-    `;
-    document.getElementById('previewAlert').className = 'alert alert-success';
-
-    // Header
-    const headHtml = '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
-    document.getElementById('previewHead').innerHTML = headHtml;
-
-    // Body (max 20 rows)
-    const previewRows = rows.slice(0, 20);
-    const bodyHtml = previewRows.map(row =>
-        '<tr>' + headers.map(h => `<td title="${row[h] || ''}">${row[h] || ''}</td>`).join('') + '</tr>'
-    ).join('');
-    document.getElementById('previewBody').innerHTML = bodyHtml;
-    document.getElementById('previewCount').textContent = `${rows.length}행 중 ${previewRows.length}행 표시`;
+function showPreview() {
+    const h = csvData.headers;
+    document.getElementById('previewHead').innerHTML = '<tr>' + h.map(c => `<th>${c}</th>`).join('') + '</tr>';
+    document.getElementById('previewBody').innerHTML = csvData.rows.slice(0,20).map(r => '<tr>' + h.map(c => `<td title="${r[c]||''}">${r[c]||''}</td>`).join('') + '</tr>').join('');
+    document.getElementById('previewCount').textContent = `전체 ${csvData.rows.length}행`;
+    document.getElementById('previewAlert').innerHTML = `<i class="fas fa-check-circle"></i> <span>${csvData.rows.length}건 파싱 완료. 컬럼 ${h.length}개 감지.</span>`;
 }
 
-// ===== Mapping =====
-function renderMapping() {
-    if (!csvData) return;
-    const { headers } = csvData;
+function buildMapping() {
     const grid = document.getElementById('mappingGrid');
-
-    grid.innerHTML = DB_FIELDS.map(field => {
-        const options = headers.map(h => `<option value="${h}" ${autoMatch(field.key, h) ? 'selected' : ''}>${h}</option>`);
-        const hintHtml = field.hint ? `<br><small style="color:#94a3b8;font-size:0.7rem;">${field.hint}</small>` : '';
-        const reqHtml = field.required ? '<span class="field-required">*필수</span>' : '';
-        
-        return `
-            <div class="mapping-item">
-                <div class="field-name">${field.label} ${reqHtml}${hintHtml}</div>
-                <i class="fas fa-arrow-right"></i>
-                <select data-field="${field.key}" onchange="updateMappingState()">
-                    <option value="">-- 매핑 안 함 --</option>
-                    ${options.join('')}
-                </select>
-            </div>
-        `;
+    grid.innerHTML = DB_FIELDS.map(f => {
+        const opts = ['<option value="">-- 선택 안 함 --</option>'].concat(
+            csvData.headers.map(h => {
+                const sel = h.toLowerCase().includes(f.key.toLowerCase()) || f.key.toLowerCase().includes(h.toLowerCase()) ? 'selected' : '';
+                return `<option value="${h}" ${sel}>${h}</option>`;
+            })
+        ).join('');
+        return `<div class="mapping-item">
+            <span class="field-name">${f.label}${f.required ? '<span class="field-required"> *</span>' : ''}</span>
+            <i class="fas fa-arrow-right"></i>
+            <select data-field="${f.key}" onchange="updateMapping(this)">${opts}</select>
+        </div>`;
     }).join('');
-
-    // 자동 매핑 적용
-    updateMappingState();
+    document.querySelectorAll('.mapping-item select').forEach(s => updateMapping(s));
 }
 
-function autoMatch(dbField, csvCol) {
-    const col = csvCol.toLowerCase().replace(/[\s_-]/g, '');
-    const db = dbField.toLowerCase().replace(/[\s_-]/g, '');
-    
-    // 정확 매치
-    if (col === db) return true;
-    
-    // 한글 매칭
-    const koreanMap = {
-        name: ['가게이름','이름','상호','상호명','가게명','매장명','업소명','점포명'],
-        category: ['업종','대분류','카테고리','분류'],
-        subcategory: ['세부업종','소분류','세부분류','서브카테고리'],
-        region: ['지역','시도','시','도','광역시'],
-        district: ['구','군','구군','시군구'],
-        address: ['주소','상세주소','도로명주소','지번주소'],
-        lat: ['위도','latitude','y'],
-        lng: ['경도','longitude','x','lon'],
-        phone: ['전화','전화번호','연락처','tel'],
-        hours: ['영업시간','운영시간','시간'],
-        playroom_type: ['놀이방유형','놀이시설','놀이방종류','키즈존유형'],
-        playroom_desc: ['놀이방설명','놀이시설설명','키즈존설명'],
-        age_range: ['연령','연령대','권장연령','나이'],
-        has_parking: ['주차','주차가능','주차여부'],
-        has_nursing_room: ['수유실','수유실여부'],
-        has_highchair: ['유아의자','아기의자','하이체어'],
-        has_stroller_access: ['유모차','유모차접근','유모차가능'],
-        price_range: ['가격대','가격','가격범위','가격수준'],
-        rating: ['평점','별점','점수','rating'],
-        review_count: ['리뷰수','리뷰','후기수','review'],
-        tags: ['태그','키워드','해시태그'],
-        description: ['설명','소개','가게소개','상세설명','메모'],
-    };
-    
-    const aliases = koreanMap[dbField] || [];
-    return aliases.some(a => col.includes(a.replace(/[\s_-]/g, '')));
+function updateMapping(sel) {
+    mapping[sel.dataset.field] = sel.value;
+    sel.className = sel.value ? 'mapped' : 'unmapped';
 }
 
-function updateMappingState() {
-    mapping = {};
-    document.querySelectorAll('#mappingGrid select').forEach(sel => {
-        const field = sel.dataset.field;
-        const val = sel.value;
-        if (val) {
-            mapping[field] = val;
-            sel.className = 'mapped';
-        } else {
-            sel.className = val === '' ? 'unmapped' : '';
-        }
-    });
-}
-
-// ===== Step Navigation =====
 function goStep(n) {
-    ['sectionUpload','sectionPreview','sectionMapping','sectionResult'].forEach((id,i) => {
-        document.getElementById(id).classList.toggle('hidden', i !== n-1);
+    [1,2,3,4].forEach(i => {
+        const s = document.getElementById('step'+i);
+        s.className = 'step' + (i < n ? ' done' : (i === n ? ' active' : ''));
     });
-    for (let i = 1; i <= 4; i++) {
-        const el = document.getElementById('step'+i);
-        el.classList.remove('active','done');
-        if (i < n) el.classList.add('done');
-        if (i === n) el.classList.add('active');
-    }
-    if (n === 3) renderMapping();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('sectionUpload').classList.toggle('hidden', n !== 1);
+    document.getElementById('sectionPreview').classList.toggle('hidden', n !== 2);
+    document.getElementById('sectionMapping').classList.toggle('hidden', n !== 3);
+    document.getElementById('sectionResult').classList.toggle('hidden', n !== 4);
+    if (n === 3) buildMapping();
 }
 
-// ===== Upload =====
 async function startUpload() {
-    if (!mapping.name) {
-        alert('가게 이름(name) 매핑은 필수입니다!');
-        return;
-    }
-    if (!csvData || csvData.rows.length === 0) {
-        alert('업로드할 데이터가 없습니다.');
-        return;
-    }
-
-    const confirmMsg = `총 ${csvData.rows.length}건을 업로드합니다. 계속하시겠습니까?`;
-    if (!confirm(confirmMsg)) return;
+    if (!csvData || csvData.rows.length === 0) { alert('업로드할 데이터가 없습니다.'); return; }
+    if (!confirm(`총 ${csvData.rows.length}건을 업로드합니다. 계속하시겠습니까?`)) return;
 
     goStep(4);
     const log = document.getElementById('resultLog');
     const progressFill = document.getElementById('progressFill');
     const progressText = document.getElementById('progressText');
     log.innerHTML = '';
+    function addLog(msg, type='info') { log.innerHTML += `<div class="${type}">  ${msg}</div>`; log.scrollTop = log.scrollHeight; }
 
-    function addLog(msg, type='info') {
-        log.innerHTML += `<div class="${type}">  ${msg}</div>`;
-        log.scrollTop = log.scrollHeight;
-    }
-
-    // 기존 데이터 처리
     const existingAction = document.querySelector('input[name="existingData"]:checked').value;
     if (existingAction === 'clear') {
         addLog('⚠️ 기존 데이터 삭제 시작...', 'warn');
@@ -1074,59 +864,29 @@ async function startUpload() {
                 addLog(`  🗑️ ${data.length}건 삭제`, 'warn');
             }
             addLog('✅ 기존 데이터 삭제 완료', 'success');
-        } catch(e) {
-            addLog('❌ 삭제 중 오류: ' + e.message, 'error');
-        }
+        } catch(e) { addLog('❌ 삭제 중 오류: ' + e.message, 'error'); }
     }
 
-    // 데이터 변환
     addLog(`📋 ${csvData.rows.length}건 변환 시작...`, 'info');
-    const records = [];
-    let skipCount = 0;
-
-    csvData.rows.forEach((row, i) => {
+    const records = []; let skipCount = 0;
+    csvData.rows.forEach(row => {
         const record = {};
-        
-        // 매핑 적용
         DB_FIELDS.forEach(field => {
             const csvCol = mapping[field.key];
             if (csvCol && row[csvCol] !== undefined && row[csvCol] !== '') {
                 let val = String(row[csvCol]).trim();
-                
-                // 타입 변환
-                if (['lat','lng','rating'].includes(field.key)) {
-                    val = parseFloat(val) || 0;
-                } else if (field.key === 'review_count') {
-                    val = parseInt(val) || 0;
-                } else if (['has_parking','has_nursing_room','has_highchair','has_stroller_access'].includes(field.key)) {
-                    val = ['true','1','o','O','예','Y','y','있음','가능'].includes(val);
-                } else if (field.key === 'tags') {
-                    val = val.split(/[,;|]/).map(t => t.trim()).filter(Boolean);
-                } else if (field.key === 'price_range') {
-                    if (['저렴','싸다','낮음','low'].includes(val.toLowerCase())) val = '$';
-                    else if (['보통','중간','medium','mid'].includes(val.toLowerCase())) val = '$$';
-                    else if (['고급','비쌈','높음','high','프리미엄'].includes(val.toLowerCase())) val = '$$$';
-                }
-                
+                if (['lat','lng','rating'].includes(field.key)) val = parseFloat(val) || 0;
+                else if (field.key === 'review_count') val = parseInt(val) || 0;
+                else if (['has_parking','has_nursing_room','has_highchair','has_stroller_access'].includes(field.key)) val = ['true','1','o','O','예','Y','y','있음','가능'].includes(val);
+                else if (field.key === 'tags') val = val.split(/[,;|]/).map(t => t.trim()).filter(Boolean);
+                else if (field.key === 'price_range') { if (['저렴','싸다','낮음','low'].includes(val.toLowerCase())) val='$'; else if (['보통','중간','medium','mid'].includes(val.toLowerCase())) val='$$'; else if (['고급','비쌈','높음','high','프리미엄'].includes(val.toLowerCase())) val='$$$'; }
                 record[field.key] = val;
             }
         });
-
-        // 필수 필드 체크
-        if (!record.name) {
-            skipCount++;
-            return;
-        }
-
-        // 기본값 적용
+        if (!record.name) { skipCount++; return; }
         if (!record.category) record.category = '식당';
         if (!record.subcategory) record.subcategory = '한식';
-        if (!record.region) {
-            // 주소에서 지역 추출 시도
-            const addr = record.address || '';
-            const regions = ['서울','경기','인천','부산','대구','대전','광주','울산','경남','충북','충남','강원','제주'];
-            record.region = regions.find(r => addr.includes(r)) || '서울';
-        }
+        if (!record.region) { const addr = record.address || ''; record.region = ['서울','경기','인천','부산','대구','대전','광주','울산','경남','충북','충남','강원','제주'].find(r => addr.includes(r)) || '서울'; }
         if (!record.playroom_type) record.playroom_type = '키즈존';
         if (!record.age_range) record.age_range = '전연령';
         if (!record.price_range) record.price_range = '$$';
@@ -1134,103 +894,37 @@ async function startUpload() {
         if (!record.review_count) record.review_count = Math.floor(10 + Math.random() * 200);
         if (!record.tags || record.tags.length === 0) record.tags = ['가족외식', '아이'];
         if (!record.description) record.description = record.playroom_desc || '키즈프렌들리 가게입니다.';
-
         records.push(record);
     });
-
     addLog(`✅ 변환 완료: ${records.length}건 (스킵: ${skipCount}건)`, 'success');
 
-    // 업로드
-    if (records.length === 0) {
-        addLog('❌ 업로드할 데이터가 없습니다.', 'error');
-        document.getElementById('resultActions').style.display = 'flex';
-        return;
-    }
+    if (records.length === 0) { addLog('❌ 업로드할 데이터가 없습니다.', 'error'); document.getElementById('resultActions').style.display = 'flex'; return; }
 
     addLog(`🚀 API 업로드 시작 (${records.length}건)...`, 'info');
-    const batchSize = 20;
-    let uploaded = 0;
-    let errors = 0;
-
+    const batchSize = 20; let uploaded = 0; let errors = 0;
     for (let i = 0; i < records.length; i += batchSize) {
         const batch = records.slice(i, i + batchSize);
-        const results = await Promise.allSettled(
-            batch.map(rec =>
-                fetch('tables/stores', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(rec)
-                })
-            )
-        );
-
-        results.forEach((r, j) => {
-            if (r.status === 'fulfilled' && r.value.ok) {
-                uploaded++;
-            } else {
-                errors++;
-                addLog(`  ⚠️ [${i+j+1}] ${batch[j].name} 실패`, 'error');
-            }
-        });
-
+        const results = await Promise.allSettled(batch.map(rec => fetch('tables/stores', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(rec) })));
+        results.forEach((r, j) => { if (r.status === 'fulfilled' && r.value.ok) uploaded++; else { errors++; addLog(`  ⚠️ [${i+j+1}] ${batch[j].name} 실패`, 'error'); } });
         const pct = Math.round(((i + batch.length) / records.length) * 100);
         progressFill.style.width = pct + '%';
         progressText.textContent = `${uploaded}/${records.length} 업로드 완료 (${pct}%)`;
-        
-        if ((i + batch.length) % 100 === 0 || i + batch.length >= records.length) {
-            addLog(`  📦 ${uploaded}건 완료...`, 'info');
-        }
     }
-
-    // 완료
     progressFill.style.width = '100%';
-    addLog('', 'info');
     addLog('═══════════════════════════════════', 'info');
-    addLog(`🎉 업로드 완료!`, 'success');
-    addLog(`   ✅ 성공: ${uploaded}건`, 'success');
-    if (errors > 0) addLog(`   ❌ 실패: ${errors}건`, 'error');
-    if (skipCount > 0) addLog(`   ⏭️ 스킵: ${skipCount}건 (이름 없음)`, 'warn');
+    addLog(`🎉 업로드 완료! ✅ 성공: ${uploaded}건${errors > 0 ? ` / ❌ 실패: ${errors}건` : ''}`, 'success');
     addLog('═══════════════════════════════════', 'info');
     progressText.textContent = `완료! ${uploaded}건 업로드 성공`;
     document.getElementById('resultActions').style.display = 'flex';
 }
 
-// ===== Template Download =====
 function downloadTemplate() {
     const headers = DB_FIELDS.map(f => f.key);
-    const example = {
-        name: '맛있는 고기집',
-        category: '식당',
-        subcategory: '고기집',
-        region: '서울',
-        district: '강남구',
-        address: '서울 강남구 테헤란로 123',
-        lat: '37.498',
-        lng: '127.028',
-        phone: '02-123-4567',
-        hours: '11:00~22:00 (월 휴무)',
-        playroom_type: '실내놀이방',
-        playroom_desc: '볼풀+미끄럼틀 키즈존 운영. CCTV 완비',
-        age_range: '전연령',
-        has_parking: 'O',
-        has_nursing_room: 'O',
-        has_highchair: 'O',
-        has_stroller_access: 'O',
-        price_range: '$$',
-        rating: '4.3',
-        review_count: '150',
-        tags: '한우,숯불구이,생일파티',
-        description: '프리미엄 한우 전문점. 넓은 키즈룸에 CCTV 모니터링 완비'
-    };
-    
+    const example = { name:'맛있는 고기집', category:'식당', subcategory:'고기집', region:'서울', district:'강남구', address:'서울 강남구 테헤란로 123', lat:'37.498', lng:'127.028', phone:'02-123-4567', hours:'11:00~22:00 (월 휴무)', playroom_type:'실내놀이방', playroom_desc:'볼풀+미끄럼틀 키즈존 운영', age_range:'전연령', has_parking:'O', has_nursing_room:'O', has_highchair:'O', has_stroller_access:'O', price_range:'$$', rating:'4.3', review_count:'150', tags:'한우,숯불구이,생일파티', description:'프리미엄 한우 전문점' };
     const csv = headers.join(',') + '\n' + headers.map(h => `"${example[h] || ''}"`).join(',') + '\n';
-    const bom = '\uFEFF';
-    const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'kidsgo_template.csv';
-    a.click();
+    const a = document.createElement('a'); a.href = url; a.download = 'kidsgo_template.csv'; a.click();
     URL.revokeObjectURL(url);
 }
 </script>
