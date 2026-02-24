@@ -687,6 +687,30 @@ async function approveRequest(id, storeName, fieldName, newValue) {
         // 여러 건이면 첫 번째 사용
         const storeId = stores[0].id;
 
+        // 한글 필드명 → 영문 변환
+        const fieldNameMap = {
+            '영업시간': 'hours',
+            '전화번호': 'phone',
+            '주소': 'address',
+            '키즈존정보': 'playroom_desc',
+        };
+        // 자동 반영 불가 항목
+        const manualFields = ['편의시설', '폐업', '기타'];
+        if (manualFields.includes(fieldName)) {
+            alert(`"${fieldName}" 항목은 내용을 직접 확인 후 수동으로 처리해주세요.\n(자동 반영 불가 항목)`);
+            // status만 approved로 변경
+            const { error: statusErr2 } = await sb.from('edit_requests').update({ status: 'approved' }).eq('id', id);
+            if (!statusErr2) {
+                allRequests = allRequests.map(r => r.id === id ? {...r, status: 'approved'} : r);
+                const pendingCount = allRequests.filter(r => r.status === 'pending').length;
+                document.getElementById('pendingBadge').textContent = pendingCount;
+                renderRequests();
+                showToast('✅ 확인 처리되었습니다. (수동 반영 필요)');
+            }
+            return;
+        }
+        fieldName = fieldNameMap[fieldName] || fieldName;
+
         // boolean 필드 변환
         const boolFields = ['has_parking','has_nursing_room','has_highchair','has_stroller_access'];
         let parsedValue = newValue;
