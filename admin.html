@@ -224,6 +224,25 @@
         .empty-state { text-align: center; padding: 48px 24px; color: var(--text-light); }
         .empty-state i { font-size: 3rem; margin-bottom: 12px; opacity: 0.3; display: block; }
 
+        /* ===== 가게 관리 탭 =====  */
+        .store-manage-card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 10px; border-left: 4px solid var(--border); transition: all 0.2s; }
+        .store-manage-card:hover { border-left-color: var(--primary); }
+        .store-manage-card.missing { border-left-color: var(--warning); }
+        .sm-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 6px; }
+        .sm-name { font-size: 0.95rem; font-weight: 700; }
+        .sm-meta { font-size: 0.75rem; color: var(--text-light); margin-top: 2px; }
+        .sm-body { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; margin-bottom: 10px; }
+        .sm-field { display: flex; flex-direction: column; gap: 3px; }
+        .sm-field label { font-size: 0.72rem; font-weight: 600; color: var(--text-light); }
+        .sm-field input, .sm-field select { padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-family: var(--font); font-size: 0.82rem; background: var(--bg); outline: none; }
+        .sm-field input:focus, .sm-field select:focus { border-color: var(--primary); background: white; }
+        .sm-facilities { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+        .sm-check { display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 0.82rem; }
+        .sm-check input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--secondary); cursor: pointer; }
+        .sm-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+        .sm-page-btn { padding: 6px 12px; border: 1.5px solid var(--border); border-radius: 8px; background: white; font-family: var(--font); font-size: 0.8rem; cursor: pointer; }
+        .sm-page-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
         @media (max-width: 768px) {
             .login-box { margin: 16px; padding: 32px 24px; }
             .steps { flex-wrap: wrap; }
@@ -289,6 +308,9 @@
             <button class="tab-btn" onclick="switchTab('storeRequests')" id="tabStoreRequests">
                 <i class="fas fa-store"></i> 가게등록 요청 <span class="badge" id="storePendingBadge">0</span>
             </button>
+            <button class="tab-btn" onclick="switchTab('storeManage')" id="tabStoreManage">
+                <i class="fas fa-list"></i> 가게 관리
+            </button>
             <button class="tab-btn" onclick="switchTab('upload')" id="tabUpload">
                 <i class="fas fa-upload"></i> CSV 업로드
             </button>
@@ -326,6 +348,27 @@
             </div>
         </div>
 
+
+        <!-- 가게 관리 탭 -->
+        <div class="tab-content" id="tabContentStoreManage">
+            <div class="section">
+                <div class="section-title"><i class="fas fa-list"></i> 가게 목록 관리</div>
+                <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; align-items:center;">
+                    <input type="text" id="smSearch" placeholder="🔍 가게명 검색..." oninput="renderStoreManage()"
+                        style="flex:1; min-width:160px; padding:9px 14px; border:1.5px solid var(--border); border-radius:10px; font-family:var(--font); font-size:0.85rem; outline:none;">
+                    <select id="smFilter" onchange="renderStoreManage()"
+                        style="padding:9px 14px; border:1.5px solid var(--border); border-radius:10px; font-family:var(--font); font-size:0.85rem; background:white;">
+                        <option value="all">전체</option>
+                        <option value="missing">편의시설 미입력</option>
+                        <option value="no_hours">영업시간 없음</option>
+                        <option value="no_phone">전화번호 없음</option>
+                    </select>
+                    <span id="smCount" style="font-size:0.82rem; color:var(--text-light); white-space:nowrap;"></span>
+                </div>
+                <div id="storeManageList"><div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>불러오는 중...</p></div></div>
+                <div id="smPagination" style="display:flex; justify-content:center; gap:6px; margin-top:16px; flex-wrap:wrap;"></div>
+            </div>
+        </div>
         <!-- CSV 업로드 탭 -->
         <div class="tab-content" id="tabContentUpload">
             <div class="steps">
@@ -520,6 +563,11 @@ function switchTab(tab) {
         document.getElementById('tabRequests').classList.add('active');
         document.getElementById('tabContentRequests').style.display = 'block';
         document.getElementById('tabContentRequests').classList.add('active');
+    } else if (tab === 'storeManage') {
+        document.getElementById('tabStoreManage').classList.add('active');
+        document.getElementById('tabContentStoreManage').style.display = 'block';
+        document.getElementById('tabContentStoreManage').classList.add('active');
+        if (allStores.length === 0) loadStoreManage();
     } else if (tab === 'storeRequests') {
         document.getElementById('tabStoreRequests').classList.add('active');
         document.getElementById('tabContentStoreRequests').style.display = 'block';
@@ -1070,3 +1118,161 @@ function downloadTemplate() {
 </script>
 </body>
 </html>
+<script>
+// ===== 가게 관리 탭 =====
+let allStores = [];
+let smPage = 1;
+const SM_PAGE_SIZE = 15;
+
+async function loadStoreManage() {
+    if (!sb) return;
+    const { data, error } = await sb.from('stores').select('*').order('name', { ascending: true });
+    if (error) { console.error(error); return; }
+    allStores = data || [];
+    renderStoreManage();
+}
+
+function getFilteredStores() {
+    const search = (document.getElementById('smSearch')?.value || '').trim().toLowerCase();
+    const filter = document.getElementById('smFilter')?.value || 'all';
+    return allStores.filter(s => {
+        if (search && !s.name.toLowerCase().includes(search)) return false;
+        if (filter === 'missing') return !s.has_parking && !s.has_nursing_room && !s.has_highchair && !s.has_stroller_access;
+        if (filter === 'no_hours') return !s.hours;
+        if (filter === 'no_phone') return !s.phone;
+        return true;
+    });
+}
+
+function renderStoreManage() {
+    const list = document.getElementById('storeManageList');
+    if (!list) return;
+    const filtered = getFilteredStores();
+    const totalPages = Math.ceil(filtered.length / SM_PAGE_SIZE);
+    if (smPage > totalPages) smPage = 1;
+    const paged = filtered.slice((smPage - 1) * SM_PAGE_SIZE, smPage * SM_PAGE_SIZE);
+
+    document.getElementById('smCount').textContent = `${filtered.length}개`;
+
+    if (paged.length === 0) {
+        list.innerHTML = '<div class="empty-state"><i class="fas fa-store"></i><p>해당하는 가게가 없습니다.</p></div>';
+        document.getElementById('smPagination').innerHTML = '';
+        return;
+    }
+
+    list.innerHTML = paged.map(s => {
+        const isMissing = !s.has_parking && !s.has_nursing_room && !s.has_highchair && !s.has_stroller_access;
+        const naverSearch = `https://map.naver.com/p/search/${encodeURIComponent(s.name + ' ' + (s.address || ''))}`;
+        return `
+        <div class="store-manage-card ${isMissing ? 'missing' : ''}" id="smc-${s.id}">
+            <div class="sm-header">
+                <div>
+                    <div class="sm-name">🏪 ${escHtml(s.name)}</div>
+                    <div class="sm-meta">${escHtml(s.region || '')} ${escHtml(s.district || '')} · ${escHtml(s.category || '')}</div>
+                </div>
+                <a href="${naverSearch}" target="_blank" rel="noopener"
+                   style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:#03C75A;color:white;border-radius:8px;font-size:0.78rem;font-weight:600;text-decoration:none;">
+                    <i class="fas fa-map-marker-alt"></i> 네이버 확인
+                </a>
+            </div>
+
+            <div style="font-size:0.78rem;color:var(--text-light);margin-bottom:10px;">📍 ${escHtml(s.address || '-')}</div>
+
+            <!-- 편의시설 체크박스 -->
+            <div class="sm-facilities">
+                <label class="sm-check"><input type="checkbox" id="sm-parking-${s.id}" ${s.has_parking ? 'checked' : ''}> 🅿️ 주차</label>
+                <label class="sm-check"><input type="checkbox" id="sm-nursing-${s.id}" ${s.has_nursing_room ? 'checked' : ''}> 🍼 수유실</label>
+                <label class="sm-check"><input type="checkbox" id="sm-highchair-${s.id}" ${s.has_highchair ? 'checked' : ''}> 🪑 유아의자</label>
+                <label class="sm-check"><input type="checkbox" id="sm-stroller-${s.id}" ${s.has_stroller_access ? 'checked' : ''}> 👶 유모차</label>
+            </div>
+
+            <!-- 텍스트 필드 -->
+            <div class="sm-body">
+                <div class="sm-field">
+                    <label>전화번호</label>
+                    <input type="text" id="sm-phone-${s.id}" value="${escHtml(s.phone || '')}" placeholder="02-000-0000">
+                </div>
+                <div class="sm-field">
+                    <label>영업시간</label>
+                    <input type="text" id="sm-hours-${s.id}" value="${escHtml(s.hours || '')}" placeholder="11:00~22:00 (월 휴무)">
+                </div>
+                <div class="sm-field">
+                    <label>놀이시설 유형</label>
+                    <select id="sm-playroom-${s.id}">
+                        <option value="">선택</option>
+                        ${['키즈존','실내놀이방','볼풀','미끄럼틀','트램펄린','키즈카페형'].map(v => `<option value="${v}" ${s.playroom_type===v?'selected':''}>${v}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="sm-field">
+                    <label>가격대</label>
+                    <select id="sm-price-${s.id}">
+                        ${['$','$$','$$$'].map(v => `<option value="${v}" ${s.price_range===v?'selected':''}>${v}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="sm-field">
+                    <label>놀이시설 설명</label>
+                    <input type="text" id="sm-playdesc-${s.id}" value="${escHtml(s.playroom_desc || '')}" placeholder="볼풀+미끄럼틀, CCTV 완비">
+                </div>
+                <div class="sm-field">
+                    <label>연령대</label>
+                    <select id="sm-age-${s.id}">
+                        ${['전연령','0~3세','3~5세','5~10세','초등학생'].map(v => `<option value="${v}" ${s.age_range===v?'selected':''}>${v}</option>`).join('')}
+                    </select>
+                </div>
+            </div>
+
+            <div class="sm-actions">
+                <button class="btn btn-sm btn-danger" onclick="deleteStore(${s.id}, '${escStr(s.name)}')">
+                    <i class="fas fa-trash"></i> 삭제
+                </button>
+                <button class="btn btn-sm btn-secondary" onclick="saveStore(${s.id})">
+                    <i class="fas fa-save"></i> 저장
+                </button>
+            </div>
+        </div>`;
+    }).join('');
+
+    // 페이지네이션
+    const pg = document.getElementById('smPagination');
+    pg.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'sm-page-btn' + (i === smPage ? ' active' : '');
+        btn.textContent = i;
+        btn.onclick = () => { smPage = i; renderStoreManage(); };
+        pg.appendChild(btn);
+    }
+}
+
+async function saveStore(id) {
+    if (!sb) return;
+    const updates = {
+        has_parking: document.getElementById(`sm-parking-${id}`).checked,
+        has_nursing_room: document.getElementById(`sm-nursing-${id}`).checked,
+        has_highchair: document.getElementById(`sm-highchair-${id}`).checked,
+        has_stroller_access: document.getElementById(`sm-stroller-${id}`).checked,
+        phone: document.getElementById(`sm-phone-${id}`).value.trim() || null,
+        hours: document.getElementById(`sm-hours-${id}`).value.trim() || null,
+        playroom_type: document.getElementById(`sm-playroom-${id}`).value || null,
+        playroom_desc: document.getElementById(`sm-playdesc-${id}`).value.trim() || null,
+        price_range: document.getElementById(`sm-price-${id}`).value || '$$',
+        age_range: document.getElementById(`sm-age-${id}`).value || '전연령',
+    };
+    const { error } = await sb.from('stores').update(updates).eq('id', id);
+    if (error) { alert('저장 실패: ' + error.message); return; }
+    // 로컬 데이터 업데이트
+    allStores = allStores.map(s => s.id === id ? {...s, ...updates} : s);
+    showToast('✅ 저장 완료!');
+    renderStoreManage();
+}
+
+async function deleteStore(id, name) {
+    if (!sb) return;
+    if (!confirm(`"${name}"을 삭제하시겠습니까? 복구할 수 없습니다.`)) return;
+    const { error } = await sb.from('stores').delete().eq('id', id);
+    if (error) { alert('삭제 실패: ' + error.message); return; }
+    allStores = allStores.filter(s => s.id !== id);
+    showToast(`🗑️ "${name}" 삭제됐습니다.`);
+    renderStoreManage();
+}
+</script>
