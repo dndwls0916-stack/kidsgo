@@ -1,103 +1,298 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>정보 수정 요청</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>정보 수정 요청 | 키즈고</title>
+  <meta name="description" content="키즈고 매장 정보 수정 요청 페이지" />
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 
 <style>
-body {
-  font-family: sans-serif;
-  max-width: 600px;
-  margin: 50px auto;
-  padding: 20px;
+:root {
+    --primary: #FF6B9D; --primary-dark: #E85588; --primary-light: #FFD4E3;
+    --secondary: #4ECDC4; --secondary-dark: #3BB5AD;
+    --bg: #FFF8F0; --bg-card: #FFFFFF; --text: #2D3436; --text-light: #636E72; --text-lighter: #B2BEC3;
+    --border: #F0E6DD; --shadow: 0 2px 16px rgba(0,0,0,0.06);
+    --radius: 16px; --radius-sm: 10px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --font: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
 }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
-input, select, textarea {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+.header { background: linear-gradient(135deg, var(--primary) 0%, #FF8E9E 50%, var(--secondary) 100%); padding: 16px 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(255,107,157,0.3); }
+.header-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; gap: 16px; }
+.logo { display: flex; align-items: center; gap: 8px; color: white; font-size: 1.5rem; font-weight: 800; cursor: pointer; flex-shrink: 0; text-decoration: none; }
+.logo i { font-size: 1.3rem; background: rgba(255,255,255,0.25); border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; }
+.tagline { color: rgba(255,255,255,0.9); font-size: 0.85rem; font-weight: 400; }
+
+.results-section { padding: 24px 0 60px; }
+.results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.results-header h2 { font-size: 1.15rem; font-weight: 700; }
+.results-count { background: var(--primary-light); color: var(--primary-dark); border-radius: 50px; padding: 4px 14px; font-size: 0.82rem; font-weight: 700; }
+
+.form-panel { background: white; border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); }
+.form-intro { color: var(--text-light); margin-bottom: 24px; font-size: 0.92rem; line-height: 1.7; }
+
+.form-group { margin-bottom: 20px; }
+.form-label { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.form-label i { color: var(--primary); width: 18px; text-align: center; }
+.form-label .required { color: var(--primary); font-size: 0.75rem; }
+
+.form-input, .form-select, .form-textarea {
+    width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 12px 16px; font-size: 0.92rem; font-family: var(--font); color: var(--text);
+    background: var(--bg); transition: var(--transition); outline: none;
 }
-
-button {
-  background: #ff6b6b;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  width: 100%;
-  font-size: 16px;
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--primary); background: white;
+    box-shadow: 0 0 0 3px rgba(255,107,157,0.1);
 }
+.form-input::placeholder, .form-textarea::placeholder { color: var(--text-lighter); }
+.form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%23636E72'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
+.form-textarea { min-height: 100px; resize: vertical; }
 
-button:hover {
-  background: #ff5252;
+.form-hint { font-size: 0.78rem; color: var(--text-lighter); margin-top: 4px; }
+
+.btn-submit {
+    width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--primary); color: white; border: none; border-radius: var(--radius-sm);
+    padding: 16px; font-size: 1rem; font-weight: 700; cursor: pointer;
+    font-family: var(--font); transition: var(--transition); margin-top: 8px;
+}
+.btn-submit:hover { background: var(--primary-dark); transform: translateY(-1px); }
+.btn-submit:disabled { background: var(--text-lighter); cursor: not-allowed; transform: none; }
+
+.success-msg {
+    display: none; text-align: center; padding: 40px 20px;
+    background: linear-gradient(135deg, #E8F8F5, #FFF0F5);
+    border-radius: var(--radius); margin-top: 20px;
+}
+.success-msg i { font-size: 3rem; color: var(--secondary); margin-bottom: 12px; }
+.success-msg h3 { font-size: 1.2rem; margin-bottom: 8px; color: var(--text); }
+.success-msg p { color: var(--text-light); font-size: 0.9rem; margin-bottom: 20px; }
+.btn-back {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--secondary); color: white; border: none; border-radius: 50px;
+    padding: 12px 28px; font-size: 0.92rem; font-weight: 600; cursor: pointer;
+    font-family: var(--font); transition: var(--transition); text-decoration: none;
+}
+.btn-back:hover { background: var(--secondary-dark); }
+
+.footer { background: var(--text); color: rgba(255,255,255,0.7); padding: 48px 0 24px; }
+.footer-inner { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 32px; }
+.footer-brand .logo { color: white; font-size: 1.3rem; margin-bottom: 12px; }
+.footer-brand p { font-size: 0.88rem; line-height: 1.6; }
+.footer-links h4 { color: white; font-size: 0.9rem; font-weight: 700; margin-bottom: 12px; }
+.footer-links a { display: block; color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.85rem; padding: 4px 0; transition: var(--transition); }
+.footer-links a:hover { color: var(--primary-light); }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; text-align: center; font-size: 0.82rem; }
+
+@media (max-width: 768px) {
+    .header-inner { flex-direction: column; gap: 4px; text-align: center; }
+    .tagline { font-size: 0.78rem; }
+    .form-panel { padding: 20px 16px; }
+    .footer-inner { grid-template-columns: 1fr; gap: 24px; }
 }
 </style>
-
 </head>
+
 <body>
 
-<h2>정보 수정 요청</h2>
+  <header class="header">
+    <div class="header-inner">
+      <a class="logo" href="index.html">
+        <i class="fas fa-baby"></i>
+        <span>키즈고</span>
+      </a>
+      <p class="tagline">놀이방 있는 식당 & 카페, 한 눈에 찾아보세요!</p>
+    </div>
+  </header>
 
-<form id="editForm">
+  <section class="results-section">
+    <div class="container">
 
-  <input type="text" id="store_name" placeholder="매장명" required>
+      <div class="results-header">
+        <h2>정보 수정 요청</h2>
+        <span class="results-count">Update</span>
+      </div>
 
-  <select id="field_name" required>
-    <option value="">수정 항목 선택</option>
-    <option value="hours">영업시간</option>
-    <option value="has_parking">주차 여부</option>
-    <option value="has_highchair">유아의자</option>
-    <option value="has_nursing_room">수유실</option>
-    <option value="phone">전화번호</option>
-    <option value="address">주소</option>
-    <option value="기타">기타</option>
-  </select>
+      <!-- 제출 폼 -->
+      <div class="form-panel" id="formPanel">
+        <p class="form-intro">
+          <i class="fas fa-info-circle" style="color:var(--primary);"></i>
+          매장 정보가 실제와 다르다면 아래 폼으로 알려주세요. 확인 후 반영합니다.
+        </p>
 
-  <textarea id="old_value" placeholder="현재 표시된 정보 (선택)"></textarea>
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-store"></i> 매장 이름 <span class="required">*필수</span>
+          </label>
+          <input type="text" class="form-input" id="storeName" placeholder="예: 키즈파크 강남점" required>
+        </div>
 
-  <textarea id="new_value" placeholder="수정할 내용 입력" required></textarea>
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-pen"></i> 수정 항목 <span class="required">*필수</span>
+          </label>
+          <select class="form-select" id="fieldName">
+            <option value="">선택해주세요</option>
+            <option value="영업시간">영업시간 / 휴무일</option>
+            <option value="전화번호">전화번호</option>
+            <option value="주소">주소</option>
+            <option value="키즈존정보">키즈존 / 놀이시설 정보</option>
+            <option value="편의시설">편의시설 (주차/수유실/유아의자 등)</option>
+            <option value="폐업">폐업 신고</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
 
-  <textarea id="reason" placeholder="수정 사유 (선택)"></textarea>
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-times-circle"></i> 현재 잘못된 정보
+          </label>
+          <input type="text" class="form-input" id="oldValue" placeholder="예: 월요일 휴무로 되어 있음">
+          <p class="form-hint">현재 사이트에 표시된 잘못된 정보를 적어주세요 (선택)</p>
+        </div>
 
-  <button type="submit">수정 요청 보내기</button>
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-check-circle"></i> 올바른 정보 <span class="required">*필수</span>
+          </label>
+          <input type="text" class="form-input" id="newValue" placeholder="예: 화요일 휴무가 맞습니다" required>
+        </div>
 
-</form>
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-comment"></i> 추가 참고사항
+          </label>
+          <textarea class="form-textarea" id="reason" placeholder="추가로 알려주실 내용이 있으면 적어주세요 (선택)"></textarea>
+        </div>
+
+        <button class="btn-submit" id="submitBtn" onclick="submitRequest()">
+          <i class="fas fa-paper-plane"></i> 수정 요청 보내기
+        </button>
+      </div>
+
+      <!-- 성공 메시지 -->
+      <div class="success-msg" id="successMsg">
+        <i class="fas fa-check-circle"></i>
+        <h3>수정 요청이 접수되었습니다!</h3>
+        <p>확인 후 반영하겠습니다. 감사합니다.</p>
+        <a class="btn-back" href="index.html">
+          <i class="fas fa-home"></i> 홈으로 돌아가기
+        </a>
+        <br><br>
+        <button class="btn-back" onclick="resetForm()" style="background:var(--primary);">
+          <i class="fas fa-plus"></i> 추가 요청하기
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="logo"><i class="fas fa-baby"></i> 키즈고</div>
+          <p>아이와 함께하는 행복한 외식, 키즈고가 함께합니다.</p>
+        </div>
+        <div class="footer-links">
+          <h4>서비스</h4>
+          <a href="store-request.html">가게 등록 요청</a>
+          <a href="edit-request.html">정보 수정 요청</a>
+          <a href="guide.html">이용 가이드</a>
+          <a href="faq.html">자주 묻는 질문</a>
+        </div>
+        <div class="footer-links">
+          <h4>문의</h4>
+          <a href="mailto:info@kidsgo.kr">info@kidsgo.kr</a>
+        </div>
+        <div class="footer-links">
+          <h4>법적 고지</h4>
+          <a href="terms.html">이용약관</a>
+          <a href="privacy.html">개인정보처리방침</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 키즈고(KidsGo). All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
 
 <script>
-const supabaseUrl = "https://vzjqfogqymthtmbzyxkz.supabase.co";
-const supabaseKey = "sb_publishable_911v8puVJ_Qm-iex5F1gcg_suBEEkur";
+// ===== Supabase 설정 (index.html과 동일한 값) =====
+const SUPABASE_URL = 'YOUR_SUPABASE_URL_HERE';
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE';
 
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+async function submitRequest() {
+    const storeName = document.getElementById('storeName').value.trim();
+    const fieldName = document.getElementById('fieldName').value;
+    const oldValue = document.getElementById('oldValue').value.trim();
+    const newValue = document.getElementById('newValue').value.trim();
+    const reason = document.getElementById('reason').value.trim();
 
-document.getElementById("editForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+    // 필수값 검증
+    if (!storeName) { alert('매장 이름을 입력해주세요.'); return; }
+    if (!fieldName) { alert('수정 항목을 선택해주세요.'); return; }
+    if (!newValue) { alert('올바른 정보를 입력해주세요.'); return; }
 
-  const data = {
-    store_name: document.getElementById("store_name").value,
-    field_name: document.getElementById("field_name").value,
-    old_value: document.getElementById("old_value").value,
-    new_value: document.getElementById("new_value").value,
-    reason: document.getElementById("reason").value
-  };
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 전송 중...';
 
-  const { error } = await supabase
-    .from("edit_requests")
-    .insert([data]);
+    try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/edit_requests`, {
+            method: 'POST',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
+                store_name: storeName,
+                field_name: fieldName,
+                old_value: oldValue || null,
+                new_value: newValue,
+                reason: reason || null,
+                status: 'pending'
+            })
+        });
 
-  if (error) {
-    alert("전송 실패 😢 콘솔 확인하세요.");
-    console.error(error);
-  } else {
-    alert("수정 요청이 접수되었습니다!");
-    e.target.reset();
-  }
-});
+        if (response.ok || response.status === 201) {
+            // 성공
+            document.getElementById('formPanel').style.display = 'none';
+            document.getElementById('successMsg').style.display = 'block';
+        } else {
+            const err = await response.text();
+            console.error('제출 실패:', err);
+            alert('전송에 실패했습니다. 잠시 후 다시 시도해주세요.');
+        }
+    } catch (e) {
+        console.error('네트워크 에러:', e);
+        alert('네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.');
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> 수정 요청 보내기';
+}
+
+function resetForm() {
+    document.getElementById('storeName').value = '';
+    document.getElementById('fieldName').value = '';
+    document.getElementById('oldValue').value = '';
+    document.getElementById('newValue').value = '';
+    document.getElementById('reason').value = '';
+    document.getElementById('formPanel').style.display = 'block';
+    document.getElementById('successMsg').style.display = 'none';
+}
 </script>
 
 </body>
