@@ -70,6 +70,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <!-- 카카오맵 API -->
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=be5d553e67e98098b4936d583161ca56&libraries=services,clusterer"></script>
     <!-- CSS 인라인 적용됨 -->
     <style>
 /* ===== CSS Variables & Reset ===== */
@@ -185,7 +187,11 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); line
 
 /* Map */
 .map-container { margin-bottom: 20px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
-.map-view { height: 400px; background: #E8F0FE; position: relative; }
+.map-view { height: 500px; background: #E8F0FE; position: relative; }
+#kakaoMap { width: 100%; height: 100%; }
+.kakao-info-window { padding: 8px 12px; font-family: 'Noto Sans KR', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.kakao-info-window .iw-name { color: #2D3436; margin-bottom: 2px; }
+.kakao-info-window .iw-category { color: #FF6B9D; font-size: 0.75rem; }
 .map-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-light); }
 .map-placeholder i { font-size: 3rem; margin-bottom: 12px; color: var(--primary); }
 .map-placeholder p { font-weight: 600; font-size: 1.1rem; }
@@ -554,12 +560,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); line
 
             <!-- Map Container -->
             <div id="mapContainer" class="map-container" style="display:none;">
-                <div id="mapView" class="map-view">
-                    <div class="map-placeholder">
-                        <i class="fas fa-map-marked-alt"></i>
-                        <p>지도 보기</p>
-                        <span>가게 위치를 지도에서 확인하세요</span>
-                    </div>
+                <div id="mapView" class="map-view"><div id="kakaoMap"></div>
                 </div>
             </div>
 
@@ -568,7 +569,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); line
                 <div class="ad-placeholder ad-native">
                     <span class="ad-label">SPONSORED</span>
                     <p>🎈 프리미엄 키즈프렌들리 가게를 여기에 노출하세요</p>
-                    <small>광고 문의: ad@kidsgo.kr</small>
+                    <small>광고 문의: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ddbcb99db6b4b9aebab2f3b6af">[email&#160;protected]</a></small>
                 </div>
             </div>
 
@@ -635,7 +636,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); line
                 </div>
                 <div class="footer-links">
                     <h4>문의</h4>
-                    <a href="mailto:info@kidsgo.kr">info@kidsgo.kr</a>
+                    <a href="/cdn-cgi/l/email-protection#5831363e371833313c2b3f3776332a"><span class="__cf_email__" data-cfemail="1c75727a735c7775786f7b7332776e">[email&#160;protected]</span></a>
                     <a href="https://instagram.com/kidsgo" target="_blank">Instagram @kidsgo</a>
                 </div>
                 <div class="footer-links">
@@ -647,7 +648,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); line
             <!-- 사업자 정보 (사업자등록 후 실제 정보로 교체) -->
             <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;margin-bottom:12px;font-size:0.75rem;color:rgba(255,255,255,0.4);line-height:1.8;text-align:center;">
                 상호: 키즈고 | 대표: [대표자명] | 사업자등록번호: [000-00-00000]<br>
-                소재지: [사업장 주소] | 이메일: info@kidsgo.kr<br>
+                소재지: [사업장 주소] | 이메일: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4b22252d240b20222f382c24652039">[email&#160;protected]</a><br>
                 <a href="terms.html" style="color:rgba(255,255,255,0.5);text-decoration:none;">이용약관</a> · 
                 <a href="privacy.html" style="color:rgba(255,255,255,0.5);text-decoration:none;">개인정보처리방침</a>
             </div>
@@ -658,7 +659,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); line
         </div>
     </footer>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /**
  * 키즈고 - 대량 시드 데이터 자동 생성기 v3
  */
@@ -1100,19 +1101,109 @@ function updateResultsTitle() { const title = document.getElementById('resultsTi
 function updateView() {
     const grid = document.getElementById('storeGrid'); const mapContainer = document.getElementById('mapContainer');
     grid.classList.remove('list-view'); mapContainer.style.display = 'none';
-    switch (state.currentView) { case 'list': grid.classList.add('list-view'); grid.style.display = 'grid'; break; case 'map': mapContainer.style.display = 'block'; grid.style.display = 'grid'; renderMap(); break; default: grid.style.display = 'grid'; }
+    switch (state.currentView) { case 'list': grid.classList.add('list-view'); grid.style.display = 'grid'; break; case 'map': mapContainer.style.display = 'block'; grid.style.display = 'none'; setTimeout(() => { if (kakaoMap) kakao.maps.event.trigger(kakaoMap, 'resize'); renderMap(); }, 100); break; default: grid.style.display = 'grid'; }
 }
+// ===== 카카오맵 =====
+let kakaoMap = null;
+let kakaoMarkers = [];
+let kakaoClusterer = null;
+let userMarker = null;
+
 function renderMap() {
-    const mapView = document.getElementById('mapView');
-    if (state.filtered.length === 0) { mapView.innerHTML = '<div class="map-placeholder"><i class="fas fa-map-marked-alt"></i><p>표시할 가게가 없어요</p><span>필터를 조정해 보세요</span></div>'; return; }
-    const stores = state.filtered.filter(s => s.lat && s.lng); if (stores.length === 0) return;
-    const minLat = Math.min(...stores.map(s => s.lat)); const maxLat = Math.max(...stores.map(s => s.lat)); const minLng = Math.min(...stores.map(s => s.lng)); const maxLng = Math.max(...stores.map(s => s.lng));
-    const padLat = (maxLat - minLat) * 0.15 || 0.01; const padLng = (maxLng - minLng) * 0.15 || 0.01;
-    const latRange = (maxLat + padLat) - (minLat - padLat); const lngRange = (maxLng + padLng) - (minLng - padLng);
-    const mapWidth = mapView.offsetWidth; const mapHeight = mapView.offsetHeight;
-    let markersHtml = stores.map(store => { const x = ((store.lng - (minLng - padLng)) / lngRange) * (mapWidth - 60) + 30; const y = mapHeight - ((store.lat - (minLat - padLat)) / latRange) * (mapHeight - 60) - 30; return `<div class="map-marker" style="left:${x}px; top:${y}px;" onclick="event.stopPropagation(); openDetail('${store.id}')"><div class="marker-icon"><i class="fas fa-map-pin"></i></div><div class="marker-tooltip">${categoryIcons[store.category] || '📍'} ${store.name}</div></div>`; }).join('');
-    if (state.userLocation) { const ux = ((state.userLocation.lng - (minLng - padLng)) / lngRange) * (mapWidth - 60) + 30; const uy = mapHeight - ((state.userLocation.lat - (minLat - padLat)) / latRange) * (mapHeight - 60) - 30; if (ux > 0 && ux < mapWidth && uy > 0 && uy < mapHeight) { markersHtml += `<div class="map-marker" style="left:${ux}px; top:${uy}px;"><div class="marker-icon" style="background: #3B82F6;"><i class="fas fa-user" style="font-size:0.65rem;"></i></div><div class="marker-tooltip">📍 내 위치</div></div>`; } }
-    mapView.innerHTML = `<div style="position:absolute;inset:0;background:linear-gradient(135deg,#E8F4FD 0%,#F0F8FF 50%,#E8F0FE 100%);"></div><div style="position:absolute;inset:0;opacity:0.15;background-image:radial-gradient(circle,#94A3B8 1px,transparent 1px);background-size:20px 20px;"></div>${markersHtml}<div style="position:absolute;bottom:12px;left:12px;background:rgba(255,255,255,0.9);border-radius:8px;padding:8px 12px;font-size:0.75rem;color:#636E72;backdrop-filter:blur(4px);">📍 ${stores.length}개 가게 표시 중</div>`;
+    const stores = state.filtered.filter(s => s.lat && s.lng);
+    if (!window.kakao || !window.kakao.maps) { console.warn('카카오맵 미로드'); return; }
+
+    // 지도 초기화 (최초 1회)
+    if (!kakaoMap) {
+        const center = stores.length > 0
+            ? new kakao.maps.LatLng(stores[0].lat, stores[0].lng)
+            : new kakao.maps.LatLng(37.5665, 126.9780);
+
+        kakaoMap = new kakao.maps.Map(document.getElementById('kakaoMap'), {
+            center: center,
+            level: 8
+        });
+
+        kakaoMap.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
+        kakaoMap.addControl(new kakao.maps.MapTypeControl(), kakao.maps.ControlPosition.TOPRIGHT);
+
+        kakaoClusterer = new kakao.maps.MarkerClusterer({
+            map: kakaoMap,
+            averageCenter: true,
+            minLevel: 6,
+            styles: [{
+                width: '48px', height: '48px',
+                background: 'rgba(255,107,157,0.9)',
+                borderRadius: '50%', color: '#fff',
+                textAlign: 'center', fontWeight: '700',
+                lineHeight: '48px', fontSize: '14px',
+                border: '2px solid white',
+                boxShadow: '0 2px 8px rgba(255,107,157,0.4)'
+            }]
+        });
+    }
+
+    // 기존 마커 제거
+    kakaoClusterer.clear();
+    kakaoMarkers = [];
+
+    if (stores.length === 0) return;
+
+    const infowindow = new kakao.maps.InfoWindow({ zIndex: 10 });
+
+    // 핑크 커스텀 핀
+    const svgPin = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http%3A//www.w3.org/2000/svg' width='28' height='36' viewBox='0 0 28 36'%3E%3Cpath d='M14 0C6.27 0 0 6.27 0 14c0 9.94 14 22 14 22s14-12.06 14-22C28 6.27 21.73 0 14 0z' fill='%23FF6B9D'/%3E%3Ccircle cx='14' cy='14' r='6' fill='white'/%3E%3C/svg%3E";
+    const customImage = new kakao.maps.MarkerImage(
+        svgPin,
+        new kakao.maps.Size(28, 36),
+        { offset: new kakao.maps.Point(14, 36) }
+    );
+
+    const markers = stores.map(store => {
+        const position = new kakao.maps.LatLng(store.lat, store.lng);
+        const marker = new kakao.maps.Marker({ position, image: customImage });
+
+        kakao.maps.event.addListener(marker, 'click', function() {
+            infowindow.close();
+            infowindow.setContent(
+                '<div style="padding:10px 14px;font-family:Noto Sans KR,sans-serif;cursor:pointer;min-width:140px;" onclick="openDetail('' + store.id + '')">' +
+                '<div style="font-size:0.88rem;font-weight:700;color:#2D3436;margin-bottom:3px;">' + store.name + '</div>' +
+                '<div style="font-size:0.75rem;color:#FF6B9D;">' + (store.category || '') + ' · ' + (store.playroom_type || '키즈존') + '</div>' +
+                '<div style="font-size:0.72rem;color:#636E72;margin-top:2px;">👆 클릭하여 상세보기</div>' +
+                '</div>'
+            );
+            infowindow.open(kakaoMap, marker);
+        });
+
+        kakaoMarkers.push({ marker, store });
+        return marker;
+    });
+
+    kakaoClusterer.addMarkers(markers);
+
+    // 내 위치 마커
+    if (state.userLocation) {
+        if (userMarker) userMarker.setMap(null);
+        const userSvg = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http%3A//www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Ccircle cx='14' cy='14' r='12' fill='%233B82F6' stroke='white' stroke-width='3'/%3E%3Ccircle cx='14' cy='14' r='4' fill='white'/%3E%3C/svg%3E";
+        userMarker = new kakao.maps.Marker({
+            position: new kakao.maps.LatLng(state.userLocation.lat, state.userLocation.lng),
+            image: new kakao.maps.MarkerImage(userSvg, new kakao.maps.Size(28, 28), { offset: new kakao.maps.Point(14, 14) }),
+            map: kakaoMap,
+            zIndex: 10
+        });
+    }
+
+    // 지도 범위 자동 조정
+    const bounds = new kakao.maps.LatLngBounds();
+    stores.forEach(s => bounds.extend(new kakao.maps.LatLng(s.lat, s.lng)));
+    if (stores.length === 1) {
+        kakaoMap.setCenter(new kakao.maps.LatLng(stores[0].lat, stores[0].lng));
+        kakaoMap.setLevel(5);
+    } else {
+        kakaoMap.setBounds(bounds);
+    }
+
+    kakao.maps.event.addListener(kakaoMap, 'click', function() { infowindow.close(); });
 }
 
 function openDetail(id) {
@@ -1127,9 +1218,4 @@ function openDetail(id) {
     modal.style.display = 'flex'; document.body.style.overflow = 'hidden';
 }
 function closeModal() { document.getElementById('detailModal').style.display = 'none'; document.body.style.overflow = ''; }
-function setupScrollEffects() { const backToTop = document.getElementById('backToTop'); window.addEventListener('scroll', () => { backToTop.style.display = window.scrollY > 400 ? 'flex' : 'none'; }); backToTop.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); }); }
-function showLoading(show) { document.getElementById('loading').style.display = show ? 'block' : 'none'; }
-function debounce(func, wait) { let timeout; return function executedFunction(...args) { clearTimeout(timeout); timeout = setTimeout(() => func.apply(this, args), wait); }; }
-    </script>
-</body>
-</html>
+function setupScrollEffects() { const backToTop = document.getElementById('backToTop'); window.addEventListener('scroll', () => { backToTop.style.
