@@ -1170,7 +1170,7 @@ function renderStoreManage() {
                     <div class="sm-name">🏪 ${escHtml(s.name)}</div>
                     <div class="sm-meta">${escHtml(s.region || '')} ${escHtml(s.district || '')} · ${escHtml(s.category || '')}</div>
                 </div>
-                <a href="${naverSearch}" target="_blank" rel="noopener"
+                <a href="javascript:void(0)" onclick="window.open('${naverSearch}', 'naver', 'width=860,height=720,left='+Math.round(window.screenX+window.outerWidth-880)+',top='+Math.round(window.screenY+80)+'')" rel="noopener"
                    style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:#03C75A;color:white;border-radius:8px;font-size:0.78rem;font-weight:600;text-decoration:none;">
                     <i class="fas fa-map-marker-alt"></i> 네이버 확인
                 </a>
