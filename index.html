@@ -555,7 +555,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); line
             <!-- Map Container -->
             <div id="mapContainer" class="map-container" style="display:none;">
                 <div id="mapView" class="map-view">
-                <div id="kakaoMap" style="width:100%;height:100%;"></div>
+                <div id="kakaoMap" style="width:100%;height:500px;"></div>
                 </div>
             </div>
 
@@ -1097,45 +1097,37 @@ function updateView() {
     grid.classList.remove('list-view'); mapContainer.style.display = 'none';
     switch (state.currentView) { case 'list': grid.classList.add('list-view'); grid.style.display = 'grid'; break; case 'map': mapContainer.style.display = 'block'; grid.style.display = 'grid'; renderMap(); break; default: grid.style.display = 'grid'; }
 }
-let kakaoMap = null;
-let kakaoClusterer = null;
-let userMarker = null;
-let kakaoReady = false;
-
+let kakaoMap = null, kakaoClusterer = null, kakaoReady = false;
 function renderMap() {
     if (!kakaoReady) {
-        const script = document.createElement('script');
-        script.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=be5d553e67e98098b4936d583161ca56&libraries=services,clusterer&autoload=false';
-        script.onload = function() {
-            kakao.maps.load(function() { kakaoReady = true; drawMap(); });
-        };
-        document.head.appendChild(script);
+        const s = document.createElement('script');
+        s.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=be5d553e67e98098b4936d583161ca56&libraries=clusterer&autoload=false';
+        s.onload = function() { kakao.maps.load(function() { kakaoReady = true; drawMap(); }); };
+        document.head.appendChild(s);
     } else { drawMap(); }
 }
 function drawMap() {
     const stores = state.filtered.filter(s => s.lat && s.lng);
     if (!kakaoMap) {
-        const center = stores.length > 0 ? new kakao.maps.LatLng(stores[0].lat, stores[0].lng) : new kakao.maps.LatLng(37.5665, 126.9780);
-        kakaoMap = new kakao.maps.Map(document.getElementById('kakaoMap'), { center, level: 8 });
-        kakaoMap.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
+        kakaoMap = new kakao.maps.Map(document.getElementById('kakaoMap'), { center: new kakao.maps.LatLng(37.5665, 126.9780), level: 8 });
         kakaoClusterer = new kakao.maps.MarkerClusterer({ map: kakaoMap, averageCenter: true, minLevel: 6 });
     }
     kakaoClusterer.clear();
-    if (stores.length === 0) return;
-    const infowindow = new kakao.maps.InfoWindow({ zIndex: 10 });
+    if (!stores.length) return;
+    const iw = new kakao.maps.InfoWindow({ zIndex: 10 });
     const markers = stores.map(store => {
-        const marker = new kakao.maps.Marker({ position: new kakao.maps.LatLng(store.lat, store.lng) });
-        kakao.maps.event.addListener(marker, 'click', function() {
-            infowindow.setContent('<div style="padding:8px;cursor:pointer;" onclick="openDetail(\'' + store.id + '\')">' + store.name + '</div>');
-            infowindow.open(kakaoMap, marker);
+        const m = new kakao.maps.Marker({ position: new kakao.maps.LatLng(store.lat, store.lng) });
+        kakao.maps.event.addListener(m, 'click', function() {
+            iw.setContent('<div style="padding:8px 12px;cursor:pointer;font-size:0.85rem;font-weight:600;" onclick="openDetail(\'' + store.id + '\')">' + store.name + '<br><span style="color:#FF6B9D;font-size:0.75rem;">' + (store.category||'') + '</span></div>');
+            iw.open(kakaoMap, m);
         });
-        return marker;
+        return m;
     });
     kakaoClusterer.addMarkers(markers);
     const bounds = new kakao.maps.LatLngBounds();
     stores.forEach(s => bounds.extend(new kakao.maps.LatLng(s.lat, s.lng)));
-    if (stores.length > 1) kakaoMap.setBounds(bounds);
-    else { kakaoMap.setCenter(new kakao.maps.LatLng(stores[0].lat, stores[0].lng)); kakaoMap.setLevel(5); }
+    if (stores.length > 1) kakaoMap.setBounds(bounds); else { kakaoMap.setCenter(new kakao.maps.LatLng(stores[0].lat, stores[0].lng)); kakaoMap.setLevel(5); }
+    kakao.maps.event.addListener(kakaoMap, 'click', function() { iw.close(); });
 }
 
 function openDetail(id) {
