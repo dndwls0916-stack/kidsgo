@@ -185,8 +185,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); line
 
 /* Map */
 .map-container { margin-bottom: 20px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
-.map-view { height: 500px; background: #E8F0FE; position: relative; }
-#kakaoMap { width: 100%; height: 100%; }
+.map-view { height: 400px; background: #E8F0FE; position: relative; }
 .map-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-light); }
 .map-placeholder i { font-size: 3rem; margin-bottom: 12px; color: var(--primary); }
 .map-placeholder p { font-weight: 600; font-size: 1.1rem; }
@@ -556,7 +555,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); line
             <!-- Map Container -->
             <div id="mapContainer" class="map-container" style="display:none;">
                 <div id="mapView" class="map-view">
-                    <div id="kakaoMap"></div>
+                <div id="kakaoMap" style="width:100%;height:100%;"></div>
                 </div>
             </div>
 
@@ -565,7 +564,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); line
                 <div class="ad-placeholder ad-native">
                     <span class="ad-label">SPONSORED</span>
                     <p>🎈 프리미엄 키즈프렌들리 가게를 여기에 노출하세요</p>
-                    <small>광고 문의: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="aecfcaeec5c7caddc9c180c5dc">[email&#160;protected]</a></small>
+                    <small>광고 문의: ad@kidsgo.kr</small>
                 </div>
             </div>
 
@@ -631,7 +630,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); line
                 </div>
                 <div class="footer-links">
                     <h4>문의</h4>
-                    <a href="/cdn-cgi/l/email-protection#81e8efe7eec1eae8e5f2e6eeafeaf3"><span class="__cf_email__" data-cfemail="41282f272e012a282532262e6f2a33">[email&#160;protected]</span></a>
+                    <a href="mailto:info@kidsgo.kr">info@kidsgo.kr</a>
                     <a href="https://instagram.com/kidsgo" target="_blank">Instagram @kidsgo</a>
                 </div>
                 <div class="footer-links">
@@ -643,7 +642,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); line
             <!-- 사업자 정보 (사업자등록 후 실제 정보로 교체) -->
             <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;margin-bottom:12px;font-size:0.75rem;color:rgba(255,255,255,0.4);line-height:1.8;text-align:center;">
                 상호: 키즈고 | 대표: [대표자명] | 사업자등록번호: [000-00-00000]<br>
-                소재지: [사업장 주소] | 이메일: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="761f181019361d1f12051119581d04">[email&#160;protected]</a><br>
+                소재지: [사업장 주소] | 이메일: info@kidsgo.kr<br>
                 <a href="terms.html" style="color:rgba(255,255,255,0.5);text-decoration:none;">이용약관</a> · 
                 <a href="privacy.html" style="color:rgba(255,255,255,0.5);text-decoration:none;">개인정보처리방침</a>
             </div>
@@ -654,7 +653,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); line
         </div>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
 /**
  * 키즈고 - 대량 시드 데이터 자동 생성기 v3
  */
@@ -1108,45 +1107,35 @@ function renderMap() {
         const script = document.createElement('script');
         script.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=be5d553e67e98098b4936d583161ca56&libraries=services,clusterer&autoload=false';
         script.onload = function() {
-            kakao.maps.load(function() {
-                kakaoReady = true;
-                drawMap();
-            });
+            kakao.maps.load(function() { kakaoReady = true; drawMap(); });
         };
         document.head.appendChild(script);
-    } else {
-        drawMap();
-    }
+    } else { drawMap(); }
 }
-
 function drawMap() {
     const stores = state.filtered.filter(s => s.lat && s.lng);
     if (!kakaoMap) {
         const center = stores.length > 0 ? new kakao.maps.LatLng(stores[0].lat, stores[0].lng) : new kakao.maps.LatLng(37.5665, 126.9780);
         kakaoMap = new kakao.maps.Map(document.getElementById('kakaoMap'), { center, level: 8 });
         kakaoMap.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
-        kakaoClusterer = new kakao.maps.MarkerClusterer({ map: kakaoMap, averageCenter: true, minLevel: 6, styles: [{ width:'48px', height:'48px', background:'rgba(255,107,157,0.9)', borderRadius:'50%', color:'#fff', textAlign:'center', fontWeight:'700', lineHeight:'48px', fontSize:'14px', border:'2px solid white' }] });
+        kakaoClusterer = new kakao.maps.MarkerClusterer({ map: kakaoMap, averageCenter: true, minLevel: 6 });
     }
     kakaoClusterer.clear();
     if (stores.length === 0) return;
     const infowindow = new kakao.maps.InfoWindow({ zIndex: 10 });
-    const svgPin = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http%3A//www.w3.org/2000/svg' width='28' height='36' viewBox='0 0 28 36'%3E%3Cpath d='M14 0C6.27 0 0 6.27 0 14c0 9.94 14 22 14 22s14-12.06 14-22C28 6.27 21.73 0 14 0z' fill='%23FF6B9D'/%3E%3Ccircle cx='14' cy='14' r='6' fill='white'/%3E%3C/svg%3E";
-    const customImage = new kakao.maps.MarkerImage(svgPin, new kakao.maps.Size(28, 36), { offset: new kakao.maps.Point(14, 36) });
     const markers = stores.map(store => {
-        const marker = new kakao.maps.Marker({ position: new kakao.maps.LatLng(store.lat, store.lng), image: customImage });
+        const marker = new kakao.maps.Marker({ position: new kakao.maps.LatLng(store.lat, store.lng) });
         kakao.maps.event.addListener(marker, 'click', function() {
-            infowindow.close();
-            infowindow.setContent('<div style="padding:10px 14px;font-family:Noto Sans KR,sans-serif;cursor:pointer;" onclick="openDetail('' + store.id + '')">' + '<div style="font-size:0.88rem;font-weight:700;color:#2D3436;margin-bottom:3px;">' + store.name + '</div>' + '<div style="font-size:0.75rem;color:#FF6B9D;">' + (store.category||'') + ' · ' + (store.playroom_type||'키즈존') + '</div>' + '<div style="font-size:0.72rem;color:#636E72;margin-top:2px;">👆 클릭하여 상세보기</div></div>');
+            infowindow.setContent('<div style="padding:8px;cursor:pointer;" onclick="openDetail(\'' + store.id + '\')">' + store.name + '</div>');
             infowindow.open(kakaoMap, marker);
         });
         return marker;
     });
     kakaoClusterer.addMarkers(markers);
-    if (state.userLocation) { if (userMarker) userMarker.setMap(null); userMarker = new kakao.maps.Marker({ position: new kakao.maps.LatLng(state.userLocation.lat, state.userLocation.lng), map: kakaoMap, zIndex: 10 }); }
     const bounds = new kakao.maps.LatLngBounds();
     stores.forEach(s => bounds.extend(new kakao.maps.LatLng(s.lat, s.lng)));
-    if (stores.length === 1) { kakaoMap.setCenter(new kakao.maps.LatLng(stores[0].lat, stores[0].lng)); kakaoMap.setLevel(5); } else { kakaoMap.setBounds(bounds); }
-    kakao.maps.event.addListener(kakaoMap, 'click', function() { infowindow.close(); });
+    if (stores.length > 1) kakaoMap.setBounds(bounds);
+    else { kakaoMap.setCenter(new kakao.maps.LatLng(stores[0].lat, stores[0].lng)); kakaoMap.setLevel(5); }
 }
 
 function openDetail(id) {
@@ -1161,4 +1150,9 @@ function openDetail(id) {
     modal.style.display = 'flex'; document.body.style.overflow = 'hidden';
 }
 function closeModal() { document.getElementById('detailModal').style.display = 'none'; document.body.style.overflow = ''; }
-function setupScrollEffects() { const backToTop = document.getElementById('backToTop'); window.addEventListener('scroll', () => { backToTop.style.
+function setupScrollEffects() { const backToTop = document.getElementById('backToTop'); window.addEventListener('scroll', () => { backToTop.style.display = window.scrollY > 400 ? 'flex' : 'none'; }); backToTop.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); }); }
+function showLoading(show) { document.getElementById('loading').style.display = show ? 'block' : 'none'; }
+function debounce(func, wait) { let timeout; return function executedFunction(...args) { clearTimeout(timeout); timeout = setTimeout(() => func.apply(this, args), wait); }; }
+    </script>
+</body>
+</html>
