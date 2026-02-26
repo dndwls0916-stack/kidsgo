@@ -1106,7 +1106,7 @@ function renderMap() {
         kakaoMap = new kakao.maps.Map(container, { center: new kakao.maps.LatLng(37.5665, 126.9780), level: 8 });
         setTimeout(function(){ kakao.maps.event.trigger(kakaoMap, 'resize'); }, 300);
         kakaoMap.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
-        kakaoClusterer = new kakao.maps.MarkerClusterer({ map: kakaoMap, averageCenter: true, minLevel: 6 });
+        kakaoClusterer = new kakao.maps.MarkerClusterer({ map: kakaoMap, averageCenter: true, minLevel: 3 }); 
     }
     kakaoClusterer.clear();
     if (!stores.length) return;
@@ -1120,7 +1120,6 @@ function renderMap() {
         return m;
     });
     kakaoClusterer.addMarkers(markers);
-    markers.forEach(m => m.setMap(kakaoMap));
     const bounds = new kakao.maps.LatLngBounds();
     stores.forEach(s => bounds.extend(new kakao.maps.LatLng(s.lat, s.lng)));
     if (stores.length > 1) kakaoMap.setBounds(bounds);
