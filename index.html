@@ -1142,5 +1142,18 @@ function setupScrollEffects() { const backToTop = document.getElementById('backT
 function showLoading(show) { document.getElementById('loading').style.display = show ? 'block' : 'none'; }
 function debounce(func, wait) { let timeout; return function executedFunction(...args) { clearTimeout(timeout); timeout = setTimeout(() => func.apply(this, args), wait); }; }
     </script>
+    <script>
+window.addEventListener('load', function() {
+    var container = document.getElementById('kakaoMap');
+    if (container) {
+        var map = new kakao.maps.Map(container, {
+            center: new kakao.maps.LatLng(37.5665, 126.9780),
+            level: 8
+        });
+        window._testMap = map;
+    }
+});
+</script>
+
 </body>
 </html>
