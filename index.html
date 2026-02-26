@@ -1104,6 +1104,7 @@ function renderMap() {
     if (!kakaoMap) {
         const container = document.getElementById('kakaoMap');
         kakaoMap = new kakao.maps.Map(container, { center: new kakao.maps.LatLng(37.5665, 126.9780), level: 8 });
+        setTimeout(function(){ kakao.maps.event.trigger(kakaoMap, 'resize'); }, 300);
         kakaoMap.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
         kakaoClusterer = new kakao.maps.MarkerClusterer({ map: kakaoMap, averageCenter: true, minLevel: 6 });
     }
