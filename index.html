@@ -1120,6 +1120,7 @@ function renderMap() {
         return m;
     });
     kakaoClusterer.addMarkers(markers);
+    markers.forEach(m => m.setMap(kakaoMap));
     const bounds = new kakao.maps.LatLngBounds();
     stores.forEach(s => bounds.extend(new kakao.maps.LatLng(s.lat, s.lng)));
     if (stores.length > 1) kakaoMap.setBounds(bounds);
