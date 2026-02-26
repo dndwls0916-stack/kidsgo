@@ -70,6 +70,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=be5d553e67e98098b4936d583161ca56&libraries=clusterer"></script>
     <!-- CSS 인라인 적용됨 -->
     <style>
 /* ===== CSS Variables & Reset ===== */
@@ -1097,21 +1098,12 @@ function updateView() {
     grid.classList.remove('list-view'); mapContainer.style.display = 'none';
     switch (state.currentView) { case 'list': grid.classList.add('list-view'); grid.style.display = 'grid'; break; case 'map': mapContainer.style.display = 'block'; grid.style.display = 'grid'; renderMap(); setTimeout(function(){ if(kakaoMap){ kakao.maps.event.trigger(kakaoMap,'resize'); kakaoMap.setCenter(kakaoMap.getCenter()); } }, 500); break; default: grid.style.display = 'grid'; }
 }
-let kakaoMap = null, kakaoClusterer = null, kakaoReady = false;
 function renderMap() {
-    if (!kakaoReady) {
-        const s = document.createElement('script');
-        s.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=be5d553e67e98098b4936d583161ca56&libraries=clusterer&autoload=false';
-        s.onload = function() { kakao.maps.load(function() { kakaoReady = true; drawMap(); }); };
-        document.head.appendChild(s);
-    } else { drawMap(); }
-}
-function drawMap() {
     const stores = state.filtered.filter(s => s.lat && s.lng);
     if (!kakaoMap) {
         const container = document.getElementById('kakaoMap');
         kakaoMap = new kakao.maps.Map(container, { center: new kakao.maps.LatLng(37.5665, 126.9780), level: 8 });
-        kakao.maps.event.trigger(kakaoMap, 'resize');
+        kakaoMap.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
         kakaoClusterer = new kakao.maps.MarkerClusterer({ map: kakaoMap, averageCenter: true, minLevel: 6 });
     }
     kakaoClusterer.clear();
@@ -1128,10 +1120,10 @@ function drawMap() {
     kakaoClusterer.addMarkers(markers);
     const bounds = new kakao.maps.LatLngBounds();
     stores.forEach(s => bounds.extend(new kakao.maps.LatLng(s.lat, s.lng)));
-    if (stores.length > 1) kakaoMap.setBounds(bounds); else { kakaoMap.setCenter(new kakao.maps.LatLng(stores[0].lat, stores[0].lng)); kakaoMap.setLevel(5); }
+    if (stores.length > 1) kakaoMap.setBounds(bounds);
+    else { kakaoMap.setCenter(new kakao.maps.LatLng(stores[0].lat, stores[0].lng)); kakaoMap.setLevel(5); }
     kakao.maps.event.addListener(kakaoMap, 'click', function() { iw.close(); });
 }
-
 function openDetail(id) {
     const store = state.stores.find(s => s.id === id); if (!store) return;
     const modal = document.getElementById('detailModal'); const body = document.getElementById('modalBody');
