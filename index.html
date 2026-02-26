@@ -70,7 +70,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=be5d553e67e98098b4936d583161ca56&libraries=services,clusterer&autoload=false"></script>
     <!-- CSS 인라인 적용됨 -->
     <style>
 /* ===== CSS Variables & Reset ===== */
@@ -1103,10 +1102,23 @@ function updateView() {
 let kakaoMap = null;
 let kakaoClusterer = null;
 let userMarker = null;
+let kakaoLoaded = false;
+
+function initKakaoMap(callback) {
+    if (kakaoLoaded) { callback(); return; }
+    const script = document.createElement('script');
+    script.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=be5d553e67e98098b4936d583161ca56&libraries=services,clusterer&autoload=false';
+    script.onload = function() {
+        kakao.maps.load(function() {
+            kakaoLoaded = true;
+            callback();
+        });
+    };
+    document.body.appendChild(script);
+}
 
 function renderMap() {
-    // 카카오맵 로딩 후 실행
-    kakao.maps.load(function() {
+    initKakaoMap(function() {
         const stores = state.filtered.filter(s => s.lat && s.lng);
 
         if (!kakaoMap) {
