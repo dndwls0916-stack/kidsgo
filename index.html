@@ -1095,7 +1095,7 @@ function updateResultsTitle() { const title = document.getElementById('resultsTi
 function updateView() {
     const grid = document.getElementById('storeGrid'); const mapContainer = document.getElementById('mapContainer');
     grid.classList.remove('list-view'); mapContainer.style.display = 'none';
-    switch (state.currentView) { case 'list': grid.classList.add('list-view'); grid.style.display = 'grid'; break; case 'map': mapContainer.style.display = 'block'; grid.style.display = 'grid'; renderMap(); break; default: grid.style.display = 'grid'; }
+    switch (state.currentView) { case 'list': grid.classList.add('list-view'); grid.style.display = 'grid'; break; case 'map': mapContainer.style.display = 'block'; grid.style.display = 'grid'; renderMap(); setTimeout(function(){ if(kakaoMap){ kakao.maps.event.trigger(kakaoMap,'resize'); kakaoMap.setCenter(kakaoMap.getCenter()); } }, 300); break; default: grid.style.display = 'grid'; }
 }
 let kakaoMap = null, kakaoClusterer = null, kakaoReady = false;
 function renderMap() {
