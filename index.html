@@ -70,7 +70,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=be5d553e67e98098b4936d583161ca56&libraries=services,clusterer"></script>
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=be5d553e67e98098b4936d583161ca56&libraries=services,clusterer&autoload=false"></script>
     <!-- CSS 인라인 적용됨 -->
     <style>
 /* ===== CSS Variables & Reset ===== */
@@ -1105,57 +1105,59 @@ let kakaoClusterer = null;
 let userMarker = null;
 
 function renderMap() {
-    if (!window.kakao || !window.kakao.maps) return;
-    const stores = state.filtered.filter(s => s.lat && s.lng);
+    // 카카오맵 로딩 후 실행
+    kakao.maps.load(function() {
+        const stores = state.filtered.filter(s => s.lat && s.lng);
 
-    if (!kakaoMap) {
-        const center = stores.length > 0
-            ? new kakao.maps.LatLng(stores[0].lat, stores[0].lng)
-            : new kakao.maps.LatLng(37.5665, 126.9780);
-        kakaoMap = new kakao.maps.Map(document.getElementById('kakaoMap'), { center, level: 8 });
-        kakaoMap.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
-        kakaoClusterer = new kakao.maps.MarkerClusterer({
-            map: kakaoMap, averageCenter: true, minLevel: 6,
-            styles: [{ width:'48px', height:'48px', background:'rgba(255,107,157,0.9)', borderRadius:'50%', color:'#fff', textAlign:'center', fontWeight:'700', lineHeight:'48px', fontSize:'14px', border:'2px solid white' }]
+        if (!kakaoMap) {
+            const center = stores.length > 0
+                ? new kakao.maps.LatLng(stores[0].lat, stores[0].lng)
+                : new kakao.maps.LatLng(37.5665, 126.9780);
+            kakaoMap = new kakao.maps.Map(document.getElementById('kakaoMap'), { center, level: 8 });
+            kakaoMap.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
+            kakaoClusterer = new kakao.maps.MarkerClusterer({
+                map: kakaoMap, averageCenter: true, minLevel: 6,
+                styles: [{ width:'48px', height:'48px', background:'rgba(255,107,157,0.9)', borderRadius:'50%', color:'#fff', textAlign:'center', fontWeight:'700', lineHeight:'48px', fontSize:'14px', border:'2px solid white' }]
+            });
+        }
+
+        kakaoClusterer.clear();
+        if (stores.length === 0) return;
+
+        const infowindow = new kakao.maps.InfoWindow({ zIndex: 10 });
+        const svgPin = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http%3A//www.w3.org/2000/svg' width='28' height='36' viewBox='0 0 28 36'%3E%3Cpath d='M14 0C6.27 0 0 6.27 0 14c0 9.94 14 22 14 22s14-12.06 14-22C28 6.27 21.73 0 14 0z' fill='%23FF6B9D'/%3E%3Ccircle cx='14' cy='14' r='6' fill='white'/%3E%3C/svg%3E";
+        const customImage = new kakao.maps.MarkerImage(svgPin, new kakao.maps.Size(28, 36), { offset: new kakao.maps.Point(14, 36) });
+
+        const markers = stores.map(store => {
+            const marker = new kakao.maps.Marker({ position: new kakao.maps.LatLng(store.lat, store.lng), image: customImage });
+            kakao.maps.event.addListener(marker, 'click', function() {
+                infowindow.close();
+                infowindow.setContent('<div style="padding:10px 14px;font-family:Noto Sans KR,sans-serif;cursor:pointer;" onclick="openDetail('' + store.id + '')">' +
+                    '<div style="font-size:0.88rem;font-weight:700;color:#2D3436;margin-bottom:3px;">' + store.name + '</div>' +
+                    '<div style="font-size:0.75rem;color:#FF6B9D;">' + (store.category||'') + ' · ' + (store.playroom_type||'키즈존') + '</div>' +
+                    '<div style="font-size:0.72rem;color:#636E72;margin-top:2px;">👆 클릭하여 상세보기</div></div>');
+                infowindow.open(kakaoMap, marker);
+            });
+            return marker;
         });
-    }
 
-    kakaoClusterer.clear();
-    if (stores.length === 0) return;
+        kakaoClusterer.addMarkers(markers);
 
-    const infowindow = new kakao.maps.InfoWindow({ zIndex: 10 });
-    const svgPin = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http%3A//www.w3.org/2000/svg' width='28' height='36' viewBox='0 0 28 36'%3E%3Cpath d='M14 0C6.27 0 0 6.27 0 14c0 9.94 14 22 14 22s14-12.06 14-22C28 6.27 21.73 0 14 0z' fill='%23FF6B9D'/%3E%3Ccircle cx='14' cy='14' r='6' fill='white'/%3E%3C/svg%3E";
-    const customImage = new kakao.maps.MarkerImage(svgPin, new kakao.maps.Size(28, 36), { offset: new kakao.maps.Point(14, 36) });
+        if (state.userLocation) {
+            if (userMarker) userMarker.setMap(null);
+            userMarker = new kakao.maps.Marker({
+                position: new kakao.maps.LatLng(state.userLocation.lat, state.userLocation.lng),
+                map: kakaoMap, zIndex: 10
+            });
+        }
 
-    const markers = stores.map(store => {
-        const marker = new kakao.maps.Marker({ position: new kakao.maps.LatLng(store.lat, store.lng), image: customImage });
-        kakao.maps.event.addListener(marker, 'click', function() {
-            infowindow.close();
-            infowindow.setContent('<div style="padding:10px 14px;font-family:Noto Sans KR,sans-serif;cursor:pointer;" onclick="openDetail('' + store.id + '')">' +
-                '<div style="font-size:0.88rem;font-weight:700;color:#2D3436;margin-bottom:3px;">' + store.name + '</div>' +
-                '<div style="font-size:0.75rem;color:#FF6B9D;">' + (store.category||'') + ' · ' + (store.playroom_type||'키즈존') + '</div>' +
-                '<div style="font-size:0.72rem;color:#636E72;margin-top:2px;">👆 클릭하여 상세보기</div></div>');
-            infowindow.open(kakaoMap, marker);
-        });
-        return marker;
+        const bounds = new kakao.maps.LatLngBounds();
+        stores.forEach(s => bounds.extend(new kakao.maps.LatLng(s.lat, s.lng)));
+        if (stores.length === 1) { kakaoMap.setCenter(new kakao.maps.LatLng(stores[0].lat, stores[0].lng)); kakaoMap.setLevel(5); }
+        else { kakaoMap.setBounds(bounds); }
+
+        kakao.maps.event.addListener(kakaoMap, 'click', function() { infowindow.close(); });
     });
-
-    kakaoClusterer.addMarkers(markers);
-
-    if (state.userLocation) {
-        if (userMarker) userMarker.setMap(null);
-        userMarker = new kakao.maps.Marker({
-            position: new kakao.maps.LatLng(state.userLocation.lat, state.userLocation.lng),
-            map: kakaoMap, zIndex: 10
-        });
-    }
-
-    const bounds = new kakao.maps.LatLngBounds();
-    stores.forEach(s => bounds.extend(new kakao.maps.LatLng(s.lat, s.lng)));
-    if (stores.length === 1) { kakaoMap.setCenter(new kakao.maps.LatLng(stores[0].lat, stores[0].lng)); kakaoMap.setLevel(5); }
-    else { kakaoMap.setBounds(bounds); }
-
-    kakao.maps.event.addListener(kakaoMap, 'click', function() { infowindow.close(); });
 }
 
 function openDetail(id) {
