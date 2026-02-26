@@ -1101,8 +1101,8 @@ let kakaoMap = null, kakaoClusterer = null, kakaoReady = false;
 function renderMap() {
     if (!kakaoReady) {
         const s = document.createElement('script');
-        s.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=be5d553e67e98098b4936d583161ca56&libraries=clusterer';
-        s.onload = function() { kakaoReady = true; drawMap(); };
+        s.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=be5d553e67e98098b4936d583161ca56&libraries=clusterer&autoload=false';
+        s.onload = function() { kakao.maps.load(function() { kakaoReady = true; drawMap(); }); };
         document.head.appendChild(s);
     } else { drawMap(); }
 }
