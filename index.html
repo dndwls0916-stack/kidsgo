@@ -1109,7 +1109,9 @@ function renderMap() {
 function drawMap() {
     const stores = state.filtered.filter(s => s.lat && s.lng);
     if (!kakaoMap) {
-        kakaoMap = new kakao.maps.Map(document.getElementById('kakaoMap'), { center: new kakao.maps.LatLng(37.5665, 126.9780), level: 8 });
+        const container = document.getElementById('kakaoMap');
+        kakaoMap = new kakao.maps.Map(container, { center: new kakao.maps.LatLng(37.5665, 126.9780), level: 8 });
+        kakao.maps.event.trigger(kakaoMap, 'resize');
         kakaoClusterer = new kakao.maps.MarkerClusterer({ map: kakaoMap, averageCenter: true, minLevel: 6 });
     }
     kakaoClusterer.clear();
