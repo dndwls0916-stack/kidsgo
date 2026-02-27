@@ -1099,6 +1099,7 @@ function updateView() {
     switch (state.currentView) { case 'list': grid.classList.add('list-view'); grid.style.display = 'grid'; break; case 'map': mapContainer.style.display = 'block'; grid.style.display = 'grid'; renderMap(); break;
  default: grid.style.display = 'grid'; }
 }
+let kakaoMap = null, kakaoClusterer = null;
 function renderMap() {
     const stores = state.filtered.filter(s => s.lat && s.lng);
     if (!kakaoMap) {
