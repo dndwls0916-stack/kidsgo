@@ -1027,7 +1027,6 @@ function getLocation() {
             state.stores.forEach(store => { if (store.lat && store.lng) { store._distance = calculateDistance(state.userLocation.lat, state.userLocation.lng, store.lat, store.lng); } });
             applyFilters();
             if (state.currentView === 'map' && kakaoMap) renderMap();
-            }
         },
         (error) => { let msg = '위치를 가져올 수 없습니다.'; if (error.code === 1) msg = '위치 권한이 거부되었습니다. 설정에서 허용해주세요.'; alert(msg); btn.innerHTML = '<i class="fas fa-location-crosshairs"></i> <span>내 위치로 찾기</span>'; },
         { enableHighAccuracy: true, timeout: 10000 }
