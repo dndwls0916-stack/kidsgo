@@ -1096,7 +1096,7 @@ function updateResultsTitle() { const title = document.getElementById('resultsTi
 function updateView() {
     const grid = document.getElementById('storeGrid'); const mapContainer = document.getElementById('mapContainer');
     grid.classList.remove('list-view'); mapContainer.style.display = 'none';
-    switch (state.currentView) { case 'list': grid.classList.add('list-view'); grid.style.display = 'grid'; break; case 'map': mapContainer.style.display = 'block'; grid.style.display = 'grid'; setTimeout(function(){ renderMap(); }, 200); break;
+    switch (state.currentView) { case 'list': grid.classList.add('list-view'); grid.style.display = 'grid'; break; case 'map': mapContainer.style.display = 'block'; grid.style.display = 'grid'; renderMap(); break;
  default: grid.style.display = 'grid'; }
 }
 function renderMap() {
@@ -1104,9 +1104,8 @@ function renderMap() {
     if (!kakaoMap) {
         const container = document.getElementById('kakaoMap');
         kakaoMap = new kakao.maps.Map(container, { center: new kakao.maps.LatLng(37.5665, 126.9780), level: 8 });
-        setTimeout(function(){ kakao.maps.event.trigger(kakaoMap, 'resize'); }, 300);
         kakaoMap.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
-        kakaoClusterer = new kakao.maps.MarkerClusterer({ map: kakaoMap, averageCenter: true, minLevel: 3 }); 
+        kakaoClusterer = new kakao.maps.MarkerClusterer({ map: kakaoMap, averageCenter: true, minLevel: 3 });
     }
     kakaoClusterer.clear();
     if (!stores.length) return;
