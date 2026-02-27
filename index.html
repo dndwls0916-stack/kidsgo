@@ -1105,7 +1105,7 @@ function renderMap() {
         const container = document.getElementById('kakaoMap');
         kakaoMap = new kakao.maps.Map(container, { center: new kakao.maps.LatLng(37.5665, 126.9780), level: 8 });
         kakaoMap.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
-        kakaoClusterer = new kakao.maps.MarkerClusterer({ map: kakaoMap, averageCenter: true, minLevel: 3 });
+        kakaoClusterer = new kakao.maps.MarkerClusterer({ map: kakaoMap, averageCenter: true, minLevel: 10 });
     }
     kakaoClusterer.clear();
     if (!stores.length) return;
