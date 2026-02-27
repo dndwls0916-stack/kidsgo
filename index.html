@@ -1025,7 +1025,11 @@ function getLocation() {
             document.getElementById('locationText').textContent = `현재 위치 (${state.userLocation.lat.toFixed(4)}, ${state.userLocation.lng.toFixed(4)})`;
             if (state.sort === 'distance') { applySort(); renderStores(); }
             state.stores.forEach(store => { if (store.lat && store.lng) { store._distance = calculateDistance(state.userLocation.lat, state.userLocation.lng, store.lat, store.lng); } });
-            applyFilters();
+           applyFilters();
+            if (state.currentView === 'map' && kakaoMap) {
+            kakao.maps.event.trigger(kakaoMap, 'resize');
+            renderMap();
+            }
         },
         (error) => { let msg = '위치를 가져올 수 없습니다.'; if (error.code === 1) msg = '위치 권한이 거부되었습니다. 설정에서 허용해주세요.'; alert(msg); btn.innerHTML = '<i class="fas fa-location-crosshairs"></i> <span>내 위치로 찾기</span>'; },
         { enableHighAccuracy: true, timeout: 10000 }
@@ -1124,6 +1128,13 @@ function renderMap() {
     stores.forEach(s => bounds.extend(new kakao.maps.LatLng(s.lat, s.lng)));
     if (stores.length > 1) kakaoMap.setBounds(bounds);
     else { kakaoMap.setCenter(new kakao.maps.LatLng(stores[0].lat, stores[0].lng)); kakaoMap.setLevel(5); }
+    if (state.userLocation) {
+        new kakao.maps.Marker({
+            position: new kakao.maps.LatLng(state.userLocation.lat, state.userLocation.lng),
+            map: kakaoMap,
+            image: new kakao.maps.MarkerImage('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png', new kakao.maps.Size(24, 35))
+        });
+    }
     kakao.maps.event.addListener(kakaoMap, 'click', function() { iw.close(); });
 }
 function openDetail(id) {
