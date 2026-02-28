@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>부산 놀이방 있는 식당 & 카페 찾기 | 키즈고</title>
+    <meta name="description" content="부산 놀이방 있는 식당, 카페, 키즈카페를 한눈에 검색! 아이와 함께 가기 좋은 부산 키즈프렌들리 가게 8개+를 지역별로 찾아보세요.">
+    <meta name="keywords" content="부산 놀이방있는식당,부산 키즈프렌들리,부산 키즈카페,해운대 놀이방">
+    <meta name="author" content="키즈고(KidsGo)">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://kidsgo.kr/region/busan.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="부산 놀이방 있는 식당 & 카페 | 키즈고">
+    <meta property="og:description" content="부산 키즈프렌들리 가게 8개+! 놀이방 있는 식당·카페를 한눈에 찾아보세요.">
+    <meta property="og:site_name" content="키즈고">
+    <meta property="og:locale" content="ko_KR">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "부산 놀이방 있는 식당 & 카페 찾기 | 키즈고",
+        "description": "부산 놀이방 있는 식당, 카페, 키즈카페 검색",
+        "url": "https://kidsgo.kr/region/busan.html"
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=be5d553e67e98098b4936d583161ca56&libraries=clusterer"></script>
+</head>
+<body>
+    <script>
+        // 지역 필터 자동 적용
+        window.REGION_FILTER = '부산';
+    </script>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <a class="logo" href="../index.html">
+                <i class="fas fa-baby"></i>
+                <span>키즈고</span>
+            </a>
+            <p class="tagline">부산 놀이방 있는 식당 & 카페</p>
+            <nav class="header-nav">
+                <a href="../index.html" class="nav-link">전체보기</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Region Hero -->
+    <section style="background:linear-gradient(135deg,#FF6B9D,#4ECDC4);padding:32px 20px;text-align:center;color:white;">
+        <div style="max-width:800px;margin:0 auto;">
+            <h1 style="font-size:1.8rem;font-weight:800;margin-bottom:8px;">📍 부산 키즈프렌들리 가게</h1>
+            <p style="font-size:1rem;opacity:0.9;">놀이방 있는 식당·카페·키즈카페를 한눈에 찾아보세요</p>
+        </div>
+    </section>
+
+    <!-- Search & Filter -->
+    <div class="search-section">
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="부산 가게 이름, 업종 검색...">
+                <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="content-layout">
+                <!-- Filter Panel -->
+                <aside class="filter-sidebar">
+                    <div class="filter-panel" id="filterPanel">
+                        <div class="filter-header">
+                            <span><i class="fas fa-sliders-h"></i> 필터</span>
+                            <button class="filter-reset" onclick="resetFilters()">초기화</button>
+                        </div>
+
+                        <div class="filter-group">
+                            <label class="filter-label"><i class="fas fa-store"></i> 업종</label>
+                            <div class="filter-chips" id="categoryFilter">
+                                <button class="chip active" data-value="all">전체</button>
+                                <button class="chip" data-value="식당">🍽️ 식당</button>
+                                <button class="chip" data-value="카페">☕ 카페</button>
+                                <button class="chip" data-value="키즈카페">🎪 키즈카페</button>
+                                <button class="chip" data-value="뷔페">🍱 뷔페</button>
+                                <button class="chip" data-value="베이커리">🍞 베이커리</button>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <label class="filter-label"><i class="fas fa-map-marker-alt"></i> 지역</label>
+                            <div class="filter-chips" id="regionFilter">
+                                <button class="chip active" data-value="부산">부산</button>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <label class="filter-label"><i class="fas fa-puzzle-piece"></i> 놀이시설</label>
+                            <div class="filter-chips" id="playroomFilter">
+                                <button class="chip active" data-value="all">전체</button>
+                                <button class="chip" data-value="실내놀이방">실내놀이방</button>
+                                <button class="chip" data-value="실외놀이터">실외놀이터</button>
+                                <button class="chip" data-value="키즈존">키즈존</button>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <label class="filter-label"><i class="fas fa-check-circle"></i> 편의시설</label>
+                            <div class="facility-toggles" id="facilityFilter">
+                                <label class="toggle-item"><input type="checkbox" data-facility="has_parking"><span class="toggle-label"><i class="fas fa-parking"></i> 주차</span></label>
+                                <label class="toggle-item"><input type="checkbox" data-facility="has_nursing_room"><span class="toggle-label"><i class="fas fa-baby-carriage"></i> 수유실</span></label>
+                                <label class="toggle-item"><input type="checkbox" data-facility="has_highchair"><span class="toggle-label"><i class="fas fa-chair"></i> 유아의자</span></label>
+                                <label class="toggle-item"><input type="checkbox" data-facility="has_stroller_access"><span class="toggle-label"><i class="fas fa-wheelchair"></i> 유모차</span></label>
+                            </div>
+                        </div>
+
+                        <button class="btn-apply-filter" id="applyFilters">적용하기</button>
+                    </div>
+                </aside>
+
+                <!-- Store List -->
+                <div class="content-main">
+                    <div class="results-header">
+                        <h2 class="results-title">부산 키즈 프렌들리 가게</h2>
+                        <span class="results-count-badge" id="resultCount">0개</span>
+                    </div>
+                    <div class="view-controls">
+                        <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')"><i class="fas fa-th"></i></button>
+                        <button class="view-btn" id="listViewBtn" onclick="setView('list')"><i class="fas fa-list"></i></button>
+                        <button class="view-btn" id="mapViewBtn" onclick="setView('map')"><i class="fas fa-map"></i></button>
+                    </div>
+                    <div id="loading" class="loading" style="display:none;"><div class="spinner"></div><p>가게 정보를 불러오는 중...</p></div>
+                    <div id="storeGrid" class="store-grid"></div>
+                    <div id="mapView" class="map-view" style="display:none;">
+                        <div id="kakaoMap" style="width:100%;height:500px;display:block;"></div>
+                    </div>
+                    <div id="noResults" class="no-results" style="display:none;">
+                        <div style="font-size:3rem;margin-bottom:16px;">😢</div>
+                        <h3>검색 결과가 없어요</h3>
+                        <p>다른 조건으로 다시 검색해 보세요</p>
+                        <button onclick="resetFilters()" style="margin-top:16px;padding:10px 24px;background:var(--primary);color:white;border:none;border-radius:50px;cursor:pointer;">전체보기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Detail Modal -->
+    <div id="detailModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)closeModal()">
+        <div class="modal-container"><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button><div id="modalBody"></div></div>
+    </div>
+
+    <div id="backToTop" class="back-to-top" style="display:none;"><i class="fas fa-arrow-up"></i></div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>© 2026 키즈고(KidsGo). All rights reserved. | <a href="../index.html">홈으로</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../seed.js"></script>
+    <script src="../app.js"></script>
+    <script>
+        // 페이지 로드 후 지역 필터 자동 적용
+        document.addEventListener('DOMContentLoaded', function() {
+            // regionFilter를 해당 지역으로 고정
+            setTimeout(function() {
+                const regionBtns = document.querySelectorAll('#regionFilter .chip');
+                regionBtns.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.value === '부산') btn.classList.add('active');
+                });
+                state.filters.region = ['부산'];
+                applyFilters();
+            }, 500);
+        });
+    </script>
+</body>
+</html>
