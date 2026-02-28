@@ -1,4 +1,3 @@
-/*
  * 키즈고 - Main Application Script
  */
 const state = {
@@ -189,7 +188,7 @@ function resetFilters() {
     state.filters = { category: [], subcategory: [], region: [], playroom: [], age: [], price: [], facilities: [], search: '', tag: '' };
     document.querySelectorAll('.filter-chips .chip').forEach(chip => { chip.classList.toggle('active', chip.dataset.value === 'all'); });
     document.querySelectorAll('#facilityFilter input').forEach(cb => cb.checked = false);
-    document.getElementById('searchInput').value = ''; document.querySelectorAll('.quick-tag').forEach(b => b.classList.remove('active'));
+    const si = document.getElementById('searchInput'); if (si) si.value = ''; document.querySelectorAll('.quick-tag').forEach(b => b.classList.remove('active'));
     const fc = document.getElementById('filterCount'); if (fc) fc.style.display = 'none'; document.querySelectorAll('.multi-count').forEach(el => el.remove());
     const sg = document.getElementById('subcategoryGroup'); if (sg) sg.style.display = 'none'; const sf = document.getElementById('subcategoryFilter'); if (sf) sf.innerHTML = '';
     applyFilters();
@@ -219,7 +218,7 @@ function createStoreCard(store) {
     return `<div class="store-card" onclick="openDetail('${store.id}')"><div class="card-image"><span class="card-image-icon">${subIcon}</span><div class="card-badges"><span class="badge badge-category">${icon} ${store.category}</span><span class="badge badge-playroom">🎈 ${store.playroom_type || ''}</span></div>${distanceHtml}</div><div class="card-body"><div class="card-title">${store.name}<span class="price-tag">${store.price_range || ''}</span></div><div class="card-location"><i class="fas fa-map-marker-alt"></i>${store.district ? store.region + ' ' + store.district : store.address}</div><div class="card-rating"><span class="stars">${stars}</span><span class="rating-num">${(store.rating || 0).toFixed(1)}</span><span class="review-count">리뷰 ${store.review_count || 0}개</span></div><p class="card-desc">${store.description || ''}</p><div class="card-facilities">${facilities.join('')}</div><div class="card-tags">${tags}</div></div></div>`;
 }
 function renderStars(rating) { let stars = ''; const full = Math.floor(rating); const half = rating % 1 >= 0.5; for (let i = 0; i < full; i++) stars += '★'; if (half) stars += '★'; for (let i = stars.length; i < 5; i++) stars += '☆'; return stars; }
-function updateResultsTitle() { const title = document.getElementById('resultsTitle'); const parts = []; if (state.filters.region.length > 0) parts.push(state.filters.region.join('·')); if (state.filters.category.length > 0) parts.push(state.filters.category.join('·')); if (state.filters.subcategory.length > 0) parts.push(state.filters.subcategory.join('·')); if (state.filters.search) parts.push(`"${state.filters.search}"`); if (state.filters.tag) parts.push(`#${state.filters.tag}`); title.textContent = parts.length > 0 ? `${parts.join(' ')} 검색 결과` : '전체 키즈 프렌들리 가게'; }
+function updateResultsTitle() { const title = document.getElementById('resultsTitle'); if (!title) return; const parts = []; if (state.filters.region.length > 0) parts.push(state.filters.region.join('·')); if (state.filters.category.length > 0) parts.push(state.filters.category.join('·')); if (state.filters.subcategory.length > 0) parts.push(state.filters.subcategory.join('·')); if (state.filters.search) parts.push(`"${state.filters.search}"`); if (state.filters.tag) parts.push(`#${state.filters.tag}`); title.textContent = parts.length > 0 ? `${parts.join(' ')} 검색 결과` : '전체 키즈 프렌들리 가게'; }
 
 function updateView() {
     const grid = document.getElementById('storeGrid'); const mapContainer = document.getElementById('mapContainer');
