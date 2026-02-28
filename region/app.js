@@ -81,13 +81,13 @@ function setupEventListeners() {
     const clrBtn = document.getElementById('clearLocationBtn'); if (clrBtn) clrBtn.addEventListener('click', clearLocation);
     const sortSel = document.getElementById('sortSelect'); if (sortSel) sortSel.addEventListener('change', (e) => { state.sort = e.target.value; applySort(); renderStores(); });
     const filterToggle = document.getElementById('filterToggle'); const filterPanel = document.getElementById('filterPanel');
-    if (filterToggle) filterToggle.addEventListener('click', () => { filterPanel.classList.toggle('open'); filterToggle.classList.toggle('active'); });
+    if (filterToggle && filterPanel) filterToggle.addEventListener('click', () => { filterPanel.classList.toggle('open'); filterToggle.classList.toggle('active'); });
     setupCategoryFilter(); setupFilterChips('regionFilter', 'region'); setupFilterChips('playroomFilter', 'playroom'); setupFilterChips('ageFilter', 'age'); setupFilterChips('priceFilter', 'price');
     document.querySelectorAll('#facilityFilter input').forEach(cb => { cb.addEventListener('change', () => { const facility = cb.dataset.facility; if (cb.checked) { if (!state.filters.facilities.includes(facility)) state.filters.facilities.push(facility); } else { state.filters.facilities = state.filters.facilities.filter(f => f !== facility); } }); });
     const resetBtn = document.getElementById('resetFilters'); if (resetBtn) resetBtn.addEventListener('click', resetFilters);
     const applyBtn = document.getElementById('applyFilters'); if (applyBtn) applyBtn.addEventListener('click', () => { applyFilters(); if(filterPanel) filterPanel.classList.remove('open'); if(filterToggle) filterToggle.classList.remove('active'); });
     document.querySelectorAll('.view-btn').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); state.currentView = btn.dataset.view; updateView(); }); });
-    document.getElementById('detailModal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal(); });
+    const detailModal = document.getElementById('detailModal'); if (detailModal) detailModal.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 }
 
@@ -203,10 +203,11 @@ function applySort() {
 }
 
 function renderStores() {
-    const grid = document.getElementById('storeGrid'); const emptyState = document.getElementById('emptyState'); const countEl = document.getElementById('resultsCount');
-    countEl.textContent = `${state.filtered.length}개`;
-    if (state.filtered.length === 0) { grid.innerHTML = ''; emptyState.style.display = 'block'; return; }
-    emptyState.style.display = 'none'; grid.innerHTML = state.filtered.map(store => createStoreCard(store)).join('');
+    const grid = document.getElementById('storeGrid'); const emptyState = document.getElementById('emptyState') || document.getElementById('noResults'); const countEl = document.getElementById('resultsCount') || document.getElementById('resultCount');
+    if (countEl) countEl.textContent = `${state.filtered.length}개`;
+    if (!grid) return;
+    if (state.filtered.length === 0) { grid.innerHTML = ''; if (emptyState) emptyState.style.display = 'block'; return; }
+    if (emptyState) emptyState.style.display = 'none'; grid.innerHTML = state.filtered.map(store => createStoreCard(store)).join('');
     if (state.currentView === 'map') renderMap();
 }
 function createStoreCard(store) {
