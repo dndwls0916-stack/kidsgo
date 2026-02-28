@@ -1,4 +1,5 @@
- /* 키즈고 - Main Application Script
+/*
+ * 키즈고 - Main Application Script
  */
 const state = {
     stores: [], filtered: [], userLocation: null, currentView: 'grid',
