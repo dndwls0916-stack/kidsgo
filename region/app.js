@@ -1,4 +1,4 @@
- /* 키즈고 - Main Application Script
+ * 키즈고 - Main Application Script
  */
 const state = {
     stores: [], filtered: [], userLocation: null, currentView: 'grid',
@@ -65,9 +65,9 @@ function updateLoadingProgress(loaded, total) { const el = document.getElementBy
 
 function setupEventListeners() {
     const searchInput = document.getElementById('searchInput'); const searchBtn = document.getElementById('searchBtn');
-    searchBtn.addEventListener('click', () => performSearch());
-    searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') performSearch(); });
-    searchInput.addEventListener('input', debounce(() => { if (searchInput.value.length === 0) { state.filters.search = ''; state.filters.tag = ''; applyFilters(); } }, 300));
+    if (searchBtn) searchBtn.addEventListener('click', () => performSearch());
+    if (searchInput) { searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') performSearch(); });
+    searchInput.addEventListener('input', debounce(() => { if (searchInput.value.length === 0) { state.filters.search = ''; state.filters.tag = ''; applyFilters(); } }, 300)); }
     document.querySelectorAll('.quick-tag').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.quick-tag').forEach(b => b.classList.remove('active'));
@@ -77,15 +77,15 @@ function setupEventListeners() {
             applyFilters();
         });
     });
-    document.getElementById('locationBtn').addEventListener('click', getLocation);
-    document.getElementById('clearLocationBtn').addEventListener('click', clearLocation);
-    document.getElementById('sortSelect').addEventListener('change', (e) => { state.sort = e.target.value; applySort(); renderStores(); });
+    const locBtn = document.getElementById('locationBtn'); if (locBtn) locBtn.addEventListener('click', getLocation);
+    const clrBtn = document.getElementById('clearLocationBtn'); if (clrBtn) clrBtn.addEventListener('click', clearLocation);
+    const sortSel = document.getElementById('sortSelect'); if (sortSel) sortSel.addEventListener('change', (e) => { state.sort = e.target.value; applySort(); renderStores(); });
     const filterToggle = document.getElementById('filterToggle'); const filterPanel = document.getElementById('filterPanel');
-    filterToggle.addEventListener('click', () => { filterPanel.classList.toggle('open'); filterToggle.classList.toggle('active'); });
+    if (filterToggle) filterToggle.addEventListener('click', () => { filterPanel.classList.toggle('open'); filterToggle.classList.toggle('active'); });
     setupCategoryFilter(); setupFilterChips('regionFilter', 'region'); setupFilterChips('playroomFilter', 'playroom'); setupFilterChips('ageFilter', 'age'); setupFilterChips('priceFilter', 'price');
     document.querySelectorAll('#facilityFilter input').forEach(cb => { cb.addEventListener('change', () => { const facility = cb.dataset.facility; if (cb.checked) { if (!state.filters.facilities.includes(facility)) state.filters.facilities.push(facility); } else { state.filters.facilities = state.filters.facilities.filter(f => f !== facility); } }); });
-    document.getElementById('resetFilters').addEventListener('click', resetFilters);
-    document.getElementById('applyFilters').addEventListener('click', () => { applyFilters(); filterPanel.classList.remove('open'); filterToggle.classList.remove('active'); });
+    const resetBtn = document.getElementById('resetFilters'); if (resetBtn) resetBtn.addEventListener('click', resetFilters);
+    const applyBtn = document.getElementById('applyFilters'); if (applyBtn) applyBtn.addEventListener('click', () => { applyFilters(); if(filterPanel) filterPanel.classList.remove('open'); if(filterToggle) filterToggle.classList.remove('active'); });
     document.querySelectorAll('.view-btn').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); state.currentView = btn.dataset.view; updateView(); }); });
     document.getElementById('detailModal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
@@ -181,7 +181,7 @@ function applyFilters() {
         return true;
     });
     let activeCount = 0; activeCount += f.category.length; activeCount += f.subcategory.length; activeCount += f.region.length; activeCount += f.playroom.length; activeCount += f.age.length; activeCount += f.price.length; activeCount += f.facilities.length;
-    const filterCountEl = document.getElementById('filterCount'); if (activeCount > 0) { filterCountEl.textContent = activeCount; filterCountEl.style.display = 'inline-flex'; } else { filterCountEl.style.display = 'none'; }
+    const filterCountEl = document.getElementById('filterCount'); if (filterCountEl) { if (activeCount > 0) { filterCountEl.textContent = activeCount; filterCountEl.style.display = 'inline-flex'; } else { filterCountEl.style.display = 'none'; } }
     applySort(); renderStores(); updateResultsTitle();
 }
 function resetFilters() {
@@ -189,11 +189,11 @@ function resetFilters() {
     document.querySelectorAll('.filter-chips .chip').forEach(chip => { chip.classList.toggle('active', chip.dataset.value === 'all'); });
     document.querySelectorAll('#facilityFilter input').forEach(cb => cb.checked = false);
     document.getElementById('searchInput').value = ''; document.querySelectorAll('.quick-tag').forEach(b => b.classList.remove('active'));
-    document.getElementById('filterCount').style.display = 'none'; document.querySelectorAll('.multi-count').forEach(el => el.remove());
-    document.getElementById('subcategoryGroup').style.display = 'none'; document.getElementById('subcategoryFilter').innerHTML = '';
+    const fc = document.getElementById('filterCount'); if (fc) fc.style.display = 'none'; document.querySelectorAll('.multi-count').forEach(el => el.remove());
+    const sg = document.getElementById('subcategoryGroup'); if (sg) sg.style.display = 'none'; const sf = document.getElementById('subcategoryFilter'); if (sf) sf.innerHTML = '';
     applyFilters();
 }
-function resetAll() { resetFilters(); document.getElementById('filterPanel').classList.remove('open'); document.getElementById('filterToggle').classList.remove('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+function resetAll() { resetFilters(); const fp = document.getElementById('filterPanel'); if (fp) fp.classList.remove('open'); const ft = document.getElementById('filterToggle'); if (ft) ft.classList.remove('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
 function applySort() {
     const s = state.sort;
